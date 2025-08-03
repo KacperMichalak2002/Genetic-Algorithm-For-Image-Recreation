@@ -8,15 +8,21 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
     internal class Chromosome
     {
+        private String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         public String value { get; set; }
-        private const int _maxLength = 4;
+        private const int _maxLength = 6;
         public Chromosome() { 
             value = RandomString();
         }
 
-        public String RandomString()
+        public Chromosome(String value)
         {
-            String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            this.value = value;
+        }
+
+        private String RandomString()
+        {
+            
             Random random = new Random();
             Char[] randomChars = new Char[_maxLength];
 

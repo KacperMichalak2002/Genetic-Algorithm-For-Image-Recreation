@@ -8,20 +8,22 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
     internal class Fitness
     {
-        public int value;
+        
         private String TARGET = "Kacper";
 
-        public Fitness()
-        {
-            value = 0;
-        }
         public int CalculateFitness(Individual individual)
         {
+            int value = 0;
+
             Chromosome invChromosome = individual.chromosome;
             int size = invChromosome.value.Length;
 
-            foreach (char ch in invChromosome.value) {
-                value += TARGET.Contains(ch) ? 1 : 0;
+            for (int i = 0; i < size; i++)
+            {
+                if (invChromosome.value[i] != TARGET[i])
+                {
+                    value++;
+                }
             }
 
             return value;

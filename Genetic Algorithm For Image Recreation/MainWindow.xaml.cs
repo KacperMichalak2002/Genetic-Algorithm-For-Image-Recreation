@@ -15,6 +15,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
             GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
             Chromosome chromosome = new Chromosome();
             txtBlock1.Text = chromosome.value;
+            geneticAlgorithm.Start(txtBlock1);
         }
     }
 }

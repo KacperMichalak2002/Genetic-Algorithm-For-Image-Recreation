@@ -9,8 +9,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     internal class Individual
     {
         public Chromosome chromosome { get; set; }
-        public Fitness fitness { get; set; }
+        public int fitness { get; set; }
 
-        public Individual(){ }
+        public Individual()
+        {
+            chromosome = new Chromosome();
+            fitness = 0;
+        }
+
+        public Individual(Chromosome chromosome)
+        {
+            this.chromosome = chromosome;
+        }
     }
 }
