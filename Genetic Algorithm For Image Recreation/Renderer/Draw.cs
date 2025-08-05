@@ -34,8 +34,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                 };
 
                 Canvas.SetLeft(ellipse, gene.X);
-                Canvas.SetTop(ellipse, gene.Y);
-               // algorithmCanva.Background = new SolidColorBrush(gene.color);
+                algorithmCanva.Background = new SolidColorBrush(gene.backgroundColor);
                 algorithmCanva.Children.Add(ellipse);
             }
         }
