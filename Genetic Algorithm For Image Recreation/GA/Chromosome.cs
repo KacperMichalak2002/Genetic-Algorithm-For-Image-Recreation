@@ -1,38 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
+using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
+    
     internal class Chromosome
     {
-        private String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        public String value { get; set; }
-        private const int _maxLength = 6;
-        public Chromosome() { 
-            value = RandomString();
-        }
+        public List<Gene> genes {get; set;} = new List<Gene>();
 
-        public Chromosome(String value)
+        public Chromosome(int numberOfGenes, double maxWidth, double maxHeight)
         {
-            this.value = value;
-        }
-
-        private String RandomString()
-        {
-            
             Random random = new Random();
-            Char[] randomChars = new Char[_maxLength];
 
-            for(int i = 0; i < _maxLength; i++)
+            for(int i = 0; i < numberOfGenes; i++)
             {
-                randomChars[i] = chars[random.Next(chars.Length)];
+                genes.Add(new Gene
+                {
+                    X = random.NextDouble() * maxWidth,
+                    Y = random.NextDouble() * maxHeight,
+                    width = random.NextDouble() * maxWidth,
+                    height = random.NextDouble() * maxHeight,
+                    color = System.Windows.Media.Color.FromRgb((byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
+                    backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
+                });
             }
-
-            String finalString = new String(randomChars);
-            return finalString;
         }
+
     }
+
+ 
+}
+public class Gene
+{
+    public double X, Y;
+    public double width, height;
+    public System.Windows.Media.Color color, backgroundColor;
+
 }

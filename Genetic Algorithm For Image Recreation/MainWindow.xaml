@@ -29,8 +29,8 @@
             <Button Name="testButton" Content="Start" Width="auto" Height="auto" Padding="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="Button_Click" Margin="30"/>
             <Button Grid.Column="1" Name="loadImageButton" Content="Select Image" Width="auto" Height="auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="20" Margin="30"/>
         </Grid>
-        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="1">
-            <Canvas Grid.Column="1" Grid.Row="1" Name="resultCanva"/>
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="1" Name="canvaBorder">
+            <Canvas Grid.Column="1" Grid.Row="1" Name="resultCanva" Height="auto" Width="auto" ClipToBounds="True"/>
         </Border>
 
         <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1">

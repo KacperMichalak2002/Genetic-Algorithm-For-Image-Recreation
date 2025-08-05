@@ -1,4 +1,5 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
+using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using System.Windows;
 
 namespace Genetic_Algorithm_For_Image_Recreation
@@ -12,10 +13,10 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-          GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-          Chromosome chromosome = new Chromosome();
-          txtBlock1.Text = chromosome.value;
-          geneticAlgorithm.Start(txtBlock1);
+           Draw draw = new Draw(resultCanva, canvaBorder.ActualHeight, canvaBorder.ActualWidth);
+           draw.StartDrawing();
+
+
         }
     }
 }
