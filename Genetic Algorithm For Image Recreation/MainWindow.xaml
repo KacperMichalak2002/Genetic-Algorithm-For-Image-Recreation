@@ -10,6 +10,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -18,8 +20,9 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Name="txtBlock1"  Text="Click Button" FontSize="22" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0 " TextWrapping="Wrap"/>
 
-        <Grid Grid.Row="2" Name="buttonGrid">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Name="buttonGrid">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
@@ -27,13 +30,18 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Button Name="testButton" Content="Start" Width="auto" Height="auto" Padding="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="Button_Click" Margin="30"/>
-            <Button Grid.Column="1" Name="loadImageButton" Content="Select Image" Width="auto" Height="auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="20" Margin="30"/>
+            <Button Grid.Column="1" Name="loadImageButton" Content="Select Image" Width="auto" Height="auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="20" Margin="30" Click="loadImageButton_Click"/>
+            <StackPanel HorizontalAlignment="Left" Grid.Column="2" >
+                <RadioButton Name="rbEllipse">Ellipse</RadioButton>
+                <RadioButton Name="rbRectangle">Rectangle</RadioButton>
+                <RadioButton Name="rbTriangle">Triangle</RadioButton>
+            </StackPanel>
         </Grid>
-        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="1" Name="canvaBorder">
-            <Canvas Grid.Column="1" Grid.Row="1" Name="resultCanva" Height="auto" Width="auto" ClipToBounds="True"/>
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" Name="canvaBorder">
+            <Canvas Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Name="resultCanva" Height="auto" Width="auto" ClipToBounds="True"/>
         </Border>
 
-        <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1">
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">
             <Image Grid.Row="1" Name="srcImage" />
         </Border>
 

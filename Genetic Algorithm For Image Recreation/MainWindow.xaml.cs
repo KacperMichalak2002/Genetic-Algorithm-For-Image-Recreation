@@ -1,6 +1,8 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using Microsoft.Win32;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation
@@ -18,6 +20,28 @@ namespace Genetic_Algorithm_For_Image_Recreation
            draw.StartDrawing();
 
 
+        }
+
+        private void loadImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fileBrowser = new OpenFileDialog();
+            fileBrowser.Filter = "Image Files| *.jpg;*.png";
+
+            Boolean? result = fileBrowser.ShowDialog();
+
+            if (result.Equals(true))
+            {
+                BitmapImage image = new BitmapImage();
+
+                image.BeginInit();
+                image.UriSource = new Uri(fileBrowser.FileName);
+                image.EndInit();
+
+
+
+                srcImage.Source = image;
+
+            }
         }
     }
 }
