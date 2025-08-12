@@ -29,14 +29,18 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
             Boolean? result = fileBrowser.ShowDialog();
 
+
+
             if (result.Equals(true))
             {
                 BitmapImage image = new BitmapImage();
 
                 image.BeginInit();
                 image.UriSource = new Uri(fileBrowser.FileName);
+                //image.DecodePixelHeight = 50; Change to has and given amount of pixels in height
                 image.EndInit();
 
+                txtBlock1.Text = ImageHandler.Test(image);
 
 
                 srcImage.Source = image;
