@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Genetic_Algorithm_For_Image_Recreation.GA;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
 
             return $"R={red} G={green} B={blue} A={alpha}";
+        }
+
+        public static String RectangleScanning(BitmapImage bitmapImage, Chromosome individual)
+        {
+
+            
+
+
+
+
+            return "Nothing";
         }
 
 

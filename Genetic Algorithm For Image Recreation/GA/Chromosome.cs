@@ -1,8 +1,4 @@
-﻿using System.Drawing;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using System.Windows.Shapes;
+﻿using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
@@ -10,30 +6,32 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     internal class Chromosome
     {
         public List<Gene> genes {get; set;} = new List<Gene>();
+        public int numberOfGenes { get; set;}
 
-        public Chromosome(int numberOfGenes, double maxWidth, double maxHeight, Shape shape)
+        public Chromosome(int numberOfGenes, double maxWidth, double maxHeight, ShapeType shapeType)
         {
             Random random = new Random();
+            this.numberOfGenes = numberOfGenes;
 
             for(int i = 0; i < numberOfGenes; i++)
             {
                 Gene gene = new Gene
                 {
-                    shapeToDraw = shape,
+                    ShapeType = shapeType,
                     X = random.NextDouble() * maxWidth,
                     Y = random.NextDouble() * maxHeight,
                     color = System.Windows.Media.Color.FromRgb((byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
                     backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
                 };
 
-                switch (shape)
+                switch (shapeType)
                 {
-                    case Ellipse:
-                    case System.Windows.Shapes.Rectangle:
+                    case ShapeType.Ellipse:
+                    case ShapeType.Rectangle:
                         gene.width = random.NextDouble() * maxWidth;
                         gene.height = random.NextDouble() * maxHeight;
                         break;
-                    case Polygon:
+                    case ShapeType.Triangle:
                         System.Windows.Point point1 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);
                         System.Windows.Point point2 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);
                         System.Windows.Point point3 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);
@@ -55,6 +53,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
  
 }
 
+public enum ShapeType
+{
+    Ellipse,
+    Rectangle,
+    Triangle
+}
+
 public class Gene
 {
     public double X { get; set; }
@@ -63,7 +68,7 @@ public class Gene
     public double height { get; set; }
     public System.Windows.Media.Color color { get; set; }
     public System.Windows.Media.Color backgroundColor {get; set; }
-    public Shape shapeToDraw { get; set; }
+    public ShapeType ShapeType { get; set; }
     public PointCollection points { get; set; } = new PointCollection();
 
 }

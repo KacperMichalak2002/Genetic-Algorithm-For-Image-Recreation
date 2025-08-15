@@ -15,23 +15,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
     {
         public Canvas algorithmCanva;
         private double maxHeight, maxWidth;
-        private Shape shape;
+        private ShapeType shapeType;
 
-        public Draw(Canvas canvas, double maxHeight, double maxWidth, Shape shape)
+        public Draw(Canvas canvas, double maxHeight, double maxWidth, ShapeType shapeType)
         {
             algorithmCanva = canvas;
             this.maxHeight = maxHeight;
             this.maxWidth = maxWidth;
-            this.shape = shape;
+            this.shapeType = shapeType;
         }
 
         public void StartDrawing()
         {
-            Chromosome chromosome = new Chromosome(100, maxWidth, maxHeight, shape );
+            Chromosome chromosome = new Chromosome(100, maxWidth, maxHeight, shapeType);
             foreach(var gene in chromosome.genes)
             {
 
-                Shape newShape = GetShape(shape);
+                Shape newShape = GetShape(shapeType);
 
                 switch (newShape)
                 {
@@ -55,16 +55,18 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             }
         }
 
-        public Shape GetShape(Shape prototype) {
+        public Shape GetShape(ShapeType shapeType) {
 
-            if (prototype is Ellipse)
-                return new Ellipse();
 
-            if(prototype is Polygon)
-                return new Polygon();
-
-            if(prototype is Rectangle)
-                return new Rectangle();
+            switch (shapeType)
+            {
+                case ShapeType.Rectangle:
+                    return new Rectangle();
+                case ShapeType.Ellipse:
+                    return new Ellipse();
+                case ShapeType.Triangle:
+                    return new Polygon();
+            }
 
             throw new NotSupportedException("Not supported shape was given");
         

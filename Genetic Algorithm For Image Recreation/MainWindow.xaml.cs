@@ -16,7 +16,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-           Draw draw = new Draw(resultCanva, canvaBorder.ActualHeight, canvaBorder.ActualWidth, new Ellipse());
+           Draw draw = new Draw(resultCanva, canvaBorder.ActualHeight, canvaBorder.ActualWidth, ShapeType.Ellipse);
            draw.StartDrawing();
 
 
