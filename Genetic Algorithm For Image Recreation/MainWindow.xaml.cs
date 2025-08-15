@@ -18,14 +18,13 @@ namespace Genetic_Algorithm_For_Image_Recreation
         {
             Draw draw = new Draw(canvaBorder.ActualHeight, canvaBorder.ActualWidth);
            
-            Chromosome chromosome = new Chromosome(3, canvaBorder.ActualWidth, canvaBorder.ActualHeight, ShapeType.Triangle);
-            Chromosome chromosome2 = new Chromosome(3, canvaBorder.ActualWidth, canvaBorder.ActualHeight, ShapeType.Triangle);
+            Chromosome chromosome = new Chromosome(3, canvaBorder.ActualWidth, canvaBorder.ActualHeight, ShapeType.Rectangle);
+            Chromosome chromosome2 = new Chromosome(3, canvaBorder.ActualWidth, canvaBorder.ActualHeight, ShapeType.Rectangle);
 
             List<Chromosome> population = new List<Chromosome>();
             population.Add(chromosome);
             //population.Add(chromosome2);
             resultImage.Source = draw.RenderChromosome(population,txtBlock1);
-
             //txtBlock1.Text = ImageHandler.RectangleScanning(resultImage.Source, chromosome);
         }
 
@@ -44,7 +43,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 image.UriSource = new Uri(fileBrowser.FileName);
                 //image.DecodePixelHeight = 50; Change to has and given amount of pixels in height
                 image.EndInit();
-
+                ImageHandler.RectangleScanningSource(image);
                 //txtBlock1.Text = ImageHandler.Test(image);
 
 

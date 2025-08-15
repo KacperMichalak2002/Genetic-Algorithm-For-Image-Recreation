@@ -63,7 +63,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             bitmap.Render(drawingVisual);
 
 
-            textBlock.Text = ImageHandler.Test(bitmap);
+            //textBlock.Text = ImageHandler.GetPxielFromResult(bitmap);
 
             return bitmap;
         }
