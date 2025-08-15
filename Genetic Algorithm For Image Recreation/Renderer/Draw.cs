@@ -7,69 +7,56 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {
     internal class Draw
     {
-        public Canvas algorithmCanva;
         private double maxHeight, maxWidth;
-        private ShapeType shapeType;
 
-        public Draw(Canvas canvas, double maxHeight, double maxWidth, ShapeType shapeType)
+        public Draw(double maxHeight, double maxWidth)
         {
-            algorithmCanva = canvas;
             this.maxHeight = maxHeight;
             this.maxWidth = maxWidth;
-            this.shapeType = shapeType;
         }
 
-        public void StartDrawing()
+        public RenderTargetBitmap RenderChromosoe(Chromosome chromosome)
         {
-            Chromosome chromosome = new Chromosome(100, maxWidth, maxHeight, shapeType);
-            foreach(var gene in chromosome.genes)
+         
+            DrawingVisual drawingVisual = new DrawingVisual();
+
+            using(DrawingContext drawingContext = drawingVisual.RenderOpen())
             {
-
-                Shape newShape = GetShape(shapeType);
-
-                switch (newShape)
+                foreach (var gene in chromosome.genes)
                 {
-                    case Ellipse:
-                    case Rectangle:
-                        newShape.Width = gene.width;
-                        newShape.Height = gene.height;
-                        break;
-                    case Polygon polygon:
-                        polygon.Points = gene.points;
-                        break;
+                    Brush brush = new SolidColorBrush(gene.color);
 
+                    switch (gene.ShapeType)
+                    {
+                        case ShapeType.Rectangle:
+                            drawingContext.DrawRectangle(brush, null, new Rect(gene.X, gene.Y, gene.width, gene.height));
+                            break;
+                        case ShapeType.Ellipse:
+                            drawingContext.DrawEllipse(brush, null, new Point(gene.X, gene.Y), gene.width / 2, gene.height / 2);
+                            break;
+                        case ShapeType.Triangle:
+                            StreamGeometry triangle = new StreamGeometry();
+                            using (StreamGeometryContext context =  triangle.Open())
+                            {
+                                context.BeginFigure(gene.points[0],true,true);
+                                context.PolyLineTo(gene.points.Skip(1).ToList(), true, true);
+                            }
+                            drawingContext.DrawGeometry(brush, null, triangle);
+                            break;
+                    }
                 }
-
-                newShape.Fill = new SolidColorBrush(gene.color);
-
-                Canvas.SetLeft(newShape, gene.X);
-                Canvas.SetTop(newShape, gene.Y);
-                algorithmCanva.Background = new SolidColorBrush(gene.backgroundColor);
-                algorithmCanva.Children.Add(newShape);
-            }
-        }
-
-        public Shape GetShape(ShapeType shapeType) {
-
-
-            switch (shapeType)
-            {
-                case ShapeType.Rectangle:
-                    return new Rectangle();
-                case ShapeType.Ellipse:
-                    return new Ellipse();
-                case ShapeType.Triangle:
-                    return new Polygon();
             }
 
-            throw new NotSupportedException("Not supported shape was given");
-        
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)maxWidth, (int)maxHeight, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(drawingVisual);
+            return bitmap;
         }
     }
 }
