@@ -22,40 +22,49 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             this.maxWidth = maxWidth;
         }
 
-        public RenderTargetBitmap RenderChromosoe(Chromosome chromosome)
+        public RenderTargetBitmap RenderChromosome(List<Chromosome> population, TextBlock textBlock)
         {
          
             DrawingVisual drawingVisual = new DrawingVisual();
 
             using(DrawingContext drawingContext = drawingVisual.RenderOpen())
             {
-                foreach (var gene in chromosome.genes)
-                {
-                    Brush brush = new SolidColorBrush(gene.color);
 
-                    switch (gene.ShapeType)
+                foreach(Chromosome chromosome in population)
+                {
+                    foreach (var gene in chromosome.genes)
                     {
-                        case ShapeType.Rectangle:
-                            drawingContext.DrawRectangle(brush, null, new Rect(gene.X, gene.Y, gene.width, gene.height));
-                            break;
-                        case ShapeType.Ellipse:
-                            drawingContext.DrawEllipse(brush, null, new Point(gene.X, gene.Y), gene.width / 2, gene.height / 2);
-                            break;
-                        case ShapeType.Triangle:
-                            StreamGeometry triangle = new StreamGeometry();
-                            using (StreamGeometryContext context =  triangle.Open())
-                            {
-                                context.BeginFigure(gene.points[0],true,true);
-                                context.PolyLineTo(gene.points.Skip(1).ToList(), true, true);
-                            }
-                            drawingContext.DrawGeometry(brush, null, triangle);
-                            break;
+                        Brush brush = new SolidColorBrush(gene.color);
+
+                        switch (gene.ShapeType)
+                        {
+                            case ShapeType.Rectangle:
+                                drawingContext.DrawRectangle(brush, null, new Rect(gene.X, gene.Y, gene.width, gene.height));
+                                break;
+                            case ShapeType.Ellipse:
+                                drawingContext.DrawEllipse(brush, null, new Point(gene.X, gene.Y), gene.width / 2, gene.height / 2);
+                                break;
+                            case ShapeType.Triangle:
+                                StreamGeometry triangle = new StreamGeometry();
+                                using (StreamGeometryContext context = triangle.Open())
+                                {
+                                    context.BeginFigure(gene.points[0], true, true);
+                                    context.PolyLineTo(gene.points.Skip(1).ToList(), true, true);
+                                }
+                                drawingContext.DrawGeometry(brush, null, triangle);
+                                break;
+                        }
                     }
                 }
+                
             }
 
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)maxWidth, (int)maxHeight, 96, 96, PixelFormats.Pbgra32);
             bitmap.Render(drawingVisual);
+
+
+            textBlock.Text = ImageHandler.Test(bitmap);
+
             return bitmap;
         }
     }
