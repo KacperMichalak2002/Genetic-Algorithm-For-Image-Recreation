@@ -8,19 +8,20 @@
         Title="MainWindow" Height="500" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="63*"/>
+            <ColumnDefinition Width="187*"/>
+            <ColumnDefinition Width="250*"/>
+            <ColumnDefinition Width="250*"/>
+            <ColumnDefinition Width="250*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Name="txtBlock1"  Text="Click Button" FontSize="22" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0 " TextWrapping="Wrap"/>
+        <TextBlock Grid.Column="0" Name="txtBlock1"  Text="Click Button" FontSize="22" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0 " TextWrapping="Wrap" Grid.ColumnSpan="2"/>
 
-        <Grid Grid.Row="2" Grid.ColumnSpan="2" Name="buttonGrid">
+        <Grid Grid.Row="1" Grid.ColumnSpan="3" Name="buttonGrid" Margin="0,244,0,0" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -37,15 +38,17 @@
                 <RadioButton Name="rbTriangle">Triangle</RadioButton>
             </StackPanel>
         </Grid>
-        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" Name="canvaBorder">
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="3" Grid.ColumnSpan="2" Name="canvaBorder" Margin="0,29,0,20" Grid.RowSpan="2">
             <Image Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Name="resultImage" Height="auto" Width="auto" ClipToBounds="True"/>
-            
+
         </Border>
 
-        <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">
+        <Border BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="3" Margin="0,29,0,20" Grid.RowSpan="2">
             <Image Grid.Row="1" Name="srcImage" />
         </Border>
 
-        
+        <Canvas Grid.Row="1" Name="searchVisualSource"></Canvas>
+
+
     </Grid>
 </Window>

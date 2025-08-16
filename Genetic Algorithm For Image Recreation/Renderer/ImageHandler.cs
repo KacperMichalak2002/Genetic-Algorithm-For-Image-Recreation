@@ -74,7 +74,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
 
 
-        public static String GetPixelFromSourceTest(BitmapImage bitmapImage, double X, double Y, double width, double height)
+        public static String GetPixelFromSourceTest(FormatConvertedBitmap bitmapImage, int X, int Y, int width, int height)
         {
 
             int bitmapHeight = bitmapImage.PixelHeight;
@@ -82,15 +82,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             int bytesPerPixel = (bitmapImage.Format.BitsPerPixel + 7) / 8;
             int stride = bitmapWidth * bytesPerPixel;
 
-            byte[] pixelData = new byte[bitmapHeight * bitmapWidth * bytesPerPixel];
+            byte[] pixelData = new byte[bitmapHeight * stride];
 
             bitmapImage.CopyPixels(pixelData, stride, 0);
 
-            for(double i = X; i < X + width; i++)
+
+            if(X < 0 || Y < 0 || X + width > bitmapWidth || Y + height > bitmapHeight)
             {
-                for(double j = Y; j < Y + height; j++)
+                Debug.WriteLine("Cant calculate pixels value out of range");
+                return "Error";
+            }
+
+
+            for(int j = Y; j < Y + height; j++)
+            {
+                for (int i = X; i < X + width; i++)
                 {
-                    int pixelIndex = (int)(i * bytesPerPixel + j); 
+                    int pixelIndex = (j * stride + i * bytesPerPixel);
                     byte bluetmp = pixelData[pixelIndex];
                     byte greentmp = pixelData[pixelIndex + 1];
                     byte redtmp = pixelData[pixelIndex + 2];
@@ -101,7 +109,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                 }
             }
 
-
+             
            
 
 
@@ -117,13 +125,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             return $"R={red} G={green} B={blue} A={alpha}";
         }
-        public static String RectangleScanningSource(BitmapImage image)
+        public static String RectangleScanningSource(FormatConvertedBitmap image)
         {
 
-            double width = 2;
-            double height = 2;
-            double X = 0;
-            double Y = 0;
+            int width = 2;
+            int height = 1;
+            int X = 0;
+            int Y = 0;
 
             GetPixelFromSourceTest(image,X,Y,width,height);
 
