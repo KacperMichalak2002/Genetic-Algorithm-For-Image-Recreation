@@ -1,14 +1,7 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {
@@ -22,7 +15,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             this.maxWidth = maxWidth;
         }
 
-        public RenderTargetBitmap RenderChromosome(List<Chromosome> population, TextBlock textBlock)
+        public RenderTargetBitmap RenderChromosome(List<Chromosome> population)
         {
          
             DrawingVisual drawingVisual = new DrawingVisual();
@@ -61,9 +54,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)maxWidth, (int)maxHeight, 96, 96, PixelFormats.Pbgra32);
             bitmap.Render(drawingVisual);
-
-
-            //textBlock.Text = ImageHandler.GetPxielFromResult(bitmap);
 
             return bitmap;
         }

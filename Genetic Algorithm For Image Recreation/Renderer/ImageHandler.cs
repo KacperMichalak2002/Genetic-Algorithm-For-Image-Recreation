@@ -1,14 +1,5 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.GA;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
+﻿using System.Diagnostics;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {
@@ -109,33 +100,19 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                 }
             }
 
-             
-           
-
-
-
-            byte blue = pixelData[0];
-            byte green = pixelData[1];
-            byte red = pixelData[2];
-            byte alpha = pixelData[3];
-
-
-
-
-
-            return $"R={red} G={green} B={blue} A={alpha}";
+            return "Finished";
         }
         public static String RectangleScanningSource(FormatConvertedBitmap image)
         {
 
-            int width = 2;
-            int height = 1;
+            int width = 50;
+            int height = 50;
             int X = 0;
             int Y = 0;
 
             GetPixelFromSourceTest(image,X,Y,width,height);
 
-            
+         
 
             return "Nothing";
         }
