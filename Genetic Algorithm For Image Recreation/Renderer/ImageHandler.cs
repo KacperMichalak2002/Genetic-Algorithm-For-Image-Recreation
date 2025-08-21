@@ -65,13 +65,18 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
 
 
-        public static String GetPixelFromSourceTest(FormatConvertedBitmap bitmapImage, int X, int Y, int width, int height)
+        public static String GetPixelFromSourceTest(FormatConvertedBitmap bitmapImage, Gene gene)
         {
 
             int bitmapHeight = bitmapImage.PixelHeight;
             int bitmapWidth = bitmapImage.PixelWidth;
             int bytesPerPixel = (bitmapImage.Format.BitsPerPixel + 7) / 8;
             int stride = bitmapWidth * bytesPerPixel;
+
+            int X = (int)gene.X;
+            int Y = (int)gene.Y;
+            int width = (int)gene.width;
+            int height = (int)gene.height;
 
             byte[] pixelData = new byte[bitmapHeight * stride];
 
@@ -95,22 +100,25 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                     byte redtmp = pixelData[pixelIndex + 2];
                     byte alphatmp = pixelData[pixelIndex + 3];
 
-                    Debug.WriteLine($"R={redtmp} G={greentmp} B={bluetmp} A={alphatmp} posXY={i}{j} index={pixelIndex}");
+                    if(bluetmp < 255 || greentmp < 255 || redtmp < 255)
+                        Debug.WriteLine($"R={redtmp} G={greentmp} B={bluetmp} A={alphatmp} posXY={i}{j} index={pixelIndex}");
 
                 }
             }
+
+            Debug.WriteLine("FINISHED");
 
             return "Finished";
         }
         public static String RectangleScanningSource(FormatConvertedBitmap image)
         {
 
-            int width = 50;
-            int height = 50;
-            int X = 0;
-            int Y = 0;
+            //int width = 50;
+            //int height = 50;
+            //int X = 0;
+            //int Y = 0;
 
-            GetPixelFromSourceTest(image,X,Y,width,height);
+            //GetPixelFromSourceTest(image,X,Y,width,height);
 
          
 

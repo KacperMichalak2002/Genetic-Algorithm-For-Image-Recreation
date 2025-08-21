@@ -26,7 +26,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 return;
             }
 
-            GeneticAlgorithm ga = new GeneticAlgorithm(1, canvaBorder, ShapeType.Rectangle, resultImage, convertedImage, searchVisualSource);
+            GeneticAlgorithm ga = new GeneticAlgorithm(1, ShapeType.Rectangle, resultImage, convertedImage, searchVisualSource);
             ga.Start();
         }
 
@@ -55,7 +55,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 convertedImage.DestinationFormat = PixelFormats.Pbgra32;
                 convertedImage.EndInit();
 
-                ImageHandler.RectangleScanningSource(convertedImage);
+                //ImageHandler.RectangleScanningSource(convertedImage);
 
                 srcImage.Source = convertedImage;
 

@@ -8,9 +8,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public List<Gene> genes {get; set;} = new List<Gene>();
         public int numberOfGenes { get; set;}
 
+        private static Random random = new Random();
+
         public Chromosome(int numberOfGenes, double maxWidth, double maxHeight, ShapeType shapeType)
         {
-            Random random = new Random();
+            
             this.numberOfGenes = numberOfGenes;
 
             for(int i = 0; i < numberOfGenes; i++)
@@ -28,8 +30,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 {
                     case ShapeType.Ellipse:
                     case ShapeType.Rectangle:
-                        gene.width = random.NextDouble() * maxWidth;
-                        gene.height = random.NextDouble() * maxHeight;
+                        double maxPossibleWidth = maxWidth - gene.X;
+                        double maxPossibleHeight = maxHeight - gene.Y;
+                        gene.width = random.NextDouble() * maxPossibleWidth;
+                        gene.height = random.NextDouble() * maxPossibleHeight;
                         break;
                     case ShapeType.Triangle:
                         System.Windows.Point point1 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);

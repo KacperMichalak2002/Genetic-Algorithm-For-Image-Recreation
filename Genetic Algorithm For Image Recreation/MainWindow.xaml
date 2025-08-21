@@ -38,22 +38,26 @@
             </StackPanel>
         </Grid>
         <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" Name="canvaBorder">
-            <Image Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Name="resultImage" Height="auto" Width="auto" ClipToBounds="True"/>
+            <Image Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Name="resultImage" Height="auto" Width="auto" ClipToBounds="True" Stretch="None"/>
         </Border>
 
         <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid>
                 <Image
                     Name="srcImage" 
-                    Stretch="Uniform" 
+                    Stretch="None" 
                     Height="auto" 
                     Width="auto" />
 
-                <Canvas Name="searchVisualSource"
-                        Background="Transparent"
-                        ClipToBounds="True"
-                        Height="auto" 
-                        Width="auto"/>
+                <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=srcImage}" 
+Width="{Binding ActualWidth, ElementName=srcImage}" >
+                    <Canvas Name="searchVisualSource"
+        Background="Transparent"
+        ClipToBounds="True"
+        Height="{Binding ActualHeight, ElementName=srcImage}" 
+        Width="{Binding ActualWidth, ElementName=srcImage}" />
+                </Border>
+                
 
             </Grid>
         </Border>
