@@ -1,5 +1,6 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -34,12 +35,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 population.Add(new Chromosome(1, convertedBitmap.Width, convertedBitmap.Height, shapeType));
             }
 
-            resultImage.Source = draw.RenderChromosome(population);
 
+            RenderTargetBitmap result = draw.RenderChromosome(population);
 
+            resultImage.Source = result;
+
+           
 
             // For debug puropse
-            foreach(Chromosome chromosome in population)
+            foreach (Chromosome chromosome in population)
             {
                 foreach(Gene gene in chromosome.genes)
                 {
@@ -52,7 +56,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     Canvas.SetTop(rectangle, gene.Y);
 
                     searchVisualSource.Children.Add(rectangle);
-                    ImageHandler.GetPixelFromSourceTest(convertedBitmap, gene);
+                    //ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
+                    ImageHandler.GetPxielFromResultRectangle(result, gene);
+                    
                 }
             }
         }

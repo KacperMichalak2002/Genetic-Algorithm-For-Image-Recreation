@@ -27,45 +27,56 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             return $"R={red} G={green} B={blue} A={alpha}";
         }
 
-        public static String GetPxielFromResult(RenderTargetBitmap bitmapImage)
+        public static String GetPxielFromResultRectangle(RenderTargetBitmap bitmapImage, Gene gene)
         {
 
-            int height = bitmapImage.PixelHeight;
-            int width = bitmapImage.PixelWidth;
+            int bitmapHeight = bitmapImage.PixelHeight;
+            int bitmapWidth = bitmapImage.PixelWidth;
             int bytesPerPixel = (bitmapImage.Format.BitsPerPixel + 7) / 8;
-            int stride = width * bytesPerPixel;
+            int stride = bitmapWidth * bytesPerPixel;
 
-            byte[] pixelData = new byte[height * width * bytesPerPixel];
+            int X = (int)gene.X;
+            int Y = (int)gene.Y;
+            int width = (int)gene.width;
+            int height = (int)gene.height;
+
+            byte[] pixelData = new byte[bitmapHeight * stride];
 
             bitmapImage.CopyPixels(pixelData, stride, 0);
 
-            List<byte> pixels = new List<byte>();
 
-            for (int i = 0; i < pixelData.Length; i += bytesPerPixel)
+            if (X < 0 || Y < 0 || X + width > bitmapWidth || Y + height > bitmapHeight)
             {
-                byte alpha = pixelData[i + 3];
+                Debug.WriteLine("Cant calculate pixels value out of range");
+                return "Error";
+            }
 
-                if (alpha > 0)
+
+            for (int j = Y; j < Y + height; j++)
+            {
+                for (int i = X; i < X + width; i++)
                 {
-                    byte blue = pixelData[i];
-                    byte green = pixelData[i + 1];
-                    byte red = pixelData[i + 2];
+                    int pixelIndex = (j * stride + i * bytesPerPixel);
+                    byte bluetmp = pixelData[pixelIndex];
+                    byte greentmp = pixelData[pixelIndex + 1];
+                    byte redtmp = pixelData[pixelIndex + 2];
+                    byte alphatmp = pixelData[pixelIndex + 3];
 
-                    blue = (byte)(blue * 255 / alpha);
-                    green = (byte)(green * 255 / alpha);
-                    red = (byte)(red * 255 / alpha);
+                    if (bluetmp < 255 || greentmp < 255 || redtmp < 255)
+                        Debug.WriteLine($"R={redtmp} G={greentmp} B={bluetmp} A={alphatmp} posXY={i}{j} index={pixelIndex}");
 
-                    return $"R={red} G={green} B={blue} A={alpha}";
                 }
             }
 
-            return "Nothing";
+            Debug.WriteLine("FINISHED");
+
+            return "Finished";
 
         }
 
 
 
-        public static String GetPixelFromSourceTest(FormatConvertedBitmap bitmapImage, Gene gene)
+        public static String GetPixelFromSourceRectangle(FormatConvertedBitmap bitmapImage, Gene gene)
         {
 
             int bitmapHeight = bitmapImage.PixelHeight;
@@ -110,21 +121,5 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             return "Finished";
         }
-        public static String RectangleScanningSource(FormatConvertedBitmap image)
-        {
-
-            //int width = 50;
-            //int height = 50;
-            //int X = 0;
-            //int Y = 0;
-
-            //GetPixelFromSourceTest(image,X,Y,width,height);
-
-         
-
-            return "Nothing";
-        }
-
-
     }
 }
