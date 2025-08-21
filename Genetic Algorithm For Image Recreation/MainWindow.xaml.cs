@@ -12,6 +12,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
     public partial class MainWindow : Window
     {
         private FormatConvertedBitmap convertedImage;
+        private ShapeType shapeType;
 
         public MainWindow()
         {
@@ -26,7 +27,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 return;
             }
 
-            GeneticAlgorithm ga = new GeneticAlgorithm(1, ShapeType.Rectangle, resultImage, convertedImage, searchVisualSource);
+            GeneticAlgorithm ga = new GeneticAlgorithm(1, shapeType, resultImage, convertedImage, searchVisualSource);
             ga.Start();
         }
 
@@ -60,6 +61,21 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 srcImage.Source = convertedImage;
 
             }
+        }
+
+        private void rbEllipse_Checked(object sender, RoutedEventArgs e)
+        {
+            shapeType = ShapeType.Ellipse;
+        }
+
+        private void rbRectangle_Checked(object sender, RoutedEventArgs e)
+        {
+            shapeType = ShapeType.Rectangle;
+        }
+
+        private void rbTriangle_Checked(object sender, RoutedEventArgs e)
+        {
+            shapeType= ShapeType.Triangle;
         }
     }
 }
