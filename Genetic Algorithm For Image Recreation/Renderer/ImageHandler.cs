@@ -27,7 +27,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             return $"R={red} G={green} B={blue} A={alpha}";
         }
 
-        public static String GetPxielFromResultRectangle(RenderTargetBitmap bitmapImage, Gene gene)
+        public static PixelColor[] GetPxielFromResultRectangle(RenderTargetBitmap bitmapImage, Gene gene)
         {
 
             int bitmapHeight = bitmapImage.PixelHeight;
@@ -42,13 +42,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             byte[] pixelData = new byte[bitmapHeight * stride];
 
+            PixelColor[] pixelColors = new PixelColor[width * height];
+            int pixelColorIndex = 0;
+
             bitmapImage.CopyPixels(pixelData, stride, 0);
 
+            Debug.WriteLine(bitmapImage.Format);
 
             if (X < 0 || Y < 0 || X + width > bitmapWidth || Y + height > bitmapHeight)
             {
                 Debug.WriteLine("Cant calculate pixels value out of range");
-                return "Error";
+                return null;
             }
 
 
@@ -62,21 +66,20 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                     byte redtmp = pixelData[pixelIndex + 2];
                     byte alphatmp = pixelData[pixelIndex + 3];
 
-                    if (bluetmp < 255 || greentmp < 255 || redtmp < 255)
-                        Debug.WriteLine($"R={redtmp} G={greentmp} B={bluetmp} A={alphatmp} posXY={i}{j} index={pixelIndex}");
-
+                        pixelColors[pixelColorIndex] = new PixelColor(bluetmp, greentmp, redtmp, alphatmp);
+                        pixelColorIndex++;
+                        // Debug.WriteLine($"R={redtmp} G={greentmp} B={bluetmp} A={alphatmp} posXY={i}{j} index={pixelIndex}");
                 }
             }
 
             Debug.WriteLine("FINISHED");
 
-            return "Finished";
-
+            return pixelColors;
         }
 
 
 
-        public static String GetPixelFromSourceRectangle(FormatConvertedBitmap bitmapImage, Gene gene)
+        public static PixelColor[] GetPixelFromSourceRectangle(FormatConvertedBitmap bitmapImage, Gene gene)
         {
 
             int bitmapHeight = bitmapImage.PixelHeight;
@@ -89,7 +92,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             int width = (int)gene.width;
             int height = (int)gene.height;
 
+            int pixelColorIndex = 0;
+
             byte[] pixelData = new byte[bitmapHeight * stride];
+            Debug.WriteLine(bitmapImage.Format);
+            PixelColor[] pixelColors = new PixelColor[width * height];
 
             bitmapImage.CopyPixels(pixelData, stride, 0);
 
@@ -97,7 +104,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             if(X < 0 || Y < 0 || X + width > bitmapWidth || Y + height > bitmapHeight)
             {
                 Debug.WriteLine("Cant calculate pixels value out of range");
-                return "Error";
+                return null;
             }
 
 
@@ -111,15 +118,50 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                     byte redtmp = pixelData[pixelIndex + 2];
                     byte alphatmp = pixelData[pixelIndex + 3];
 
-                    if(bluetmp < 255 || greentmp < 255 || redtmp < 255)
-                        Debug.WriteLine($"R={redtmp} G={greentmp} B={bluetmp} A={alphatmp} posXY={i}{j} index={pixelIndex}");
+                    pixelColors[pixelColorIndex] = new PixelColor(bluetmp, greentmp, redtmp, alphatmp);
+                    pixelColorIndex++;
 
                 }
             }
 
             Debug.WriteLine("FINISHED");
 
-            return "Finished";
+            return pixelColors;
         }
+
+        public static void ComapringColorValue(PixelColor[] sourcePixels, PixelColor[] resultPixels )
+        {
+            if (sourcePixels.Length != resultPixels.Length)
+            {
+                return;
+            }
+
+            double differenceValue = 0;
+
+                
+        }
+    }
+
+    public class PixelColor
+    {
+        public byte B { get; set; }
+        public byte G { get; set; }
+        public byte R { get; set; }
+        public byte A { get; set; }
+
+        public PixelColor(byte B, byte G, byte R, byte A)
+        {
+            this.B = B;
+            this.G = G;
+            this.R = R;
+            this.A = A;
+        }
+
+        public override string ToString()
+        {
+            return $"({R},{G},{B}) A{A}";
+        }
+       
+
     }
 }
