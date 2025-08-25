@@ -38,7 +38,16 @@
             </StackPanel>
         </Grid>
         <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" Name="canvaBorder">
-            <Image Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Name="resultImage" Height="auto" Width="auto" ClipToBounds="True" Stretch="None"/>
+            <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=resultImage}" Width="{Binding ActualWidth, ElementName=resultImage}">
+                <Image Grid.Column="2"
+                       Grid.ColumnSpan="3"
+                       Grid.Row="1" 
+                       Name="resultImage"
+                       Height="auto" 
+                       Width="auto"
+                       Stretch="None"/>
+            </Border>
+            
         </Border>
 
         <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">

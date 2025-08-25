@@ -40,22 +40,48 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             resultImage.Source = result;
 
-           
 
+            Shape debugShape = null;
             // For debug puropse
             foreach (Chromosome chromosome in population)
             {
                 foreach(Gene gene in chromosome.genes)
                 {
-                    Rectangle rectangle = new Rectangle();
-                    rectangle.Height = gene.height;
-                    rectangle.Width = gene.width;
-                    rectangle.Stroke = System.Windows.Media.Brushes.Black;
+                    
+                    switch (shapeType)
+                    {
+                        case ShapeType.Rectangle:
+                            debugShape = new Rectangle
+                            {
+                                Height = gene.height,
+                                Width = gene.width,
+                                Stroke = Brushes.Black
+                            };
+                            Canvas.SetLeft(debugShape, gene.X);
+                            Canvas.SetTop(debugShape, gene.Y);
+                            break;
+                        case ShapeType.Ellipse:
+                            debugShape = new Ellipse
+                            {
+                                Width = gene.width,
+                                Height = gene.height,
+                                Stroke = Brushes.Black
+                            };
+                            Canvas.SetLeft(debugShape, gene.X);
+                            Canvas.SetTop(debugShape, gene.Y);
+                            break;
+                        case ShapeType.Triangle:
+                            Polygon pol = new Polygon
+                            {
+                                Points = new PointCollection(gene.points),
+                                Stroke = Brushes.Black
+                            };
 
-                    Canvas.SetLeft(rectangle, gene.X);
-                    Canvas.SetTop(rectangle, gene.Y);
+                            debugShape = pol;
+                            break;
 
-                    searchVisualSource.Children.Add(rectangle);
+                    }
+                    searchVisualSource.Children.Add(debugShape);
                     //ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
                     ImageHandler.GetPxielFromResultRectangle(result, gene);
                     

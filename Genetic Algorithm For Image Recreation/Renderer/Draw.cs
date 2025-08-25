@@ -35,7 +35,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                                 drawingContext.DrawRectangle(brush, null, new Rect(gene.X, gene.Y, gene.width, gene.height));
                                 break;
                             case ShapeType.Ellipse:
-                                drawingContext.DrawEllipse(brush, null, new Point(gene.X, gene.Y), gene.width / 2, gene.height / 2);
+                                drawingContext.DrawEllipse(brush, null, new Point(gene.X + gene.width / 2, gene.Y + gene.height / 2), gene.width / 2, gene.height / 2);
                                 break;
                             case ShapeType.Triangle:
                                 StreamGeometry triangle = new StreamGeometry();
