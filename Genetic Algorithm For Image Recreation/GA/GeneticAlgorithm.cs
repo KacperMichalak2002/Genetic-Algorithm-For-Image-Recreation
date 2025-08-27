@@ -82,8 +82,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                     }
                     searchVisualSource.Children.Add(debugShape);
-                    //ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
-                    ImageHandler.GetPxielFromResultRectangle(result, gene);
+                    PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
+                    PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(result, gene);
+                    
+                    ImageHandler.ComapringColorValue(sourcePixels, resultPixels);
                     
                 }
             }

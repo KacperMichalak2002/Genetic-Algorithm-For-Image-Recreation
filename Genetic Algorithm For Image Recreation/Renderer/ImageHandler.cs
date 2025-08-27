@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using ColorMine.ColorSpaces;
+using ColorMine.ColorSpaces.Comparisons;
+using System.Diagnostics;
 using System.Windows.Media.Imaging;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Renderer
@@ -47,7 +49,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             bitmapImage.CopyPixels(pixelData, stride, 0);
 
-            Debug.WriteLine(bitmapImage.Format);
 
             if (X < 0 || Y < 0 || X + width > bitmapWidth || Y + height > bitmapHeight)
             {
@@ -95,7 +96,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             int pixelColorIndex = 0;
 
             byte[] pixelData = new byte[bitmapHeight * stride];
-            Debug.WriteLine(bitmapImage.Format);
+
             PixelColor[] pixelColors = new PixelColor[width * height];
 
             bitmapImage.CopyPixels(pixelData, stride, 0);
@@ -129,7 +130,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             return pixelColors;
         }
 
-        public static void ComapringColorValue(PixelColor[] sourcePixels, PixelColor[] resultPixels )
+        public static void ComapringColorValue(PixelColor[] sourcePixels, PixelColor[] resultPixels)
         {
             if (sourcePixels.Length != resultPixels.Length)
             {
@@ -138,7 +139,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             double differenceValue = 0;
 
+            Rgb firstSourcePixel = convertToRgb(sourcePixels[0]);
+            Rgb firstResultPixel = convertToRgb(resultPixels[0]);
+
+            
+            Cie94Comparison cie94Comparison = new Cie94Comparison();
+            Debug.WriteLine(cie94Comparison.Compare(firstSourcePixel, firstResultPixel));
                 
+        }
+
+        private static Rgb convertToRgb(PixelColor pixel)
+        {
+            return new Rgb
+            {
+                R = pixel.R,
+                G = pixel.G,
+                B = pixel.B,
+            };
         }
     }
 
