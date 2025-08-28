@@ -139,13 +139,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             double differenceValue = 0;
 
-            Rgb firstSourcePixel = convertToRgb(sourcePixels[0]);
-            Rgb firstResultPixel = convertToRgb(resultPixels[0]);
+            Rgb sourcePixel;
+            Rgb resultPixel;
 
-            
             Cie94Comparison cie94Comparison = new Cie94Comparison();
-            Debug.WriteLine(cie94Comparison.Compare(firstSourcePixel, firstResultPixel));
-                
+
+            for (int i = 0; i < resultPixels.Length; i++)
+            {
+                sourcePixel = convertToRgb(sourcePixels[i]);
+                resultPixel = convertToRgb(resultPixels[i]);
+                double diff = cie94Comparison.Compare(sourcePixel, resultPixel);
+                differenceValue += diff;
+
+            }
+
+            Debug.WriteLine($"diff:{differenceValue / resultPixels.Length}");
+
+
         }
 
         private static Rgb convertToRgb(PixelColor pixel)

@@ -43,32 +43,34 @@
                        Grid.ColumnSpan="3"
                        Grid.Row="1" 
                        Name="resultImage"
-                       Height="auto" 
-                       Width="auto"
+                       Height="{Binding ActualHeight, ElementName=srcImage}"
+                       Width="{Binding ActualWidth, ElementName=srcImage}"
                        Stretch="None"/>
             </Border>
             
         </Border>
 
         <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">
-            <Grid>
+            <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=srcImage}" 
+Width="{Binding ActualWidth, ElementName=srcImage}" >
+                <Grid>
                 <Image
                     Name="srcImage" 
                     Stretch="None" 
                     Height="auto" 
                     Width="auto" />
 
-                <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=srcImage}" 
-Width="{Binding ActualWidth, ElementName=srcImage}" >
+                
                     <Canvas Name="searchVisualSource"
         Background="Transparent"
         ClipToBounds="True"
         Height="{Binding ActualHeight, ElementName=srcImage}" 
         Width="{Binding ActualWidth, ElementName=srcImage}" />
-                </Border>
+                
                 
 
             </Grid>
+            </Border>
         </Border>
 
 

@@ -1,4 +1,6 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;

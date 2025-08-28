@@ -10,6 +10,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static Random random = new Random();
 
+
+        public Chromosome()
+        {
+
+        }
+
         public Chromosome(int numberOfGenes, double maxWidth, double maxHeight, ShapeType shapeType)
         {
             
@@ -22,7 +28,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     ShapeType = shapeType,
                     X = random.NextDouble() * maxWidth,
                     Y = random.NextDouble() * maxHeight,
-                    color = System.Windows.Media.Color.FromRgb((byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
+                    color = System.Windows.Media.Color.FromRgb(255,0,0),
+                    //color = System.Windows.Media.Color.FromRgb((byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
                     backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
                 };
 
