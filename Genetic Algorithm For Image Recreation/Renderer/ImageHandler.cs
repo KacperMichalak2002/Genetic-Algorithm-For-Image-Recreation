@@ -7,28 +7,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {
     internal class ImageHandler
     {
-
-        public static String GetPixelFromSource(BitmapImage bitmapImage)
-        {
-
-            int height = bitmapImage.PixelHeight;
-            int width = bitmapImage.PixelWidth;
-            int bytesPerPixel = (bitmapImage.Format.BitsPerPixel + 7) / 8;
-            int stride = width * bytesPerPixel;
-
-            byte[] pixelData = new byte[height * width * bytesPerPixel];
-
-            bitmapImage.CopyPixels(pixelData, stride, 0);
-
-            byte blue = pixelData[0];
-            byte green = pixelData[1];
-            byte red = pixelData[2];
-            byte alpha = pixelData[3];
-
-
-            return $"R={red} G={green} B={blue} A={alpha}";
-        }
-
         public static PixelColor[] GetPxielFromResultRectangle(RenderTargetBitmap bitmapImage, Gene gene)
         {
 
@@ -72,9 +50,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                         // Debug.WriteLine($"R={redtmp} G={greentmp} B={bluetmp} A={alphatmp} posXY={i}{j} index={pixelIndex}");
                 }
             }
-
-            Debug.WriteLine("FINISHED");
-
             return pixelColors;
         }
 
@@ -124,41 +99,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
                 }
             }
-
-            Debug.WriteLine("FINISHED");
-
             return pixelColors;
         }
 
-        public static void ComapringColorValue(PixelColor[] sourcePixels, PixelColor[] resultPixels)
-        {
-            if (sourcePixels.Length != resultPixels.Length)
-            {
-                return;
-            }
-
-            double differenceValue = 0;
-
-            Rgb sourcePixel;
-            Rgb resultPixel;
-
-            Cie94Comparison cie94Comparison = new Cie94Comparison();
-
-            for (int i = 0; i < resultPixels.Length; i++)
-            {
-                sourcePixel = convertToRgb(sourcePixels[i]);
-                resultPixel = convertToRgb(resultPixels[i]);
-                double diff = cie94Comparison.Compare(sourcePixel, resultPixel);
-                differenceValue += diff;
-
-            }
-
-            Debug.WriteLine($"diff:{differenceValue / resultPixels.Length}");
-
-
-        }
-
-        private static Rgb convertToRgb(PixelColor pixel)
+        public static Rgb convertToRgb(PixelColor pixel)
         {
             return new Rgb
             {

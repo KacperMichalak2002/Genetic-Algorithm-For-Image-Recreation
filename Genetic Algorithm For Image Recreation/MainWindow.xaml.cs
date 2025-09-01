@@ -27,7 +27,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 return;
             }
 
-            GeneticAlgorithm ga = new GeneticAlgorithm(1, shapeType, resultImage, convertedImage, searchVisualSource);
+            GeneticAlgorithm ga = new GeneticAlgorithm(2, shapeType, resultImage, convertedImage, searchVisualSource);
             ga.Start();
         }
 

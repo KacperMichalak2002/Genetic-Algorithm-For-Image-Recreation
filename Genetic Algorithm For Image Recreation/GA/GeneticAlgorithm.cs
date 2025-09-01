@@ -16,6 +16,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public FormatConvertedBitmap convertedBitmap { get; set;}
         public Canvas searchVisualSource { get; set;}
 
+        private List<Individual> population;
+
+        private RenderTargetBitmap result;
+
         public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, Image resultImage, FormatConvertedBitmap convertedBitmap, Canvas searchVisualSource)
         {
             this.sizeOfPopulation = sizeOfPopulation;
@@ -25,31 +29,38 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             this.searchVisualSource = searchVisualSource;
         }
 
-        public void Start()
+        public void Initialize()
         {
-            List<Chromosome> population = new List<Chromosome>();
+            population = new List<Individual>();
             Draw draw = new Draw(convertedBitmap.Height, convertedBitmap.Width);
 
             searchVisualSource.Children.Clear();
 
             for (int i = 0; i < sizeOfPopulation; i++)
             {
-                population.Add(new Chromosome(1, convertedBitmap.Width, convertedBitmap.Height, shapeType));
+                population.Add(new Individual
+                    (
+                        new Chromosome(1, convertedBitmap.Width, convertedBitmap.Height, shapeType)
+                    ));
             }
 
 
-            RenderTargetBitmap result = draw.RenderChromosome(population);
-
+            result = draw.RenderChromosome(population);
             resultImage.Source = result;
+        }
 
+        public void Start()
+        {
 
-            Shape debugShape = null;
-            // For debug puropse
-            foreach (Chromosome chromosome in population)
+            Initialize();
+
+            Shape? debugShape = null;
+           
+            foreach (Individual individual in population)
             {
-                foreach(Gene gene in chromosome.genes)
+                foreach(Gene gene in individual.Chromosome.genes)
                 {
-                    
+                    // For debug puropse
                     switch (shapeType)
                     {
                         case ShapeType.Rectangle:
@@ -84,13 +95,21 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                     }
                     searchVisualSource.Children.Add(debugShape);
+
+
                     PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
                     PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(result, gene);
                     
-                    ImageHandler.ComapringColorValue(sourcePixels, resultPixels);
                     
+                    individual.fitness = Fitness.CalculateFitness(sourcePixels, resultPixels);
+
                 }
             }
+
+            Individual better =  Selection.TournamentSelection(population);
+
+            Debug.WriteLine(better.fitness);
+
         }
     }
 }
