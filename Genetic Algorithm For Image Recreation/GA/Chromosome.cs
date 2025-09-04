@@ -16,6 +16,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         }
 
+        public Chromosome(List<Gene> genes, int numberOfGenes)
+        {
+            this.genes = genes;
+            this.numberOfGenes = numberOfGenes;
+        }
+
         public Chromosome(int numberOfGenes, double maxWidth, double maxHeight, ShapeType shapeType)
         {
             

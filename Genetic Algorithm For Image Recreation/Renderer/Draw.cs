@@ -15,7 +15,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             this.maxWidth = maxWidth;
         }
 
-        public RenderTargetBitmap RenderChromosome(List<Individual> population)
+        public RenderTargetBitmap RenderChromosome(Individual individual)
         {
          
             DrawingVisual drawingVisual = new DrawingVisual();
@@ -23,8 +23,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             using(DrawingContext drawingContext = drawingVisual.RenderOpen())
             {
 
-                foreach(Individual individual in population)
-                {
                     foreach (var gene in individual.Chromosome.genes)
                     {
                         Brush brush = new SolidColorBrush(gene.color);
@@ -49,8 +47,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                         }
                     }
                 }
-                
-            }
 
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)maxWidth, (int)maxHeight, 96, 96, PixelFormats.Pbgra32);
             bitmap.Render(drawingVisual);

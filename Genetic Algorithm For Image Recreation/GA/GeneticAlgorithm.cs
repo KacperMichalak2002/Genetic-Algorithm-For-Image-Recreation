@@ -12,19 +12,21 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
         public int sizeOfPopulation{get; set;}
         public ShapeType shapeType { get; set; }
-        public Image resultImage { get; set;}
+        public List<Image> resultImages { get; set;}
         public FormatConvertedBitmap convertedBitmap { get; set;}
         public Canvas searchVisualSource { get; set;}
 
         private List<Individual> population;
 
-        private RenderTargetBitmap result;
+        private RenderTargetBitmap result1;
+        private RenderTargetBitmap result2;
+        private RenderTargetBitmap result3;
 
-        public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, Image resultImage, FormatConvertedBitmap convertedBitmap, Canvas searchVisualSource)
+        public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, List<Image> resultImages, FormatConvertedBitmap convertedBitmap, Canvas searchVisualSource)
         {
             this.sizeOfPopulation = sizeOfPopulation;
             this.shapeType = shapeType;
-            this.resultImage = resultImage;
+            this.resultImages = resultImages;
             this.convertedBitmap = convertedBitmap;
             this.searchVisualSource = searchVisualSource;
         }
@@ -45,14 +47,27 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             }
 
 
-            result = draw.RenderChromosome(population);
-            resultImage.Source = result;
+            result1 = draw.RenderChromosome(population[0]);
+            result2 = draw.RenderChromosome(population[1]);
+
+
+            result3 = draw.RenderChromosome(Crossover.BlendCrossover(population[0],population[1])); // new child here after crossover for debugging
+
+            resultImages[0].Source = result1; // should show best result depending on fitness score
+            resultImages[1].Source = result2;
+            resultImages[2].Source = result3;
         }
 
         public void Start()
         {
 
             Initialize();
+
+            int i = 0;
+            List<RenderTargetBitmap> renderTargetBitmaps = new List<RenderTargetBitmap>
+            {
+                result1 , result2 , result3
+            };
 
             Shape? debugShape = null;
            
@@ -98,9 +113,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
 
                     PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
-                    PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(result, gene);
-                    
-                    
+                    PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(renderTargetBitmaps[i], gene);
+
+                    i++;
                     individual.fitness = Fitness.CalculateFitness(sourcePixels, resultPixels);
 
                 }
