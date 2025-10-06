@@ -50,42 +50,31 @@
 
 
             <Border BorderBrush="Black" BorderThickness="2" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" Name="canvaBorder">
-                <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=resultImage}" Width="{Binding ActualWidth, ElementName=resultImage}">
-                    <Image Grid.Column="1"
-                Grid.ColumnSpan="1"
-                Grid.Row="1" 
+                <Image
                 Name="resultImage"
                 Height="{Binding ActualHeight, ElementName=srcImage}"
                 Width="{Binding ActualWidth, ElementName=srcImage}"
                 Stretch="None"/>
-                </Border>
 
             </Border>
 
 
-            <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder2">
-                <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=resultImage}" Width="{Binding ActualWidth, ElementName=resultImage}">
-                    <Image Grid.Column="1"
-                Grid.ColumnSpan="1"
-                Grid.Row="1" 
+            <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder2">
+                <Image 
                 Name="resultImage2"
                 Height="{Binding ActualHeight, ElementName=srcImage}"
                 Width="{Binding ActualWidth, ElementName=srcImage}"
                 Stretch="None"/>
-                </Border>
+               
 
             </Border>
 
             <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder3">
-                <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=resultImage}" Width="{Binding ActualWidth, ElementName=resultImage}">
-                    <Image Grid.Column="1"
-                Grid.ColumnSpan="1"
-                Grid.Row="1" 
+                <Image
                 Name="resultImage3"
                 Height="{Binding ActualHeight, ElementName=srcImage}"
                 Width="{Binding ActualWidth, ElementName=srcImage}"
                 Stretch="None"/>
-                </Border>
 
             </Border>
 
@@ -95,8 +84,7 @@
        
 
         <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">
-            <Border BorderBrush="Red" BorderThickness="2" Height="{Binding ActualHeight, ElementName=srcImage}" 
-Width="{Binding ActualWidth, ElementName=srcImage}" >
+
                 <Grid>
                 <Image
                     Name="srcImage" 
@@ -114,7 +102,7 @@ Width="{Binding ActualWidth, ElementName=srcImage}" >
                 
 
             </Grid>
-            </Border>
+
         </Border>
 
 
