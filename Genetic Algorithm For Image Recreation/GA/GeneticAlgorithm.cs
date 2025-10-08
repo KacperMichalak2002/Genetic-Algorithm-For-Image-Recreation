@@ -18,6 +18,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private List<Individual> population;
 
+        Draw draw;
+
+
+        List<RenderTargetBitmap> renderTargetBitmaps = new List<RenderTargetBitmap>();
         private RenderTargetBitmap result1;
         private RenderTargetBitmap result2;
         private RenderTargetBitmap result3;
@@ -34,7 +38,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public void Initialize()
         {
             population = new List<Individual>();
-            Draw draw = new Draw(convertedBitmap.Height, convertedBitmap.Width);
+
+            draw = new Draw(convertedBitmap.Height, convertedBitmap.Width);
 
             searchVisualSource.Children.Clear();
 
@@ -42,20 +47,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(1, convertedBitmap.Width, convertedBitmap.Height, shapeType)
+                        new Chromosome(2, convertedBitmap.Width, convertedBitmap.Height, shapeType)
                     ));
+
+                renderTargetBitmaps.Add(draw.RenderChromosome(population[i]));
             }
-
-
-            result1 = draw.RenderChromosome(population[0]);
-            result2 = draw.RenderChromosome(population[1]);
-
-
-            result3 = draw.RenderChromosome(Crossover.BlendCrossover(population[0],population[1])); // new child here after crossover for debugging
-
-            resultImages[0].Source = result1; // should show best result depending on fitness score
-            resultImages[1].Source = result2;
-            resultImages[2].Source = result3;
         }
 
         public void Start()
@@ -64,16 +60,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
             int i = 0;
-            List<RenderTargetBitmap> renderTargetBitmaps = new List<RenderTargetBitmap>
-            {
-                result1 , result2 , result3
-            };
 
             Shape? debugShape = null;
-           
+
+            
             foreach (Individual individual in population)
             {
-                foreach(Gene gene in individual.Chromosome.genes)
+                double individualFitness = 0;
+                foreach (Gene gene in individual.Chromosome.genes)
                 {
                     // For debug puropse
                     switch (shapeType)
@@ -115,15 +109,29 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
                     PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(renderTargetBitmaps[i], gene);
 
-                    i++;
-                    individual.fitness = Fitness.CalculateFitness(sourcePixels, resultPixels);
+
+                    individualFitness  += Fitness.CalculateFitness(sourcePixels, resultPixels);
 
                 }
+                individual.fitness = individualFitness / individual.Chromosome.genes.Count;
+                i++;
             }
 
-            Individual better =  Selection.TournamentSelection(population);
+            Individual parent1 = Selection.TournamentSelection(population);
+            Individual parent2 = Selection.TournamentSelection(population);
 
-            Debug.WriteLine(better.fitness);
+
+            Individual child = Crossover.BlendCrossover(parent1, parent2);
+
+            child.Chromosome.Mutate();
+
+            result3 = draw.RenderChromosome(child);
+
+            resultImages[0].Source = draw.RenderChromosome(parent1);
+            resultImages[1].Source = draw.RenderChromosome(parent2);
+            resultImages[2].Source = result3;
+
+            
 
         }
     }

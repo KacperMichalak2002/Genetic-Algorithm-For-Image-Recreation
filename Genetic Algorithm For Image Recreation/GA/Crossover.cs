@@ -11,6 +11,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     internal class Crossover
     {
 
+        // Mutation after selection and crossover
         public static Individual BlendCrossover(Individual parent1, Individual parent2)
         {
 
@@ -53,7 +54,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             }
 
-            Chromosome childsChromosome = new Chromosome(childsGenes, childsGenes.Count);
+            Chromosome childsChromosome = new Chromosome(childsGenes, childsGenes.Count, parent1.Chromosome.maxWidth, parent1.Chromosome.maxHeight, parent1.Chromosome.shapeType);
             Individual child = new Individual(childsChromosome);
 
             

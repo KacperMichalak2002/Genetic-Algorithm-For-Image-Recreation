@@ -27,6 +27,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 return;
             }
 
+
+            // List of images you want to be drawn
             List<Image> resultImages = new List<Image>
             {
                 resultImage,
@@ -34,7 +36,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 resultImage3
             };
 
-            GeneticAlgorithm ga = new GeneticAlgorithm(2, shapeType, resultImages, convertedImage, searchVisualSource);
+            GeneticAlgorithm ga = new GeneticAlgorithm(12, shapeType, resultImages, convertedImage, searchVisualSource);
             ga.Start();
         }
 
