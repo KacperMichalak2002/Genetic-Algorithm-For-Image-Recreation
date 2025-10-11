@@ -59,80 +59,66 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             Initialize();
 
-            int i = 0;
-
-            Shape? debugShape = null;
+           
+            int numberOfIterations = 20;
 
             
-            foreach (Individual individual in population)
-            {
-                double individualFitness = 0;
-                foreach (Gene gene in individual.Chromosome.genes)
-                {
-                    // For debug puropse
-                    switch (shapeType)
-                    {
-                        case ShapeType.Rectangle:
-                            debugShape = new Rectangle
-                            {
-                                Height = gene.height,
-                                Width = gene.width,
-                                Stroke = Brushes.Black
-                            };
-                            Canvas.SetLeft(debugShape, gene.X);
-                            Canvas.SetTop(debugShape, gene.Y);
-                            break;
-                        case ShapeType.Ellipse:
-                            debugShape = new Ellipse
-                            {
-                                Width = gene.width,
-                                Height = gene.height,
-                                Stroke = Brushes.Black
-                            };
-                            Canvas.SetLeft(debugShape, gene.X);
-                            Canvas.SetTop(debugShape, gene.Y);
-                            break;
-                        case ShapeType.Triangle:
-                            Polygon pol = new Polygon
-                            {
-                                Points = new PointCollection(gene.points),
-                                Stroke = Brushes.Black
-                            };
 
-                            debugShape = pol;
-                            break;
+            for(int genI = 0; genI < numberOfIterations; genI++)
+            {
+                int i = 0;
+                foreach (Individual individual in population)
+                {
+                    double individualFitness = 0;
+                    foreach (Gene gene in individual.Chromosome.genes)
+                    {
+
+                        PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
+                        PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(renderTargetBitmaps[i], gene);
+
+
+                        individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
+                        if(sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
+                        {
+                            Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
+                        }
 
                     }
-                    searchVisualSource.Children.Add(debugShape);
-
-
-                    PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
-                    PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(renderTargetBitmaps[i], gene);
-
-
-                    individualFitness  += Fitness.CalculateFitness(sourcePixels, resultPixels);
-
+                    individual.fitness = individualFitness / individual.Chromosome.genes.Count;
+                    i++;
                 }
-                individual.fitness = individualFitness / individual.Chromosome.genes.Count;
-                i++;
+                
+
+                // Sorting by fitness
+                population.Sort(new FitnessComparer());
+
+                // Ellitism
+
+
+                // Some % of the population for crossover
+
+                Individual parent1 = Selection.TournamentSelection(population);
+                Individual parent2 = Selection.TournamentSelection(population);
+
+
+                Individual child = Crossover.BlendCrossover(parent1, parent2);
+
+                child.Chromosome.Mutate();
+
+                result3 = draw.RenderChromosome(child);
+
+                resultImages[0].Source = draw.RenderChromosome(parent1);
+                resultImages[1].Source = draw.RenderChromosome(parent2);
+                resultImages[2].Source = result3;
             }
+        }
 
-            Individual parent1 = Selection.TournamentSelection(population);
-            Individual parent2 = Selection.TournamentSelection(population);
-
-
-            Individual child = Crossover.BlendCrossover(parent1, parent2);
-
-            child.Chromosome.Mutate();
-
-            result3 = draw.RenderChromosome(child);
-
-            resultImages[0].Source = draw.RenderChromosome(parent1);
-            resultImages[1].Source = draw.RenderChromosome(parent2);
-            resultImages[2].Source = result3;
-
-            
-
+        private class FitnessComparer : IComparer<Individual>
+        {
+            public int Compare(Individual? ind1, Individual? ind2)
+            {
+                return ind1.fitness.CompareTo(ind2?.fitness);
+            }
         }
     }
 }
