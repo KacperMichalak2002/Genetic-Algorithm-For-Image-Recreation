@@ -17,6 +17,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public Canvas searchVisualSource { get; set;}
 
         private List<Individual> population;
+        private static Random random = new Random();
 
         Draw draw;
 
@@ -45,7 +46,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(3, convertedBitmap.Width, convertedBitmap.Height, shapeType)
+                        new Chromosome(4, convertedBitmap.Width, convertedBitmap.Height, shapeType)
                     ));
             }
         }
@@ -56,7 +57,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
            
-            int numberOfIterations = 200;
+            int numberOfIterations = 20;
             int generation = 0;
 
             
@@ -95,6 +96,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     Individual parent1 = Selection.TournamentSelection(population);
                     Individual parent2 = Selection.TournamentSelection(population);
                     Individual child = Crossover.BlendCrossover(parent1, parent2);
+
+                    if(random.NextDouble() < 0.2) // 20% for mutation
+                    {
+                        Mutation.Mutate(child, 0.1);
+                    }
 
                     newGeneration.Add(child);
                 }
