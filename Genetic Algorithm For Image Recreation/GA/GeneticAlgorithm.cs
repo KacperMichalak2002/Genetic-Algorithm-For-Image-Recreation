@@ -20,8 +20,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         Draw draw;
 
-
-        List<RenderTargetBitmap> renderTargetBitmaps = new List<RenderTargetBitmap>();
         private RenderTargetBitmap result1;
         private RenderTargetBitmap result2;
         private RenderTargetBitmap result3;
@@ -47,10 +45,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(2, convertedBitmap.Width, convertedBitmap.Height, shapeType)
+                        new Chromosome(3, convertedBitmap.Width, convertedBitmap.Height, shapeType)
                     ));
-
-                renderTargetBitmaps.Add(draw.RenderChromosome(population[i]));
             }
         }
 
@@ -60,56 +56,91 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
            
-            int numberOfIterations = 20;
+            int numberOfIterations = 200;
+            int generation = 0;
 
             
 
             for(int genI = 0; genI < numberOfIterations; genI++)
             {
-                int i = 0;
-                foreach (Individual individual in population)
-                {
-                    double individualFitness = 0;
-                    foreach (Gene gene in individual.Chromosome.genes)
-                    {
 
-                        PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
-                        PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(renderTargetBitmaps[i], gene);
+                List<RenderTargetBitmap> renderTargetBitmaps = RenderPopulation();
 
-
-                        individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
-                        if(sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
-                        {
-                            Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
-                        }
-
-                    }
-                    individual.fitness = individualFitness / individual.Chromosome.genes.Count;
-                    i++;
-                }
+                CalculateFitnessForPopulation(renderTargetBitmaps);
                 
-
                 // Sorting by fitness
                 population.Sort(new FitnessComparer());
 
-                // Ellitism
+                Debug.WriteLine($"Generation: {generation}");
+                Debug.WriteLine($"Best fitness{population[0].fitness}");
+
+                resultImages[0].Source = draw.RenderChromosome(population[2]);
+                resultImages[1].Source = draw.RenderChromosome(population[1]);
+                resultImages[2].Source = draw.RenderChromosome(population[0]);
+
+                // Creataing new generation 
+                List<Individual> newGeneration = new List<Individual>();
 
 
-                // Some % of the population for crossover
+                // Ellitism 10% for testing
+                int pct = Math.Max(1, (10 * sizeOfPopulation) / 100);
 
-                Individual parent1 = Selection.TournamentSelection(population);
-                Individual parent2 = Selection.TournamentSelection(population);
+                for (int i = 0; i < pct; i++)
+                {
+                    newGeneration.Add(population[i]);
+                }
+
+                while(newGeneration.Count < sizeOfPopulation)
+                {
+                    Individual parent1 = Selection.TournamentSelection(population);
+                    Individual parent2 = Selection.TournamentSelection(population);
+                    Individual child = Crossover.BlendCrossover(parent1, parent2);
+
+                    newGeneration.Add(child);
+                }
+
+                population = newGeneration;
+                generation++;
+            }
+        }
+
+        private List<RenderTargetBitmap> RenderPopulation()
+        {
+            List<RenderTargetBitmap> bitmaps = new List<RenderTargetBitmap>();
+
+            foreach(Individual individual in population)
+            {
+                RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
+                bitmaps.Add(bitmap);
+            }
+
+            return bitmaps;
+        }
+
+        private void CalculateFitnessForPopulation(List<RenderTargetBitmap> renderTargetBitmaps)
+        {
+
+            for(int i = 0; i < population.Count; i++)
+            {
+                Individual individual = population[i];
+                double individualFitness = 0;
 
 
-                Individual child = Crossover.BlendCrossover(parent1, parent2);
+                foreach (Gene gene in individual.Chromosome.genes)
+                {
 
-                child.Chromosome.Mutate();
+                    PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
+                    PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(renderTargetBitmaps[i], gene);
 
-                result3 = draw.RenderChromosome(child);
 
-                resultImages[0].Source = draw.RenderChromosome(parent1);
-                resultImages[1].Source = draw.RenderChromosome(parent2);
-                resultImages[2].Source = result3;
+                    individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
+                    if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
+                    {
+                        Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
+                    }
+
+                }
+                individual.fitness = individualFitness / individual.Chromosome.genes.Count;
             }
         }
 
