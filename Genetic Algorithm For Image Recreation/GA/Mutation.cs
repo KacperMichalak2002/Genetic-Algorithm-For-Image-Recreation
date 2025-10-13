@@ -11,17 +11,33 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
         private static Random random = new Random();
 
-        public static void Mutate(Individual individual, double mutationRate = 0.1)
+        public static void Mutate(Individual individual, double mutationRate = 0.1, double maxHeight = 100, double maxWidth = 100)
         {
             foreach (Gene gene in individual.Chromosome.genes)
             {
                 if (random.NextDouble() < mutationRate)
                 {
-                    MutateColor(gene);
+                    SelectMutation(gene,maxHeight,maxWidth);
                 }
             }
         }
-        public static void MutateColor(Gene gene)
+
+        private static void SelectMutation(Gene gene, double maxHeight, double maxWidth)
+        {
+            int mutationType = random.Next(0,2);
+
+            switch (mutationType)
+            {
+                case 0:
+                    MutateColor(gene);
+                    break;
+                case 1:
+                    MutatePosition(gene, maxHeight, maxWidth); 
+                    break;
+            }
+        }
+
+        private static void MutateColor(Gene gene)
         {
             int diffR = random.Next(-30, 30);
             int diffG = random.Next(-30, 30);
@@ -36,5 +52,19 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             gene.color = newColor;
         }
+
+        private static void MutatePosition(Gene gene, double maxHeight, double maxWidth)
+        {
+            double randomVal = random.NextDouble() - 0.5; // Range of [-0.5, 0.5]
+            double maxShift = maxWidth * 0.2; // 20% of the image
+            double diffX = randomVal * maxShift;
+
+            double diffY = (random.NextDouble() - 0.5) * maxHeight * 0.2;
+
+            gene.X = Math.Clamp(gene.X, 0, maxWidth);
+            gene.Y = Math.Clamp(gene.Y, 0, maxHeight);
+        } 
+
+
     }
 }
