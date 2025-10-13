@@ -46,7 +46,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(4, convertedBitmap.Width, convertedBitmap.Height, shapeType)
+                        new Chromosome(20, convertedBitmap.Width, convertedBitmap.Height, shapeType)
                     ));
             }
         }
@@ -57,7 +57,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
            
-            int numberOfIterations = 20;
+            int numberOfIterations = 1000;
             int generation = 0;
 
             
@@ -65,10 +65,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             for(int genI = 0; genI < numberOfIterations; genI++)
             {
 
-                List<RenderTargetBitmap> renderTargetBitmaps = RenderPopulation();
+                foreach (Individual individual in population)
+                {
+                    RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
 
-                CalculateFitnessForPopulation(renderTargetBitmaps);
-                
+                    CalculateFitnessForPopulation(individual ,bitmap);
+                }
+
                 // Sorting by fitness
                 population.Sort(new FitnessComparer());
 
@@ -99,7 +102,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                     if(random.NextDouble() < 0.2) // 20% for mutation
                     {
-                        Mutation.Mutate(child, 0.1);
+                        Mutation.Mutate(child, 0.1, convertedBitmap.Height, convertedBitmap.Width);
                     }
 
                     newGeneration.Add(child);
@@ -110,44 +113,25 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             }
         }
 
-        private List<RenderTargetBitmap> RenderPopulation()
+        private void CalculateFitnessForPopulation(Individual individual, RenderTargetBitmap individualBitmap)
         {
-            List<RenderTargetBitmap> bitmaps = new List<RenderTargetBitmap>();
-
-            foreach(Individual individual in population)
+            double individualFitness = 0;
+            foreach (Gene gene in individual.Chromosome.genes)
             {
-                RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
-                bitmaps.Add(bitmap);
-            }
-
-            return bitmaps;
-        }
-
-        private void CalculateFitnessForPopulation(List<RenderTargetBitmap> renderTargetBitmaps)
-        {
-
-            for(int i = 0; i < population.Count; i++)
-            {
-                Individual individual = population[i];
-                double individualFitness = 0;
-
-
-                foreach (Gene gene in individual.Chromosome.genes)
+            
+                PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
+                PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(individualBitmap, gene);
+            
+            
+                individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
+                if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
                 {
-
-                    PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
-                    PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(renderTargetBitmaps[i], gene);
-
-
-                    individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
-                    if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
-                    {
-                        Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
-                    }
-
+                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
                 }
-                individual.fitness = individualFitness / individual.Chromosome.genes.Count;
+            
             }
+            individual.fitness = individualFitness / individual.Chromosome.genes.Count;
+
         }
 
         private class FitnessComparer : IComparer<Individual>

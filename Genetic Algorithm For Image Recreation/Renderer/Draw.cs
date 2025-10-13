@@ -8,11 +8,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
     internal class Draw
     {
         private double maxHeight, maxWidth;
+        private RenderTargetBitmap renderTarget;
 
         public Draw(double maxHeight, double maxWidth)
         {
             this.maxHeight = maxHeight;
             this.maxWidth = maxWidth;
+            renderTarget = new RenderTargetBitmap((int)maxWidth, (int)maxHeight, 96, 96, PixelFormats.Pbgra32);
         }
 
         public RenderTargetBitmap RenderChromosome(Individual individual)
@@ -22,8 +24,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             using(DrawingContext drawingContext = drawingVisual.RenderOpen())
             {
+                drawingContext.DrawRectangle(Brushes.White, null, new Rect(0, 0, maxWidth, maxHeight));
 
-                    foreach (var gene in individual.Chromosome.genes)
+                foreach (var gene in individual.Chromosome.genes)
                     {
                         Brush brush = new SolidColorBrush(gene.color);
 
@@ -48,10 +51,20 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                     }
                 }
 
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)maxWidth, (int)maxHeight, 96, 96, PixelFormats.Pbgra32);
-            bitmap.Render(drawingVisual);
+            ClearRenderTarget();
+            renderTarget.Render(drawingVisual);
 
-            return bitmap;
+            return renderTarget;
+        }
+
+        private void ClearRenderTarget()
+        {
+            DrawingVisual clearVisual = new DrawingVisual();
+            using(DrawingContext dc = clearVisual.RenderOpen())
+            {
+                dc.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, maxWidth, maxHeight));
+            }
+            renderTarget.Render(clearVisual);
         }
     }
 }
