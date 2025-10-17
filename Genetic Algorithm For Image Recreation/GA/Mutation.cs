@@ -61,9 +61,20 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             double diffY = (random.NextDouble() - 0.5) * maxHeight * 0.2;
 
-            gene.X = Math.Clamp(gene.X, 0, maxWidth);
-            gene.Y = Math.Clamp(gene.Y, 0, maxHeight);
-        } 
+            gene.X = Math.Clamp(gene.X + diffX, 0, maxWidth);
+            gene.Y = Math.Clamp(gene.Y + diffY, 0, maxHeight);
+        }
+
+        private static void MutateSize(Gene gene, double maxHeight, double maxWidth)
+        {
+            double maxPossibleWidth = maxWidth - gene.X;
+            double maxPossibleHeight = maxHeight - gene.Y;
+
+            double randomVal = random.NextDouble() - 0.5;
+            randomVal = randomVal * maxPossibleWidth;
+
+            gene.width = Math.Clamp(gene.width, 0, maxWidth);
+        }
 
 
     }

@@ -46,7 +46,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(20, convertedBitmap.Width, convertedBitmap.Height, shapeType)
+                        new Chromosome(10, convertedBitmap.Width, convertedBitmap.Height, shapeType)
                     ));
             }
         }
@@ -57,9 +57,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
            
-            int numberOfIterations = 1000;
+            int numberOfIterations = 400;
             int generation = 0;
-
+            int halfPoint = numberOfIterations / 2;
             
 
             for(int genI = 0; genI < numberOfIterations; genI++)
@@ -70,6 +70,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
 
                     CalculateFitnessForPopulation(individual ,bitmap);
+                    bitmap?.Clear();
                 }
 
                 // Sorting by fitness
@@ -78,10 +79,16 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 Debug.WriteLine($"Generation: {generation}");
                 Debug.WriteLine($"Best fitness{population[0].fitness}");
 
-                resultImages[0].Source = draw.RenderChromosome(population[2]);
-                resultImages[1].Source = draw.RenderChromosome(population[1]);
-                resultImages[2].Source = draw.RenderChromosome(population[0]);
 
+                if(generation == 0)
+                {
+                    draw.RenderChromosome(population[0]);
+                    resultImages[0].Source = draw.CloneCurrentBitmap();
+                }else if (generation == halfPoint)
+                {
+                    draw.RenderChromosome(population[0]);
+                    resultImages[1].Source = draw.CloneCurrentBitmap();
+                }
                 // Creataing new generation 
                 List<Individual> newGeneration = new List<Individual>();
 
@@ -111,6 +118,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 population = newGeneration;
                 generation++;
             }
+            draw.RenderChromosome(population[0]);
+            resultImages[2].Source = draw.CloneCurrentBitmap();
         }
 
         private void CalculateFitnessForPopulation(Individual individual, RenderTargetBitmap individualBitmap)

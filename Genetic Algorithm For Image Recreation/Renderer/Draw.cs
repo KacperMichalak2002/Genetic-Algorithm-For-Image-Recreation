@@ -66,5 +66,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             }
             renderTarget.Render(clearVisual);
         }
+
+        public BitmapSource CloneCurrentBitmap()
+        {
+            return renderTarget.Clone();
+        }
     }
 }
