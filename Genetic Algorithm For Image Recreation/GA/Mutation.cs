@@ -24,7 +24,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void SelectMutation(Gene gene, double maxHeight, double maxWidth)
         {
-            int mutationType = random.Next(0,3);
+            int mutationType = random.Next(0,4);
 
             switch (mutationType)
             {
@@ -32,9 +32,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     MutateColor(gene);
                     break;
                 case 1:
-                    MutatePosition(gene, maxHeight, maxWidth); 
+                    MutateAlpha(gene);
                     break;
                 case 2:
+                    MutatePosition(gene, maxHeight, maxWidth); 
+                    break;
+                case 3:
                     MutateSize(gene, maxHeight, maxWidth);
                     break;
 
@@ -43,9 +46,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void MutateColor(Gene gene)
         {
-            int diffR = random.Next(-30, 30);
-            int diffG = random.Next(-30, 30);
-            int diffB = random.Next(-30, 30);
+            int diffR = random.Next(-30, 31);
+            int diffG = random.Next(-30, 31);
+            int diffB = random.Next(-30, 31);
 
 
             byte newR = (byte)Math.Clamp((gene.color.R + diffR), 0, 255);
@@ -55,6 +58,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Color newColor = Color.FromArgb(gene.color.A, newR, newG, newB);
 
             gene.color = newColor;
+        }
+
+        private static void MutateAlpha(Gene gene)
+        {
+            int diffA = random.Next(-50, 31);
+            byte newA = (byte) Math.Clamp((gene.color.A + diffA), 50, 255);
+
+            gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
         }
 
         private static void MutatePosition(Gene gene, double maxHeight, double maxWidth)
@@ -87,8 +98,5 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 gene.height = maxHeight - gene.Y;
             }
         }
-
-
-
     }
 }

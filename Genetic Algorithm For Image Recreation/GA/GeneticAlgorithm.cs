@@ -57,7 +57,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
            
-            int numberOfIterations = 400;
+            int numberOfIterations = 1000;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             

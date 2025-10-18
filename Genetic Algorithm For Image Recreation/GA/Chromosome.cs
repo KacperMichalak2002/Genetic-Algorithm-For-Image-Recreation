@@ -43,7 +43,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             }
         }
 
-        private void GenerateGene(ShapeType shapeType)
+        public void GenerateGene(ShapeType shapeType)
         {
             Gene gene = new Gene
             {
