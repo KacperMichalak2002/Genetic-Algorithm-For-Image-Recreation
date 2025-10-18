@@ -24,7 +24,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void SelectMutation(Gene gene, double maxHeight, double maxWidth)
         {
-            int mutationType = random.Next(0,2);
+            int mutationType = random.Next(0,3);
 
             switch (mutationType)
             {
@@ -34,6 +34,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 case 1:
                     MutatePosition(gene, maxHeight, maxWidth); 
                     break;
+                case 2:
+                    MutateSize(gene, maxHeight, maxWidth);
+                    break;
+
             }
         }
 
@@ -67,14 +71,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void MutateSize(Gene gene, double maxHeight, double maxWidth)
         {
-            double maxPossibleWidth = maxWidth - gene.X;
-            double maxPossibleHeight = maxHeight - gene.Y;
+            double widhtMult = 0.8 + random.NextDouble() * 0.4;
+            double heightMult = 0.8 + random.NextDouble() * 0.4;
 
-            double randomVal = random.NextDouble() - 0.5;
-            randomVal = randomVal * maxPossibleWidth;
+            gene.width = Math.Clamp(gene.width * widhtMult, 5, maxWidth * 0.5);
+            gene.height = Math.Clamp(gene.height * heightMult, 5, maxHeight * 0.5);
 
-            gene.width = Math.Clamp(gene.width, 0, maxWidth);
+            if(gene.X + gene.width > maxWidth)
+            {
+                gene.width = maxWidth - gene.X;
+            }
+
+            if(gene.Y + gene.height > maxHeight)
+            {
+                gene.height = maxHeight - gene.Y;
+            }
         }
+
 
 
     }
