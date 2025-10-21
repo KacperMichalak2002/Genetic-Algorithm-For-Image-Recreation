@@ -18,51 +18,39 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             List<Gene> childsGenes = new List<Gene>();
             Random random = new Random();
 
-            int numberOfGenes = Math.Min(parent1.Chromosome.genes.Count, parent2.Chromosome.genes.Count);
+            int minGenes = Math.Min(parent1.Chromosome.genes.Count, parent2.Chromosome.genes.Count);
+            int maxGenes = Math.Max(parent1.Chromosome.genes.Count, parent2.Chromosome.genes.Count);
 
-
-            for (int i = 0; i < numberOfGenes; i++)
+            for (int i = 0; i < minGenes; i++)
             {
                 Gene gene1 = parent1.Chromosome.genes[i];
                 Gene gene2 = parent2.Chromosome.genes[i];
 
                 double alpha = random.NextDouble();
 
-                int X = (int)(gene1.X * alpha + gene2.X * (1 - alpha));
-                int Y = (int)(gene1.Y * alpha + gene2.Y * (1 - alpha));
-                int width = (int)(gene1.width * alpha + gene2.width * (1 - alpha));
-                int height = (int)(gene1.height * alpha + gene2.height * (1 - alpha));
+                Gene blendedGene = BlendGenes(gene1, gene2, alpha, parent1.Chromosome.imageWidth, parent1.Chromosome.imageHeight);
+                
 
-                if(X + width > parent1.Chromosome.imageWidth)
-                {
-                    width = parent1.Chromosome.imageWidth - X;
-                }
-
-                if(Y + height > parent1.Chromosome.imageHeight)
-                {
-                    height = parent1.Chromosome.imageHeight - Y;
-                }
-
-                byte r = (byte)(gene1.color.R * alpha + gene2.color.R * (1 - alpha));
-                byte g = (byte)(gene1.color.G * alpha + gene2.color.G * (1 - alpha));
-                byte b = (byte)(gene1.color.B * alpha + gene2.color.B * (1 - alpha));
-                byte a = (byte)(gene1.color.A * alpha + gene2.color.A * (1 - alpha));
-
-                Color newColor = Color.FromArgb(a, r, g, b);
-
-                Gene newGene = new Gene
-                {
-                    X = X,
-                    Y = Y,
-                    width = width,
-                    height = height,
-                    color = newColor,
-                    ShapeType = gene1.ShapeType
-                };
-
-                childsGenes.Add(newGene);
+                childsGenes.Add(blendedGene);
 
             }
+
+            if(parent1.Chromosome.genes.Count == maxGenes)
+            {
+                for(int i = minGenes; i < maxGenes; i++)
+                {
+                    if(random.NextDouble() < 0.5)
+                        childsGenes.Add(CopyGene(parent1.Chromosome.genes[i]));
+                }
+            }else if(parent2.Chromosome.genes.Count == maxGenes)
+            {
+                for(int i = minGenes;i < maxGenes; i++)
+                {
+                    if (random.NextDouble() < 0.5)
+                        childsGenes.Add(CopyGene(parent2.Chromosome.genes[i]));
+                }
+            }
+
 
             Chromosome childsChromosome = new Chromosome(childsGenes, childsGenes.Count, parent1.Chromosome.imageWidth, parent1.Chromosome.imageHeight, parent1.Chromosome.shapeType);
             Individual child = new Individual(childsChromosome);
@@ -71,12 +59,58 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             return child;
         }
 
-        private static void BlendGenes (Gene gene)
+        private static Gene BlendGenes (Gene gene1 , Gene gene2, double alpha, int imageWidth, int imageHeight)
         {
-            byte Alpha = (byte)((int)gene.color.A / 2);
-            System.Windows.Media.Color newColor = System.Windows.Media.Color.FromArgb(Alpha, gene.color.R, gene.color.G, gene.color.B);
-            gene.color = newColor;
+            
+
+            int X = (int)(gene1.X * alpha + gene2.X * (1 - alpha));
+            int Y = (int)(gene1.Y * alpha + gene2.Y * (1 - alpha));
+            int width = (int)(gene1.width * alpha + gene2.width * (1 - alpha));
+            int height = (int)(gene1.height * alpha + gene2.height * (1 - alpha));
+
+            if (X + width > imageWidth)
+            {
+                width = imageWidth - X;
+            }
+
+            if (Y + height > imageHeight)
+            {
+                height = imageHeight - Y;
+            }
+
+            byte r = (byte)(gene1.color.R * alpha + gene2.color.R * (1 - alpha));
+            byte g = (byte)(gene1.color.G * alpha + gene2.color.G * (1 - alpha));
+            byte b = (byte)(gene1.color.B * alpha + gene2.color.B * (1 - alpha));
+            byte a = (byte)(gene1.color.A * alpha + gene2.color.A * (1 - alpha));
+
+            Color newColor = Color.FromArgb(a, r, g, b);
+
+            Gene newGene = new Gene
+            {
+                X = X,
+                Y = Y,
+                width = width,
+                height = height,
+                color = newColor,
+                ShapeType = gene1.ShapeType
+            };
+
+            return newGene;
         }
 
+        private static Gene CopyGene(Gene gene)
+        {
+            Gene coppiedGene = new Gene
+            {
+                X = gene.X,
+                Y = gene.Y,
+                width = gene.width,
+                height = gene.height,
+                color = gene.color,
+                ShapeType = gene.ShapeType
+            };
+
+            return coppiedGene;
+        }
     }
 }

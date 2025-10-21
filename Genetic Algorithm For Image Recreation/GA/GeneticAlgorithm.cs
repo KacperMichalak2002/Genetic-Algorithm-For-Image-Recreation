@@ -18,6 +18,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private List<Individual> population;
         private static Random random = new Random();
+        private static int numberOfGenes = 100;
 
         Draw draw;
 
@@ -46,7 +47,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(80, (int)convertedBitmap.Width, (int)convertedBitmap.Height, shapeType)
+                        new Chromosome(numberOfGenes, (int)convertedBitmap.Width, (int)convertedBitmap.Height, shapeType)
                     ));
             }
         }
@@ -57,7 +58,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
            
-            int numberOfIterations = 40;
+            int numberOfIterations = 200;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             
@@ -72,15 +73,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     CalculateFitnessForPopulation(individual ,bitmap);
                     bitmap?.Clear();
                 }
-                Debug.WriteLine("Fitness calculated");
                 // Sorting by fitness
                 population.Sort(new FitnessComparer());
 
                 Debug.WriteLine($"Generation: {generation}");
                 Debug.WriteLine($"Best fitness{population[0].fitness}");
+                Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
 
 
-                if(generation == 0)
+                if (generation == 0)
                 {
                     draw.RenderChromosome(population[0]);
                     resultImages[0].Source = draw.CloneCurrentBitmap();
@@ -110,6 +111,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     if(random.NextDouble() < 0.2) // 20% for mutation
                     {
                         Mutation.Mutate(child, 0.1);
+                    }
+
+                    if(random.NextDouble() < 0.1 && child.Chromosome.genes.Count < numberOfGenes + 100)
+                    {
+                        child.Chromosome.GenerateGene(shapeType);
                     }
 
                     newGeneration.Add(child);
