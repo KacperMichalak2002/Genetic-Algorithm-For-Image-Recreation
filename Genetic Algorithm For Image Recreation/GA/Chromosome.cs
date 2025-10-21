@@ -8,8 +8,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
         public List<Gene> genes {get; set;} = new List<Gene>();
         public int numberOfGenes { get; set;}
-        public double maxWidth {get; set;}
-        public double maxHeight { get; set; }
+        public int imageWidth {get; set;}
+        public int imageHeight { get; set; }
         public ShapeType shapeType{get; set;} 
 
         private static Random random = new Random();
@@ -20,21 +20,21 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         }
 
-        public Chromosome(List<Gene> genes, int numberOfGenes, double maxWidth, double maxHeight, ShapeType shapeType)
+        public Chromosome(List<Gene> genes, int numberOfGenes, int imageWidth, int imageHeight, ShapeType shapeType)
         {
             this.genes = genes;
             this.numberOfGenes = numberOfGenes;
-            this.maxWidth = maxWidth;
-            this.maxHeight = maxHeight;
+            this.imageWidth = imageWidth;
+            this.imageHeight = imageHeight;
             this.shapeType = shapeType;
         }
 
-        public Chromosome(int numberOfGenes, double maxWidth, double maxHeight, ShapeType shapeType)
+        public Chromosome(int numberOfGenes, int imageWidth, int imageHeight, ShapeType shapeType)
         {
             
             this.numberOfGenes = numberOfGenes;
-            this.maxWidth = maxWidth;
-            this.maxHeight = maxHeight;
+            this.imageWidth = imageWidth;
+            this.imageHeight = imageHeight;
             this.shapeType = shapeType;
 
             for(int i = 0; i < numberOfGenes; i++)
@@ -45,24 +45,38 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         public void GenerateGene(ShapeType shapeType)
         {
+
+            int maxWidth = (int)(imageWidth * 0.25);
+            int maxHeight = (int)(imageHeight * 0.25);
+
             Gene gene = new Gene
             {
                 ShapeType = shapeType,
-                X = random.NextDouble() * maxWidth,
-                Y = random.NextDouble() * maxHeight,
+                X = random.Next(0,imageWidth),
+                Y = random.Next(0, imageHeight),
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
-                color = System.Windows.Media.Color.FromRgb((byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
-                backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
+                color = System.Windows.Media.Color.FromArgb((byte)random.Next(100,256), (byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
+                //backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
             };
 
             switch (shapeType)
             {
                 case ShapeType.Ellipse:
                 case ShapeType.Rectangle:
-                    double maxPossibleWidth = maxWidth - gene.X;
-                    double maxPossibleHeight = maxHeight - gene.Y;
-                    gene.width = random.NextDouble() * maxPossibleWidth;
-                    gene.height = random.NextDouble() * maxPossibleHeight;
+                    //double maxPossibleWidth = maxWidth - gene.X;
+                    //double maxPossibleHeight = maxHeight - gene.Y;
+                    gene.width = random.Next(1, maxWidth + 1);
+                    gene.height = random.Next(1, maxHeight + 1);
+
+                    if(gene.X + gene.width > imageWidth)
+                    {
+                        gene.width = imageWidth - gene.X;
+                    }
+                    if(gene.Y + gene.height > imageHeight)
+                    {
+                        gene.height = imageHeight - gene.Y;
+                    }
+
                     break;
                 case ShapeType.Triangle:
                     System.Windows.Point point1 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);
@@ -99,10 +113,10 @@ public enum ShapeType
 
 public class Gene
 {
-    public double X { get; set; }
-    public double Y { get; set; }
-    public double width { get; set; }
-    public double height { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int width { get; set; }
+    public int height { get; set; }
     public System.Windows.Media.Color color { get; set; }
     public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }

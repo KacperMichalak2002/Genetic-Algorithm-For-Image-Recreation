@@ -15,10 +15,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             int bytesPerPixel = (bitmapImage.Format.BitsPerPixel + 7) / 8;
             int stride = bitmapWidth * bytesPerPixel;
 
-            int X = (int)gene.X;
-            int Y = (int)gene.Y;
-             int width = (int)Math.Ceiling(gene.width);
-            int height = (int)Math.Ceiling(gene.height);
+            int X = gene.X;
+            int Y = gene.Y;
+            int width = gene.width;
+            int height = gene.height;
 
             byte[] pixelData = new byte[bitmapHeight * stride];
 
@@ -30,7 +30,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             if (X < 0 || Y < 0 || X + width > bitmapWidth || Y + height > bitmapHeight)
             {
-                Debug.WriteLine($"Gene out of bounds X={X} Y={Y} W={width} H ={height}");
+                Debug.WriteLine($"Gene out of bounds X={X} W={width} Y={Y} H ={height}");
                 return Array.Empty<PixelColor>();
             }
 
@@ -63,10 +63,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             int bytesPerPixel = (bitmapImage.Format.BitsPerPixel + 7) / 8;
             int stride = bitmapWidth * bytesPerPixel;
 
-            int X = (int)gene.X;
-            int Y = (int)gene.Y;
-            int width = (int)Math.Ceiling(gene.width);
-            int height = (int)Math.Ceiling(gene.height);
+            int X = gene.X;
+            int Y = gene.Y;
+            int width = gene.width;
+            int height = gene.height;
 
             int pixelColorIndex = 0;
 

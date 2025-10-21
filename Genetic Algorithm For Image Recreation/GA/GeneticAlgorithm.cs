@@ -46,7 +46,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(10, convertedBitmap.Width, convertedBitmap.Height, shapeType)
+                        new Chromosome(80, (int)convertedBitmap.Width, (int)convertedBitmap.Height, shapeType)
                     ));
             }
         }
@@ -57,7 +57,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Initialize();
 
            
-            int numberOfIterations = 1000;
+            int numberOfIterations = 40;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             
@@ -72,7 +72,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     CalculateFitnessForPopulation(individual ,bitmap);
                     bitmap?.Clear();
                 }
-
+                Debug.WriteLine("Fitness calculated");
                 // Sorting by fitness
                 population.Sort(new FitnessComparer());
 
@@ -109,7 +109,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                     if(random.NextDouble() < 0.2) // 20% for mutation
                     {
-                        Mutation.Mutate(child, 0.1, convertedBitmap.Height, convertedBitmap.Width);
+                        Mutation.Mutate(child, 0.1);
                     }
 
                     newGeneration.Add(child);
@@ -130,14 +130,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             
                 PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
                 PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(individualBitmap, gene);
-            
-            
-                individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
+
                 if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
                 {
                     Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
                 }
-            
+
+                individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
+
             }
             individual.fitness = individualFitness / individual.Chromosome.genes.Count;
 

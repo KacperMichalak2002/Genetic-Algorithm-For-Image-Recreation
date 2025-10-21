@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
         private static Random random = new Random();
 
-        public static void Mutate(Individual individual, double mutationRate = 0.1, double maxHeight = 100, double maxWidth = 100)
+        public static void Mutate(Individual individual, double mutationRate)
         {
+            int maxWidth = individual.Chromosome.imageWidth;
+            int maxHeight = individual.Chromosome.imageHeight;
+
             foreach (Gene gene in individual.Chromosome.genes)
             {
                 if (random.NextDouble() < mutationRate)
@@ -22,7 +26,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             }
         }
 
-        private static void SelectMutation(Gene gene, double maxHeight, double maxWidth)
+        private static void SelectMutation(Gene gene, int maxHeight, int maxWidth)
         {
             int mutationType = random.Next(0,4);
 
@@ -35,7 +39,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     MutateAlpha(gene);
                     break;
                 case 2:
-                    MutatePosition(gene, maxHeight, maxWidth); 
+                    MutatePosition(gene, maxHeight, maxWidth);
                     break;
                 case 3:
                     MutateSize(gene, maxHeight, maxWidth);
@@ -68,7 +72,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
         }
 
-        private static void MutatePosition(Gene gene, double maxHeight, double maxWidth)
+        private static void MutatePosition(Gene gene, int maxHeight, int maxWidth)
         {
             double randomVal = random.NextDouble() - 0.5; // Range of [-0.5, 0.5]
             double maxShift = maxWidth * 0.2; // 20% of the image
@@ -76,17 +80,18 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             double diffY = (random.NextDouble() - 0.5) * maxHeight * 0.2;
 
-            gene.X = Math.Clamp(gene.X + diffX, 0, maxWidth);
-            gene.Y = Math.Clamp(gene.Y + diffY, 0, maxHeight);
+            gene.X = (int)Math.Clamp(gene.X + diffX, 0, maxWidth - gene.width);
+            gene.Y = (int)Math.Clamp(gene.Y + diffY, 0, maxHeight - gene.height);
+
         }
 
-        private static void MutateSize(Gene gene, double maxHeight, double maxWidth)
+        private static void MutateSize(Gene gene, int maxHeight, int maxWidth)
         {
             double widhtMult = 0.8 + random.NextDouble() * 0.4;
             double heightMult = 0.8 + random.NextDouble() * 0.4;
 
-            gene.width = Math.Clamp(gene.width * widhtMult, 5, maxWidth * 0.5);
-            gene.height = Math.Clamp(gene.height * heightMult, 5, maxHeight * 0.5);
+            gene.width = (int)Math.Clamp(gene.width * widhtMult, 5, maxWidth * 0.5);
+            gene.height = (int)Math.Clamp(gene.height * heightMult, 5, maxHeight * 0.5);
 
             if(gene.X + gene.width > maxWidth)
             {

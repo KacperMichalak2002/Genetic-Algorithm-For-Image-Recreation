@@ -28,10 +28,20 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                 double alpha = random.NextDouble();
 
-                double X = gene1.X * alpha + gene2.X * (1 - alpha);
-                double Y = gene1.Y * alpha + gene2.Y * (1 - alpha);
-                double width = gene1.width * alpha + gene2.width * (1 - alpha);
-                double height = gene1.height * alpha + gene2.height * (1 - alpha);
+                int X = (int)(gene1.X * alpha + gene2.X * (1 - alpha));
+                int Y = (int)(gene1.Y * alpha + gene2.Y * (1 - alpha));
+                int width = (int)(gene1.width * alpha + gene2.width * (1 - alpha));
+                int height = (int)(gene1.height * alpha + gene2.height * (1 - alpha));
+
+                if(X + width > parent1.Chromosome.imageWidth)
+                {
+                    width = parent1.Chromosome.imageWidth - X;
+                }
+
+                if(Y + height > parent1.Chromosome.imageHeight)
+                {
+                    height = parent1.Chromosome.imageHeight - Y;
+                }
 
                 byte r = (byte)(gene1.color.R * alpha + gene2.color.R * (1 - alpha));
                 byte g = (byte)(gene1.color.G * alpha + gene2.color.G * (1 - alpha));
@@ -54,7 +64,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             }
 
-            Chromosome childsChromosome = new Chromosome(childsGenes, childsGenes.Count, parent1.Chromosome.maxWidth, parent1.Chromosome.maxHeight, parent1.Chromosome.shapeType);
+            Chromosome childsChromosome = new Chromosome(childsGenes, childsGenes.Count, parent1.Chromosome.imageWidth, parent1.Chromosome.imageHeight, parent1.Chromosome.shapeType);
             Individual child = new Individual(childsChromosome);
 
             
