@@ -18,13 +18,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private List<Individual> population;
         private static Random random = new Random();
-        private static int numberOfGenes = 100;
+        private static int numberOfGenes = 40;
 
         Draw draw;
 
         private RenderTargetBitmap result1;
         private RenderTargetBitmap result2;
         private RenderTargetBitmap result3;
+
+        private PixelColor[] sourcePixels;
 
         public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, List<Image> resultImages, FormatConvertedBitmap convertedBitmap, Canvas searchVisualSource)
         {
@@ -57,8 +59,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             Initialize();
 
-           
-            int numberOfIterations = 200;
+            sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedBitmap);
+
+            int numberOfIterations = 500;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             
@@ -70,7 +73,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 {
                     RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
 
-                    CalculateFitnessForPopulation(individual ,bitmap);
+                    CalculateFitnessForPopulationV2(individual ,bitmap);
                     bitmap?.Clear();
                 }
                 // Sorting by fitness
@@ -106,14 +109,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 {
                     Individual parent1 = Selection.TournamentSelection(population);
                     Individual parent2 = Selection.TournamentSelection(population);
-                    Individual child = Crossover.BlendCrossover(parent1, parent2);
+                    Individual child = Crossover.UniformCrossover(parent1, parent2);
 
                     if(random.NextDouble() < 0.2) // 20% for mutation
                     {
                         Mutation.Mutate(child, 0.1);
                     }
 
-                    if(random.NextDouble() < 0.1 && child.Chromosome.genes.Count < numberOfGenes + 100)
+                    if(random.NextDouble() < 0.02 && child.Chromosome.genes.Count < numberOfGenes + 100)
                     {
                         child.Chromosome.GenerateGene(shapeType);
                     }
@@ -146,6 +149,20 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             }
             individual.fitness = individualFitness / individual.Chromosome.genes.Count;
+
+        }
+
+
+        private void CalculateFitnessForPopulationV2(Individual individual, RenderTargetBitmap individualBitmap)
+        {
+            PixelColor[] resultPixels = ImageHandler.GetAllPxielsFromBitmap(individualBitmap);
+
+            if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
+                {
+                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
+                }
+
+            individual.fitness = Fitness.CalculateFitness(sourcePixels, resultPixels);
 
         }
 

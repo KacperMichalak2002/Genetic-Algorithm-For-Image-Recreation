@@ -46,8 +46,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public void GenerateGene(ShapeType shapeType)
         {
 
-            int maxWidth = (int)(imageWidth * 0.25);
-            int maxHeight = (int)(imageHeight * 0.25);
+            int maxWidth = (int)(imageWidth * 0.50);
+            int maxHeight = (int)(imageHeight * 0.50);
 
             Gene gene = new Gene
             {
@@ -55,7 +55,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 X = random.Next(0,imageWidth),
                 Y = random.Next(0, imageHeight),
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
-                color = System.Windows.Media.Color.FromArgb((byte)random.Next(100,256), (byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
+                //color = System.Windows.Media.Color.FromArgb((byte)random.Next(100,256), (byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
+                color = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))
                 //backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
             };
 
