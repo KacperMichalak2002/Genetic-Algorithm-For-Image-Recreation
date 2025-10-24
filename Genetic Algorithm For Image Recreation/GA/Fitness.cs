@@ -35,9 +35,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             }
 
-            
             double retValue= Math.Round(differenceValue / resultPixels.Length, 4);
-            //Debug.WriteLine($"diff:{retValue}");
             return retValue;
 
 

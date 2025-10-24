@@ -18,15 +18,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private List<Individual> population;
         private static Random random = new Random();
-        private static int numberOfGenes = 40;
+        private static int numberOfGenes = 500;
 
         Draw draw;
 
-        private RenderTargetBitmap result1;
-        private RenderTargetBitmap result2;
-        private RenderTargetBitmap result3;
-
         private PixelColor[] sourcePixels;
+        private PixelColor[] resultPixels;
 
         public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, List<Image> resultImages, FormatConvertedBitmap convertedBitmap, Canvas searchVisualSource)
         {
@@ -61,21 +58,21 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedBitmap);
 
-            int numberOfIterations = 500;
+            int numberOfIterations = 4000;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
-            
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             for(int genI = 0; genI < numberOfIterations; genI++)
             {
-
                 foreach (Individual individual in population)
                 {
                     RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
 
-                    CalculateFitnessForPopulationV2(individual ,bitmap);
+                    CalculateFitnessForPopulation(individual ,bitmap);
                     bitmap?.Clear();
                 }
+
                 // Sorting by fitness
                 population.Sort(new FitnessComparer());
 
@@ -129,33 +126,18 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             }
             draw.RenderChromosome(population[0]);
             resultImages[2].Source = draw.CloneCurrentBitmap();
+
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            Debug.WriteLine($"Time elapsed: {elapsedTime}");
         }
 
         private void CalculateFitnessForPopulation(Individual individual, RenderTargetBitmap individualBitmap)
         {
-            double individualFitness = 0;
-            foreach (Gene gene in individual.Chromosome.genes)
-            {
-            
-                PixelColor[] sourcePixels = ImageHandler.GetPixelFromSourceRectangle(convertedBitmap, gene);
-                PixelColor[] resultPixels = ImageHandler.GetPxielFromResultRectangle(individualBitmap, gene);
-
-                if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
-                {
-                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
-                }
-
-                individualFitness += Fitness.CalculateFitness(sourcePixels, resultPixels);
-
-            }
-            individual.fitness = individualFitness / individual.Chromosome.genes.Count;
-
-        }
-
-
-        private void CalculateFitnessForPopulationV2(Individual individual, RenderTargetBitmap individualBitmap)
-        {
-            PixelColor[] resultPixels = ImageHandler.GetAllPxielsFromBitmap(individualBitmap);
+            resultPixels = ImageHandler.GetAllPxielsFromBitmap(individualBitmap);
 
             if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
                 {

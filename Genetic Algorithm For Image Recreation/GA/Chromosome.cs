@@ -46,8 +46,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public void GenerateGene(ShapeType shapeType)
         {
 
-            int maxWidth = (int)(imageWidth * 0.50);
-            int maxHeight = (int)(imageHeight * 0.50);
+            int maxWidth = (int)(imageWidth * 0.20);
+            int maxHeight = (int)(imageHeight * 0.20);
 
             Gene gene = new Gene
             {
