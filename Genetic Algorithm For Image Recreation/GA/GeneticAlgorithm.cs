@@ -1,4 +1,5 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using Genetic_Algorithm_For_Image_Recreation.Utils;
 using System;
 using System.Diagnostics;
 using System.Windows.Controls;
@@ -18,7 +19,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private List<Individual> population;
         private static Random random = new Random();
-        private static int numberOfGenes = 500;
+        private static int numberOfGenes = 50;
 
         Draw draw;
 
@@ -58,7 +59,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedBitmap);
 
-            int numberOfIterations = 4000;
+            int numberOfIterations = 100;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -67,10 +68,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 foreach (Individual individual in population)
                 {
-                    RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
+                    //RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
 
-                    CalculateFitnessForPopulation(individual ,bitmap);
-                    bitmap?.Clear();
+                    CalculateFitnessForPopulation(individual);
+                    //bitmap?.Clear();
                 }
 
                 // Sorting by fitness
@@ -135,9 +136,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Debug.WriteLine($"Time elapsed: {elapsedTime}");
         }
 
-        private void CalculateFitnessForPopulation(Individual individual, RenderTargetBitmap individualBitmap)
+        private void CalculateFitnessForPopulation(Individual individual)
         {
-            resultPixels = ImageHandler.GetAllPxielsFromBitmap(individualBitmap);
+            resultPixels = PixelRenderer.RenderPixelsToArray(individual);
 
             if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
                 {
