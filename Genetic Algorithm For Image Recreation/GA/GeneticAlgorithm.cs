@@ -19,7 +19,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private List<Individual> population;
         private static Random random = new Random();
-        private static int numberOfGenes = 50;
+        private static int numberOfGenes = 100;
 
         Draw draw;
 
@@ -59,7 +59,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedBitmap);
 
-            int numberOfIterations = 100;
+            int numberOfIterations = 500;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -100,7 +100,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                 for (int i = 0; i < pct; i++)
                 {
-                    newGeneration.Add(population[i]);
+                    newGeneration.Add(population[i].Clone());
                 }
 
                 while(newGeneration.Count < sizeOfPopulation)

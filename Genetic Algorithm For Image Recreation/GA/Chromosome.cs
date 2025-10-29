@@ -93,13 +93,19 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             genes.Add(gene);
         }
 
-
-        // Mutation by adding new shape
-        public void Mutate()
+        public Chromosome Clone()
         {
-            GenerateGene(shapeType);
-        }
+            Chromosome newChromosome = new Chromosome
+            {
+                genes = this.genes,
+                numberOfGenes = this.numberOfGenes,
+                imageHeight = this.imageHeight,
+                imageWidth = this.imageWidth,
+                shapeType = this.shapeType
+            };
 
+            return newChromosome;
+        }
     }
 
  
@@ -122,5 +128,20 @@ public class Gene
     public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }
     public PointCollection points { get; set; } = new PointCollection();
+
+    public Gene Clone()
+    {
+        Gene coppiedGene = new Gene
+        {
+            X = this.X,
+            Y = this.Y,
+            width = this.width,
+            height = this.height,
+            color = this.color,
+            ShapeType = this.ShapeType
+        };
+
+        return coppiedGene;
+    }
 
 }
