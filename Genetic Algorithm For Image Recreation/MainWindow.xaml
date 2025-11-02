@@ -91,16 +91,6 @@
                     Stretch="None" 
                     Height="auto" 
                     Width="auto" />
-
-                
-                    <Canvas Name="searchVisualSource"
-        Background="Transparent"
-        ClipToBounds="True"
-        Height="{Binding ActualHeight, ElementName=srcImage}" 
-        Width="{Binding ActualWidth, ElementName=srcImage}" />
-                
-                
-
             </Grid>
 
         </Border>

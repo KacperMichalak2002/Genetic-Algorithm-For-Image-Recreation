@@ -6,7 +6,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
        public Chromosome Chromosome { get; set; }
        public double fitness { get; set; }
-       public PixelColor[] pixels { get; set; }
+       public PixelColor[]? pixels { get; set; }
 
 
         public Individual() { }
@@ -14,7 +14,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public Individual(Chromosome chromosome)
         {
             Chromosome = chromosome;
-            fitness = 0;
+            fitness = Double.MaxValue;
+            pixels = null;
         }
 
 

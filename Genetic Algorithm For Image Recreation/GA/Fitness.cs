@@ -16,7 +16,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         {
             if (sourcePixels.Length != resultPixels.Length)
             {
-                return 10000.00;
+                return Double.MaxValue;
             }
 
             double differenceValue = 0;

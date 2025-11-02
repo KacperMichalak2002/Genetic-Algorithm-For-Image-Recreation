@@ -13,66 +13,58 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
         public int sizeOfPopulation{get; set;}
         public ShapeType shapeType { get; set; }
-        public List<Image> resultImages { get; set;}
         public FormatConvertedBitmap convertedBitmap { get; set;}
-        public Canvas searchVisualSource { get; set;}
 
-        private List<Individual> population;
         private static Random random = new Random();
-        private static int numberOfGenes = 100;
-
-        Draw draw;
+        private static int numberOfGenes = 50;
 
         private PixelColor[] sourcePixels;
-        private PixelColor[] resultPixels;
+        private double bitmapHeight; 
+        private double bitmapWidth;
 
-        public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, List<Image> resultImages, FormatConvertedBitmap convertedBitmap, Canvas searchVisualSource)
+        public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, PixelColor[] sourcePixels, double bitmapHeight, double bitmapWidth)
         {
             this.sizeOfPopulation = sizeOfPopulation;
             this.shapeType = shapeType;
-            this.resultImages = resultImages;
-            this.convertedBitmap = convertedBitmap;
-            this.searchVisualSource = searchVisualSource;
+            this.bitmapHeight = bitmapHeight;
+            this.bitmapWidth = bitmapWidth;
+            this.sourcePixels = sourcePixels;
         }
 
-        public void Initialize()
+        private List<Individual> Initialize()
         {
-            population = new List<Individual>();
-
-            draw = new Draw(convertedBitmap.Height, convertedBitmap.Width);
-
-            searchVisualSource.Children.Clear();
+            List<Individual> population = new List<Individual>();
 
             for (int i = 0; i < sizeOfPopulation; i++)
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(numberOfGenes, (int)convertedBitmap.Width, (int)convertedBitmap.Height, shapeType)
+                        new Chromosome(numberOfGenes, (int)bitmapWidth, (int)bitmapHeight, shapeType)
                     ));
             }
+
+            return population;
         }
 
-        public void Start()
+        public Individual[] Start()
         {
 
-            Initialize();
+            List<Individual> population = Initialize();
 
-            sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedBitmap);
-
-            int numberOfIterations = 500;
+            int numberOfIterations = 200;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
+            Individual[] bestIndividuals = new Individual[3];
+
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             for(int genI = 0; genI < numberOfIterations; genI++)
             {
-                foreach (Individual individual in population)
-                {
-                    //RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
 
+                Parallel.ForEach(population, individual =>
+                {
                     CalculateFitnessForPopulation(individual);
-                    //bitmap?.Clear();
-                }
+                });
 
                 // Sorting by fitness
                 population.Sort(new FitnessComparer());
@@ -81,15 +73,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 Debug.WriteLine($"Best fitness{population[0].fitness}");
                 Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
 
-
                 if (generation == 0)
                 {
-                    draw.RenderChromosome(population[0]);
-                    resultImages[0].Source = draw.CloneCurrentBitmap();
-                }else if (generation == halfPoint)
+                    bestIndividuals[0] = population[0];
+                }
+                else if (generation == halfPoint)
                 {
-                    draw.RenderChromosome(population[0]);
-                    resultImages[1].Source = draw.CloneCurrentBitmap();
+                    bestIndividuals[1] = population[0];
                 }
                 // Creataing new generation 
                 List<Individual> newGeneration = new List<Individual>();
@@ -125,8 +115,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 population = newGeneration;
                 generation++;
             }
-            draw.RenderChromosome(population[0]);
-            resultImages[2].Source = draw.CloneCurrentBitmap();
+            bestIndividuals[2] = population[0];
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
@@ -134,18 +123,27 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
             Debug.WriteLine($"Time elapsed: {elapsedTime}");
+
+            return bestIndividuals;
         }
 
         private void CalculateFitnessForPopulation(Individual individual)
         {
-            resultPixels = PixelRenderer.RenderPixelsToArray(individual);
 
-            if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
+            //Pixeles were already calculated individual came from elitism
+            if(individual.pixels != null)
+            {
+                return;
+            }
+
+             individual.pixels = PixelRenderer.RenderPixelsToArray(individual);
+
+            if (sourcePixels == null || individual.pixels == null || sourcePixels.Length == 0 || individual.pixels.Length == 0)
                 {
-                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
+                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {individual.pixels} L {individual.pixels.Length}");
                 }
 
-            individual.fitness = Fitness.CalculateFitness(sourcePixels, resultPixels);
+            individual.fitness = Fitness.CalculateFitness(sourcePixels, individual.pixels);
 
         }
 

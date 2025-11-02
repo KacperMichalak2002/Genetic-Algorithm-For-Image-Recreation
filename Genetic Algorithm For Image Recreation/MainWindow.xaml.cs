@@ -13,20 +13,20 @@ namespace Genetic_Algorithm_For_Image_Recreation
     {
         private FormatConvertedBitmap convertedImage;
         private ShapeType shapeType;
+        private PixelColor[] sourcePixels;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             if(convertedImage == null)
             {
                 txtBlock1.Text = "Load image first!";
                 return;
             }
-
 
             // List of images you want to be drawn
             List<Image> resultImages = new List<Image>
@@ -36,8 +36,16 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 resultImage3
             };
 
-            GeneticAlgorithm ga = new GeneticAlgorithm(40, shapeType, resultImages, convertedImage, searchVisualSource);
-            ga.Start();
+            sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
+            GeneticAlgorithm ga = new GeneticAlgorithm(40, shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
+            Individual[] individualsToDraw = await Task.Run(() => ga.Start());
+            Draw draw = new Draw(convertedImage.Height, convertedImage.Width);
+
+            for(int i = 0; i < individualsToDraw.Length; i++)
+            {
+                draw.RenderChromosome(individualsToDraw[i]);
+                resultImages[i].Source = draw.CloneCurrentBitmap();
+            }
         }
 
         private void loadImageButton_Click(object sender, RoutedEventArgs e)
