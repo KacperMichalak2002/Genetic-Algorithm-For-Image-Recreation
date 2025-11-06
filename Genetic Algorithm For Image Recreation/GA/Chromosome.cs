@@ -46,8 +46,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public void GenerateGene(ShapeType shapeType)
         {
 
-            int maxWidth = (int)(imageWidth * 0.20);
-            int maxHeight = (int)(imageHeight * 0.20);
+            int maxWidth = (int)(imageWidth * 0.15);
+            int maxHeight = (int)(imageHeight * 0.15);
 
             Gene gene = new Gene
             {
@@ -95,9 +95,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         public Chromosome Clone()
         {
+            List<Gene> clonedGenes = this.genes.Select(genes => genes.Clone()).ToList();
             Chromosome newChromosome = new Chromosome
             {
-                genes = this.genes,
+                genes = clonedGenes,
                 numberOfGenes = this.numberOfGenes,
                 imageHeight = this.imageHeight,
                 imageWidth = this.imageWidth,

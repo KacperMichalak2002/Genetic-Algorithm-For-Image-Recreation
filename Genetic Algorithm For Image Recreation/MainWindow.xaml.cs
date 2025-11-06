@@ -37,7 +37,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
             };
 
             sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
-            GeneticAlgorithm ga = new GeneticAlgorithm(40, shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
+            GeneticAlgorithm ga = new GeneticAlgorithm(30, shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
             Individual[] individualsToDraw = await Task.Run(() => ga.Start());
             Draw draw = new Draw(convertedImage.Height, convertedImage.Width);
 

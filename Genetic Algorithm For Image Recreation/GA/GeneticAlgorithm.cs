@@ -16,7 +16,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public FormatConvertedBitmap convertedBitmap { get; set;}
 
         private static Random random = new Random();
-        private static int numberOfGenes = 50;
+        private static int numberOfGenes = 1800;
 
         private PixelColor[] sourcePixels;
         private double bitmapHeight; 
@@ -51,7 +51,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             List<Individual> population = Initialize();
 
-            int numberOfIterations = 200;
+            int numberOfIterations = 10_000;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             Individual[] bestIndividuals = new Individual[3];
