@@ -17,10 +17,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         private PixelColor[] sourcePixels;
         private double bitmapHeight; 
         private double bitmapWidth;
+        private int numberOfIterations;
 
-        public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, PixelColor[] sourcePixels, double bitmapHeight, double bitmapWidth)
+        public GeneticAlgorithm(int sizeOfPopulation, int numberOfIterations, ShapeType shapeType, PixelColor[] sourcePixels, double bitmapHeight, double bitmapWidth)
         {
             this.sizeOfPopulation = sizeOfPopulation;
+            this.numberOfIterations = numberOfIterations;
             this.shapeType = shapeType;
             this.bitmapHeight = bitmapHeight;
             this.bitmapWidth = bitmapWidth;
@@ -42,20 +44,24 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             return population;
         }
 
-        public Individual[] Start()
+        public void Start(CancellationToken cancellationToken, IProgress<Individual> progress)
         {
 
             List<Individual> population = Initialize();
 
-            int numberOfIterations = 10_000;
-            int generation = 0;
-            int halfPoint = numberOfIterations / 2;
-            Individual[] bestIndividuals = new Individual[3];
+            var updateTimer = Stopwatch.StartNew();
+            long updateInterval = 33;
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            for(int genI = 0; genI < numberOfIterations; genI++)
+            for(int generation = 0; generation < numberOfIterations; generation++)
             {
+
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+                
 
                 Parallel.ForEach(population, individual =>
                 {
@@ -69,14 +75,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 Debug.WriteLine($"Best fitness{population[0].fitness}");
                 Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
 
-                if (generation == 0)
+                if(updateTimer.ElapsedMilliseconds > updateInterval)
                 {
-                    bestIndividuals[0] = population[0];
+                    progress.Report(population[0]);
+                    updateTimer.Restart();
                 }
-                else if (generation == halfPoint)
-                {
-                    bestIndividuals[1] = population[0];
-                }
+
                 // Creataing new generation 
                 List<Individual> newGeneration = new List<Individual>();
 
@@ -116,7 +120,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 population = newGeneration;
                 generation++;
             }
-            bestIndividuals[2] = population[0];
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
@@ -124,8 +127,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
             Debug.WriteLine($"Time elapsed: {elapsedTime}");
-
-            return bestIndividuals;
         }
 
         private void CalculateFitnessForPopulation(Individual individual)

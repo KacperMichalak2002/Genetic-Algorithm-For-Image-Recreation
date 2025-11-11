@@ -29,7 +29,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Button Name="startButton" Content="Start" Width="auto" Height="auto" Padding="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="btnStart_Click" Margin="30"/>
+            <Button Name="btnToggleRun" Content="Start" Width="auto" Height="auto" Padding="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="btnToggleRun_Click" Margin="30"/>
             <Button Grid.Column="1" Name="loadImageButton" Content="Select Image" Width="auto" Height="auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="20" Margin="30" Click="loadImageButton_Click"/>
             <StackPanel HorizontalAlignment="Left" Grid.Column="2" >
                 <RadioButton Name="rbRectangle" Checked="rbRectangle_Checked" IsChecked="True">Rectangle</RadioButton>
@@ -57,28 +57,7 @@
                 Stretch="None"/>
 
             </Border>
-
-
-            <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder2">
-                <Image 
-                Name="resultImage2"
-                Height="{Binding ActualHeight, ElementName=srcImage}"
-                Width="{Binding ActualWidth, ElementName=srcImage}"
-                Stretch="None"/>
-
-
-            </Border>
-
-            <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder3">
-                <Image
-                Name="resultImage3"
-                Height="{Binding ActualHeight, ElementName=srcImage}"
-                Width="{Binding ActualWidth, ElementName=srcImage}"
-                Stretch="None"/>
-
-            </Border>
-
-
+            
         </Grid>
         <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">
 
