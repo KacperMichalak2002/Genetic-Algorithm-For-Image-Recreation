@@ -45,18 +45,31 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         public void GenerateGene(ShapeType shapeType)
         {
+            double procentOfImage = 0.20;
+            int maxWidth = (int)(imageWidth * procentOfImage);
+            int maxHeight = (int)(imageHeight * procentOfImage);
 
-            int maxWidth = (int)(imageWidth * 0.15);
-            int maxHeight = (int)(imageHeight * 0.15);
+            int geneWidth = random.Next(1, maxWidth + 1);
+            int geneHeight = random.Next(1, maxHeight + 1);
+
+            int geneX = random.Next(0, imageWidth - geneWidth);
+            int geneY = random.Next(0, imageHeight - geneHeight);
+
 
             Gene gene = new Gene
             {
                 ShapeType = shapeType,
-                X = random.Next(0,imageWidth),
-                Y = random.Next(0, imageHeight),
+                X = geneX,
+                Y = geneY,
+                width = geneWidth,
+                height = geneHeight,
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
-                //color = System.Windows.Media.Color.FromArgb((byte)random.Next(100,256), (byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
-                color = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))
+                color = System.Windows.Media.Color.FromArgb(
+                    (byte)random.Next(50,150),
+                    (byte)random.Next(256), 
+                    (byte)random.Next(256), 
+                    (byte)random.Next(256)),
+                //color = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))
                 //backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
             };
 
@@ -66,17 +79,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 case ShapeType.Rectangle:
                     //double maxPossibleWidth = maxWidth - gene.X;
                     //double maxPossibleHeight = maxHeight - gene.Y;
-                    gene.width = random.Next(1, maxWidth + 1);
-                    gene.height = random.Next(1, maxHeight + 1);
+                    //gene.width = random.Next(1, maxWidth + 1);
+                    //gene.height = random.Next(1, maxHeight + 1);
 
-                    if(gene.X + gene.width > imageWidth)
-                    {
-                        gene.width = imageWidth - gene.X;
-                    }
-                    if(gene.Y + gene.height > imageHeight)
-                    {
-                        gene.height = imageHeight - gene.Y;
-                    }
+                    //if(gene.X + gene.width > imageWidth)
+                    //{
+                    //    gene.width = imageWidth - gene.X;
+                    //}
+                    //if(gene.Y + gene.height > imageHeight)
+                    //{
+                    //    gene.height = imageHeight - gene.Y;
+                    //}
 
                     break;
                 case ShapeType.Triangle:
@@ -106,6 +119,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             };
 
             return newChromosome;
+        }
+
+        public void RemoveRandomGene()
+        {
+            if(genes.Count > 500)
+            {
+                int indexToRemove = random.Next(0, genes.Count);
+                genes.RemoveAt(indexToRemove);
+            }
         }
     }
 
