@@ -37,7 +37,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
             };
 
             sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
-            GeneticAlgorithm ga = new GeneticAlgorithm(30, shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
+            GeneticAlgorithm ga = new GeneticAlgorithm(100, shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
             Individual[] individualsToDraw = await Task.Run(() => ga.Start());
             Draw draw = new Draw(convertedImage.Height, convertedImage.Width);
 
@@ -70,7 +70,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 convertedImage = new FormatConvertedBitmap();
                 convertedImage.BeginInit();
                 convertedImage.Source = image;
-                convertedImage.DestinationFormat = PixelFormats.Pbgra32;
+                convertedImage.DestinationFormat = PixelFormats.Bgra32;
                 convertedImage.EndInit();
 
                 //ImageHandler.RectangleScanningSource(convertedImage);

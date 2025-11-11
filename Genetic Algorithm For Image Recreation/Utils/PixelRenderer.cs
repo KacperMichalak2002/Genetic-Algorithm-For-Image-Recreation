@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Utils
 {
@@ -50,22 +51,37 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 
             int endX = startX + geneWidth;
             int endY = startY + geneHeight;
-
-            byte redTmp = gene.color.R;
-            byte greenTmp = gene.color.G;
-            byte blueTmp = gene.color.B;
-            byte alphaTmp = gene.color.A;
-
-            PixelColor colorTmp = new PixelColor(blueTmp, greenTmp, redTmp, alphaTmp);
-
+            
             for (int i = startX; i < endX; i++)
             {
                 for(int j = startY; j < endY; j++)
                 {
                     int index = j * imageWidth + i;
-                    pixels[index] = colorTmp;
+
+                    PixelColor oldColor = pixels[index];
+
+                    pixels[index] = BlendColorsWithAlpha(pixels[index], gene.color);
                 }
             }
+        }
+
+        private static PixelColor BlendColorsWithAlpha(PixelColor oldColor, Color geneColor)
+        {
+            byte redTmp = geneColor.R;
+            byte greenTmp = geneColor.G;
+            byte blueTmp = geneColor.B;
+            byte alphaTmp = geneColor.A;
+
+            double newAlphaVal = alphaTmp / 255.0;
+            double oneMinusAlpha = 1.0 - newAlphaVal;
+
+
+            byte newR = (byte)((redTmp * newAlphaVal) + (oldColor.R * oneMinusAlpha));
+            byte newG = (byte)((greenTmp * newAlphaVal) + (oldColor.G * oneMinusAlpha));
+            byte newB = (byte)((blueTmp * newAlphaVal) + (oldColor.B * oneMinusAlpha));
+
+
+            return new PixelColor(newR, newG, newB, 255);
         }
         private static void PixelsFromEllipse(PixelColor[] pixels, Gene gene, int imageWidth, int imageHeight)
         { 

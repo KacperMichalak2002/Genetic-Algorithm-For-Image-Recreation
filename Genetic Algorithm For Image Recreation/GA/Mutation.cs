@@ -28,7 +28,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void SelectMutation(Gene gene, int maxHeight, int maxWidth)
         {
-            int mutationType = random.Next(0,3);
+            int mutationType = random.Next(0,4);
 
             switch (mutationType)
             {
@@ -41,9 +41,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 case 2:
                     MutatePosition(gene, maxHeight, maxWidth);
                     break;
-                //case 3:
-                //    MutateAlpha(gene);
-                //    break;
+                case 3:
+                    MutateAlpha(gene);
+                    break;
 
             }
         }
@@ -66,7 +66,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void MutateAlpha(Gene gene)
         {
-            int diffA = random.Next(-50, 31);
+            int diffA = random.Next(-50, 51);
             byte newA = (byte) Math.Clamp((gene.color.A + diffA), 50, 255);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
