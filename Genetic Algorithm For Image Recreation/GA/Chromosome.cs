@@ -1,5 +1,4 @@
-﻿using System.Printing;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
@@ -45,7 +44,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         public void GenerateGene(ShapeType shapeType)
         {
-            double procentOfImage = 0.20;
+            double procentOfImage = 0.10;
             int maxWidth = (int)(imageWidth * procentOfImage);
             int maxHeight = (int)(imageHeight * procentOfImage);
 

@@ -1,11 +1,7 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
-using System;
 using System.Diagnostics;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
@@ -16,7 +12,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public FormatConvertedBitmap convertedBitmap { get; set;}
 
         private static Random random = new Random();
-        private static int numberOfGenes = 10_000;
+        private static int numberOfGenes = 5_000;
 
         private PixelColor[] sourcePixels;
         private double bitmapHeight; 
@@ -51,7 +47,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             List<Individual> population = Initialize();
 
-            int numberOfIterations = 50_000;
+            int numberOfIterations = 10_000;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             Individual[] bestIndividuals = new Individual[3];

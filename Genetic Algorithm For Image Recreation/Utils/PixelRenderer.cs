@@ -1,10 +1,5 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Utils

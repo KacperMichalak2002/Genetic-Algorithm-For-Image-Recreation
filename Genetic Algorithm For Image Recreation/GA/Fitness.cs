@@ -1,12 +1,6 @@
 ﻿using ColorMine.ColorSpaces;
 using ColorMine.ColorSpaces.Comparisons;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
