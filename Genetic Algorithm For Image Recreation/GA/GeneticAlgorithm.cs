@@ -16,7 +16,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public FormatConvertedBitmap convertedBitmap { get; set;}
 
         private static Random random = new Random();
-        private static int numberOfGenes = 1800;
+        private static int numberOfGenes = 10_000;
 
         private PixelColor[] sourcePixels;
         private double bitmapHeight; 
@@ -51,7 +51,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             List<Individual> population = Initialize();
 
-            int numberOfIterations = 10_000;
+            int numberOfIterations = 50_000;
             int generation = 0;
             int halfPoint = numberOfIterations / 2;
             Individual[] bestIndividuals = new Individual[3];
@@ -99,14 +99,19 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     Individual parent2 = Selection.TournamentSelection(population);
                     Individual child = Crossover.UniformCrossover(parent1, parent2);
 
-                    if(random.NextDouble() < 0.2) // 20% for mutation
+                    if(random.NextDouble() < 0.20) // 20% for mutation
                     {
                         Mutation.Mutate(child, 0.1);
                     }
 
-                    if(random.NextDouble() < 0.02 && child.Chromosome.genes.Count < numberOfGenes + 100)
+                    if(random.NextDouble() < 0.02) // 2% for adding new gene
                     {
                         child.Chromosome.GenerateGene(shapeType);
+                    }
+
+                    if(random.NextDouble() < 0.01) // 1% for removing random gene
+                    {
+                        child.Chromosome.RemoveRandomGene();
                     }
 
                     newGeneration.Add(child);
