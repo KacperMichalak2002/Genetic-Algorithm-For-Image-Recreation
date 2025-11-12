@@ -1,5 +1,8 @@
 ﻿using ColorMine.ColorSpaces;
+using ColorMine.ColorSpaces.Comparisons;
+using System.Diagnostics;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {

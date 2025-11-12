@@ -20,7 +20,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
             InitializeComponent();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             if(convertedImage == null)
             {
