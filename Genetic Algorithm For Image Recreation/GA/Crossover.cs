@@ -24,8 +24,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             for (int i = 0; i < minGenes; i++)
             {
-                Gene gene1 = parent1.Chromosome.genes[i];
-                Gene gene2 = parent2.Chromosome.genes[i];
+                Gene gene1 = parent1.Chromosome.genes[i].Clone();
+                Gene gene2 = parent2.Chromosome.genes[i].Clone();
 
                 double alpha = random.NextDouble();
 
@@ -50,7 +50,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 for (int i = minGenes; i < maxGenes; i++)
                 {
                     if (random.NextDouble() < 0.5)
-                        childsGenes.Add(CopyGene(parent1.Chromosome.genes[i]));
+                        childsGenes.Add(parent1.Chromosome.genes[i].Clone());
                 }
             }
             else if (parent2.Chromosome.genes.Count == maxGenes)
@@ -58,7 +58,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 for (int i = minGenes; i < maxGenes; i++)
                 {
                     if (random.NextDouble() < 0.5)
-                        childsGenes.Add(CopyGene(parent2.Chromosome.genes[i]));
+                        childsGenes.Add(parent2.Chromosome.genes[i].Clone());
                 }
             }
         }
@@ -77,11 +77,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                 if(random.NextDouble() < 0.5)
                 {
-                    newGene = CopyGene(parent1.Chromosome.genes[i]);
+                    newGene = parent1.Chromosome.genes[i].Clone();
                 }
                 else
                 {
-                    newGene = CopyGene(parent2.Chromosome.genes[i]);
+                    newGene = parent2.Chromosome.genes[i].Clone();
                 }
 
                 childsGenes.Add(newGene);
@@ -132,21 +132,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             };
 
             return newGene;
-        }
-
-        private static Gene CopyGene(Gene gene)
-        {
-            Gene coppiedGene = new Gene
-            {
-                X = gene.X,
-                Y = gene.Y,
-                width = gene.width,
-                height = gene.height,
-                color = gene.color,
-                ShapeType = gene.ShapeType
-            };
-
-            return coppiedGene;
         }
     }
 }

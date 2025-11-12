@@ -8,102 +8,57 @@
         Title="MainWindow" Height="500" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width=".5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition />
+            <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Name="txtBlock1"  Text="Click Button" FontSize="22" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0 " TextWrapping="Wrap"/>
+        
+        <!--Status progres / information display-->
+        <TextBlock Grid.Column="0" Name="tbStatus"  Text="Click Button" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0 " TextWrapping="Wrap"/>
 
+        <!--Source image-->
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1">
+            <Image
+            Name="srcImage" 
+            Stretch="Uniform" 
+            Height="auto" 
+            Width="auto" />
+        </Border>
+
+        <!--Algorithm output-->
+        <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder">
+            <Image
+                Name="resultImage"
+                Height="{Binding ActualHeight, ElementName=srcImage}"
+                Width="{Binding ActualWidth, ElementName=srcImage}"
+                Stretch="Uniform"/>
+        </Border>
+            
+        <!--Settings grid-->
         <Grid Grid.Row="2" Grid.ColumnSpan="2" Name="buttonGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Button Name="testButton" Content="Start" Width="auto" Height="auto" Padding="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="Button_Click" Margin="30"/>
-            <Button Grid.Column="1" Name="loadImageButton" Content="Select Image" Width="auto" Height="auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="20" Margin="30" Click="loadImageButton_Click"/>
-            <StackPanel HorizontalAlignment="Left" Grid.Column="2" >
+
+
+            <StackPanel Grid.Column="0">
+                <Button Name="btnToggleRun" Content="Start" Width="70" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnToggleRun_Click" Padding="10" Margin="10"/>
+                <Button Name="loadImageButton" Content="Select Image" Width="auto" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center" Click="loadImageButton_Click" Padding="10"/>
+            </StackPanel>
+            
+            
+            <StackPanel HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Column="1">
                 <RadioButton Name="rbRectangle" Checked="rbRectangle_Checked" IsChecked="True">Rectangle</RadioButton>
                 <RadioButton Name="rbTriangle" Checked="rbTriangle_Checked">Triangle</RadioButton>
                 <RadioButton Name="rbEllipse" Checked="rbEllipse_Checked">Ellipse</RadioButton>
             </StackPanel>
         </Grid>
-
-        <Grid  Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-
-
-            <Border BorderBrush="Black" BorderThickness="2" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" Name="canvaBorder">
-                <Image
-                Name="resultImage"
-                Height="{Binding ActualHeight, ElementName=srcImage}"
-                Width="{Binding ActualWidth, ElementName=srcImage}"
-                Stretch="None"/>
-
-            </Border>
-
-
-            <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder2">
-                <Image 
-                Name="resultImage2"
-                Height="{Binding ActualHeight, ElementName=srcImage}"
-                Width="{Binding ActualWidth, ElementName=srcImage}"
-                Stretch="None"/>
-               
-
-            </Border>
-
-            <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="1" Name="canvaBorder3">
-                <Image
-                Name="resultImage3"
-                Height="{Binding ActualHeight, ElementName=srcImage}"
-                Width="{Binding ActualWidth, ElementName=srcImage}"
-                Stretch="None"/>
-
-            </Border>
-
-
-        </Grid>
-        
-       
-
-        <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1" Grid.ColumnSpan="2">
-
-                <Grid>
-                <Image
-                    Name="srcImage" 
-                    Stretch="None" 
-                    Height="auto" 
-                    Width="auto" />
-
-                
-                    <Canvas Name="searchVisualSource"
-        Background="Transparent"
-        ClipToBounds="True"
-        Height="{Binding ActualHeight, ElementName=srcImage}" 
-        Width="{Binding ActualWidth, ElementName=srcImage}" />
-                
-                
-
-            </Grid>
-
-        </Border>
 
 
     </Grid>

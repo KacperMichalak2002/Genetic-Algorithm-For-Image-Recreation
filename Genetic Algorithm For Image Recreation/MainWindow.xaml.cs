@@ -13,20 +13,20 @@ namespace Genetic_Algorithm_For_Image_Recreation
     {
         private FormatConvertedBitmap convertedImage;
         private ShapeType shapeType;
+        private PixelColor[] sourcePixels;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             if(convertedImage == null)
             {
                 txtBlock1.Text = "Load image first!";
                 return;
             }
-
 
             // List of images you want to be drawn
             List<Image> resultImages = new List<Image>
@@ -36,8 +36,16 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 resultImage3
             };
 
-            GeneticAlgorithm ga = new GeneticAlgorithm(40, shapeType, resultImages, convertedImage, searchVisualSource);
-            ga.Start();
+            sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
+            GeneticAlgorithm ga = new GeneticAlgorithm(100, shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
+            Individual[] individualsToDraw = await Task.Run(() => ga.Start());
+            Draw draw = new Draw(convertedImage.Height, convertedImage.Width);
+
+            for(int i = 0; i < individualsToDraw.Length; i++)
+            {
+                draw.RenderChromosome(individualsToDraw[i]);
+                resultImages[i].Source = draw.CloneCurrentBitmap();
+            }
         }
 
         private void loadImageButton_Click(object sender, RoutedEventArgs e)
@@ -62,7 +70,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 convertedImage = new FormatConvertedBitmap();
                 convertedImage.BeginInit();
                 convertedImage.Source = image;
-                convertedImage.DestinationFormat = PixelFormats.Pbgra32;
+                convertedImage.DestinationFormat = PixelFormats.Bgra32;
                 convertedImage.EndInit();
 
                 //ImageHandler.RectangleScanningSource(convertedImage);

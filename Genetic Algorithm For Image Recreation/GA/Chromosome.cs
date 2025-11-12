@@ -1,5 +1,4 @@
-﻿using System.Printing;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
@@ -45,18 +44,31 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         public void GenerateGene(ShapeType shapeType)
         {
+            double procentOfImage = 0.10;
+            int maxWidth = (int)(imageWidth * procentOfImage);
+            int maxHeight = (int)(imageHeight * procentOfImage);
 
-            int maxWidth = (int)(imageWidth * 0.20);
-            int maxHeight = (int)(imageHeight * 0.20);
+            int geneWidth = random.Next(1, maxWidth + 1);
+            int geneHeight = random.Next(1, maxHeight + 1);
+
+            int geneX = random.Next(0, imageWidth - geneWidth);
+            int geneY = random.Next(0, imageHeight - geneHeight);
+
 
             Gene gene = new Gene
             {
                 ShapeType = shapeType,
-                X = random.Next(0,imageWidth),
-                Y = random.Next(0, imageHeight),
+                X = geneX,
+                Y = geneY,
+                width = geneWidth,
+                height = geneHeight,
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
-                //color = System.Windows.Media.Color.FromArgb((byte)random.Next(100,256), (byte) random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
-                color = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))
+                color = System.Windows.Media.Color.FromArgb(
+                    (byte)random.Next(100,200),
+                    (byte)random.Next(256), 
+                    (byte)random.Next(256), 
+                    (byte)random.Next(256)),
+                //color = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))
                 //backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
             };
 
@@ -66,17 +78,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 case ShapeType.Rectangle:
                     //double maxPossibleWidth = maxWidth - gene.X;
                     //double maxPossibleHeight = maxHeight - gene.Y;
-                    gene.width = random.Next(1, maxWidth + 1);
-                    gene.height = random.Next(1, maxHeight + 1);
+                    //gene.width = random.Next(1, maxWidth + 1);
+                    //gene.height = random.Next(1, maxHeight + 1);
 
-                    if(gene.X + gene.width > imageWidth)
-                    {
-                        gene.width = imageWidth - gene.X;
-                    }
-                    if(gene.Y + gene.height > imageHeight)
-                    {
-                        gene.height = imageHeight - gene.Y;
-                    }
+                    //if(gene.X + gene.width > imageWidth)
+                    //{
+                    //    gene.width = imageWidth - gene.X;
+                    //}
+                    //if(gene.Y + gene.height > imageHeight)
+                    //{
+                    //    gene.height = imageHeight - gene.Y;
+                    //}
 
                     break;
                 case ShapeType.Triangle:
@@ -93,13 +105,29 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             genes.Add(gene);
         }
 
-
-        // Mutation by adding new shape
-        public void Mutate()
+        public Chromosome Clone()
         {
-            GenerateGene(shapeType);
+            List<Gene> clonedGenes = this.genes.Select(genes => genes.Clone()).ToList();
+            Chromosome newChromosome = new Chromosome
+            {
+                genes = clonedGenes,
+                numberOfGenes = this.numberOfGenes,
+                imageHeight = this.imageHeight,
+                imageWidth = this.imageWidth,
+                shapeType = this.shapeType
+            };
+
+            return newChromosome;
         }
 
+        public void RemoveRandomGene()
+        {
+            if(genes.Count > 500)
+            {
+                int indexToRemove = random.Next(0, genes.Count);
+                genes.RemoveAt(indexToRemove);
+            }
+        }
     }
 
  
@@ -122,5 +150,20 @@ public class Gene
     public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }
     public PointCollection points { get; set; } = new PointCollection();
+
+    public Gene Clone()
+    {
+        Gene coppiedGene = new Gene
+        {
+            X = this.X,
+            Y = this.Y,
+            width = this.width,
+            height = this.height,
+            color = this.color,
+            ShapeType = this.ShapeType
+        };
+
+        return coppiedGene;
+    }
 
 }

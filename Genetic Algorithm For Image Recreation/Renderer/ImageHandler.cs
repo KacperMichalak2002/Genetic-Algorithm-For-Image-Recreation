@@ -52,26 +52,45 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
         }
     }
 
-    public class PixelColor
+
+    public struct PixelColor
     {
-        public byte B { get; set; }
-        public byte G { get; set; }
-        public byte R { get; set; }
-        public byte A { get; set; }
+        public byte R { get; }
+        public byte G { get; }
+        public byte B { get; }
+        public byte A { get; }
 
-        public PixelColor(byte B, byte G, byte R, byte A)
+        public PixelColor(byte b, byte g, byte r, byte a)
         {
-            this.B = B;
-            this.G = G;
-            this.R = R;
-            this.A = A;
+            B = b;
+            G = g;
+            R = r;
+            A = a;
         }
 
-        public override string ToString()
-        {
-            return $"({R},{G},{B}) A{A}";
-        }
-       
+        public override string ToString() => $"({R},{G},{B}) A{A}";
 
     }
+    //public class PixelColor
+    //{
+    //    public byte B { get; set; }
+    //    public byte G { get; set; }
+    //    public byte R { get; set; }
+    //    public byte A { get; set; }
+
+    //    public PixelColor(byte B, byte G, byte R, byte A)
+    //    {
+    //        this.B = B;
+    //        this.G = G;
+    //        this.R = R;
+    //        this.A = A;
+    //    }
+
+    //    public override string ToString()
+    //    {
+    //        return $"({R},{G},{B}) A{A}";
+    //    }
+       
+
+    //}
 }

@@ -1,4 +1,5 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using Genetic_Algorithm_For_Image_Recreation.Utils;
 using System;
 using System.Diagnostics;
 using System.Windows.Controls;
@@ -12,66 +13,64 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
         public int sizeOfPopulation{get; set;}
         public ShapeType shapeType { get; set; }
-        public List<Image> resultImages { get; set;}
         public FormatConvertedBitmap convertedBitmap { get; set;}
-        public Canvas searchVisualSource { get; set;}
 
-        private List<Individual> population;
         private static Random random = new Random();
-        private static int numberOfGenes = 500;
-
-        Draw draw;
+        private static int numberOfGenes = 5000;
 
         private PixelColor[] sourcePixels;
-        private PixelColor[] resultPixels;
+        private int bitmapHeight; 
+        private int bitmapWidth;
+        private int numberOfIterations;
 
-        public GeneticAlgorithm(int sizeOfPopulation, ShapeType shapeType, List<Image> resultImages, FormatConvertedBitmap convertedBitmap, Canvas searchVisualSource)
+        public GeneticAlgorithm(int sizeOfPopulation, int numberOfIterations, ShapeType shapeType, PixelColor[] sourcePixels, int bitmapHeight, int bitmapWidth)
         {
             this.sizeOfPopulation = sizeOfPopulation;
+            this.numberOfIterations = numberOfIterations;
             this.shapeType = shapeType;
-            this.resultImages = resultImages;
-            this.convertedBitmap = convertedBitmap;
-            this.searchVisualSource = searchVisualSource;
+            this.bitmapHeight = bitmapHeight;
+            this.bitmapWidth = bitmapWidth;
+            this.sourcePixels = sourcePixels;
         }
 
-        public void Initialize()
+        private List<Individual> Initialize()
         {
-            population = new List<Individual>();
-
-            draw = new Draw(convertedBitmap.Height, convertedBitmap.Width);
-
-            searchVisualSource.Children.Clear();
+            List<Individual> population = new List<Individual>();
 
             for (int i = 0; i < sizeOfPopulation; i++)
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(numberOfGenes, (int)convertedBitmap.Width, (int)convertedBitmap.Height, shapeType)
+                        new Chromosome(numberOfGenes, bitmapWidth, bitmapHeight, shapeType)
                     ));
             }
+
+            return population;
         }
 
-        public void Start()
+        public void Start(CancellationToken cancellationToken, IProgress<Individual> progress)
         {
 
-            Initialize();
+            List<Individual> population = Initialize();
 
-            sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedBitmap);
+            var updateTimer = Stopwatch.StartNew();
+            long updateInterval = 33;
 
-            int numberOfIterations = 4000;
-            int generation = 0;
-            int halfPoint = numberOfIterations / 2;
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            for(int genI = 0; genI < numberOfIterations; genI++)
+            for(int generation = 0; generation < numberOfIterations; generation++)
             {
-                foreach (Individual individual in population)
-                {
-                    RenderTargetBitmap bitmap = draw.RenderChromosome(individual);
 
-                    CalculateFitnessForPopulation(individual ,bitmap);
-                    bitmap?.Clear();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
+                
+
+                Parallel.ForEach(population, individual =>
+                {
+                    CalculateFitnessForPopulation(individual);
+                });
 
                 // Sorting by fitness
                 population.Sort(new FitnessComparer());
@@ -80,16 +79,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 Debug.WriteLine($"Best fitness{population[0].fitness}");
                 Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
 
-
-                if (generation == 0)
+                if(updateTimer.ElapsedMilliseconds > updateInterval)
                 {
-                    draw.RenderChromosome(population[0]);
-                    resultImages[0].Source = draw.CloneCurrentBitmap();
-                }else if (generation == halfPoint)
-                {
-                    draw.RenderChromosome(population[0]);
-                    resultImages[1].Source = draw.CloneCurrentBitmap();
+                    progress.Report(population[0]);
+                    updateTimer.Restart();
                 }
+
                 // Creataing new generation 
                 List<Individual> newGeneration = new List<Individual>();
 
@@ -99,7 +94,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                 for (int i = 0; i < pct; i++)
                 {
-                    newGeneration.Add(population[i]);
+                    newGeneration.Add(population[i].Clone());
                 }
 
                 while(newGeneration.Count < sizeOfPopulation)
@@ -108,14 +103,19 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     Individual parent2 = Selection.TournamentSelection(population);
                     Individual child = Crossover.UniformCrossover(parent1, parent2);
 
-                    if(random.NextDouble() < 0.2) // 20% for mutation
+                    if(random.NextDouble() < 0.20) // 20% for mutation
                     {
                         Mutation.Mutate(child, 0.1);
                     }
 
-                    if(random.NextDouble() < 0.02 && child.Chromosome.genes.Count < numberOfGenes + 100)
+                    if(random.NextDouble() < 0.02) // 2% for adding new gene
                     {
                         child.Chromosome.GenerateGene(shapeType);
+                    }
+
+                    if(random.NextDouble() < 0.01) // 1% for removing random gene
+                    {
+                        child.Chromosome.RemoveRandomGene();
                     }
 
                     newGeneration.Add(child);
@@ -124,8 +124,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 population = newGeneration;
                 generation++;
             }
-            draw.RenderChromosome(population[0]);
-            resultImages[2].Source = draw.CloneCurrentBitmap();
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
@@ -135,16 +133,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Debug.WriteLine($"Time elapsed: {elapsedTime}");
         }
 
-        private void CalculateFitnessForPopulation(Individual individual, RenderTargetBitmap individualBitmap)
+        private void CalculateFitnessForPopulation(Individual individual)
         {
-            resultPixels = ImageHandler.GetAllPxielsFromBitmap(individualBitmap);
 
-            if (sourcePixels == null || resultPixels == null || sourcePixels.Length == 0 || resultPixels.Length == 0)
+            //Pixeles were already calculated individual came from elitism
+            if(individual.pixels != null)
+            {
+                return;
+            }
+
+             individual.pixels = PixelRenderer.RenderPixelsToArray(individual);
+
+            if (sourcePixels == null || individual.pixels == null || sourcePixels.Length == 0 || individual.pixels.Length == 0)
                 {
-                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {resultPixels} L {resultPixels.Length}");
+                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {individual.pixels} L {individual.pixels.Length}");
                 }
 
-            individual.fitness = Fitness.CalculateFitness(sourcePixels, resultPixels);
+            individual.fitness = Fitness.CalculateFitness(sourcePixels, individual.pixels);
 
         }
 
