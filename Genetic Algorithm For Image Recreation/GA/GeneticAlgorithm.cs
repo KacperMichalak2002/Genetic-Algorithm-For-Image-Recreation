@@ -1,25 +1,21 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
-using System;
 using System.Diagnostics;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
     internal class GeneticAlgorithm
     {
-        public int sizeOfPopulation{get; set;}
+        public int sizeOfPopulation { get; set; }
         public ShapeType shapeType { get; set; }
-        public FormatConvertedBitmap convertedBitmap { get; set;}
+        public FormatConvertedBitmap convertedBitmap { get; set; }
 
         private static Random random = new Random();
-        private static int numberOfGenes = 5000;
+        private static int numberOfGenes = 5_000;
 
         private PixelColor[] sourcePixels;
-        private int bitmapHeight; 
+        private int bitmapHeight;
         private int bitmapWidth;
         private int numberOfIterations;
 
@@ -58,14 +54,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            for(int generation = 0; generation < numberOfIterations; generation++)
+            for (int generation = 0; generation < numberOfIterations; generation++)
             {
 
                 if (cancellationToken.IsCancellationRequested)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                 }
-                
+
 
                 Parallel.ForEach(population, individual =>
                 {
@@ -79,7 +75,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 Debug.WriteLine($"Best fitness{population[0].fitness}");
                 Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
 
-                if(updateTimer.ElapsedMilliseconds > updateInterval)
+                if (updateTimer.ElapsedMilliseconds > updateInterval)
                 {
                     progress.Report(population[0]);
                     updateTimer.Restart();
@@ -97,23 +93,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     newGeneration.Add(population[i].Clone());
                 }
 
-                while(newGeneration.Count < sizeOfPopulation)
+                while (newGeneration.Count < sizeOfPopulation)
                 {
                     Individual parent1 = Selection.TournamentSelection(population);
                     Individual parent2 = Selection.TournamentSelection(population);
                     Individual child = Crossover.UniformCrossover(parent1, parent2);
 
-                    if(random.NextDouble() < 0.20) // 20% for mutation
+                    if (random.NextDouble() < 0.20) // 20% for mutation
                     {
                         Mutation.Mutate(child, 0.1);
                     }
 
-                    if(random.NextDouble() < 0.02) // 2% for adding new gene
+                    if (random.NextDouble() < 0.02) // 2% for adding new gene
                     {
                         child.Chromosome.GenerateGene(shapeType);
                     }
 
-                    if(random.NextDouble() < 0.01) // 1% for removing random gene
+                    if (random.NextDouble() < 0.01) // 1% for removing random gene
                     {
                         child.Chromosome.RemoveRandomGene();
                     }
@@ -137,17 +133,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         {
 
             //Pixeles were already calculated individual came from elitism
-            if(individual.pixels != null)
+            if (individual.pixels != null)
             {
                 return;
             }
 
-             individual.pixels = PixelRenderer.RenderPixelsToArray(individual);
+            individual.pixels = PixelRenderer.RenderPixelsToArray(individual);
 
             if (sourcePixels == null || individual.pixels == null || sourcePixels.Length == 0 || individual.pixels.Length == 0)
-                {
-                    Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {individual.pixels} L {individual.pixels.Length}");
-                }
+            {
+                Debug.WriteLine($"SrcPixels {sourcePixels} L {sourcePixels.Length} \n ResPixels {individual.pixels} L {individual.pixels.Length}");
+            }
 
             individual.fitness = Fitness.CalculateFitness(sourcePixels, individual.pixels);
 
