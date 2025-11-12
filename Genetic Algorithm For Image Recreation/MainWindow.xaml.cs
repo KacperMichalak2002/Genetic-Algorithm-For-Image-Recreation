@@ -93,12 +93,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 image.BeginInit();
                 image.UriSource = new Uri(fileBrowser.FileName);
                 image.CacheOption = BitmapCacheOption.OnLoad;
-                //image.DecodePixelHeight = 50; Change to has and given amount of pixels in height
+                image.DecodePixelHeight = 250; //Change to has and given amount of pixels in height
                 image.EndInit();
-
-
-
-
 
                 convertedImage = new FormatConvertedBitmap();
                 convertedImage.BeginInit();
