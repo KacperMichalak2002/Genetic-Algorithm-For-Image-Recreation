@@ -61,7 +61,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         private static void MutateAlpha(Gene gene)
         {
             int diffA = random.Next(-50, 51);
-            byte newA = (byte) Math.Clamp((gene.color.A + diffA), 50, 255);
+            byte newA = (byte) Math.Clamp((gene.color.A + diffA), 100, 255);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
         }
@@ -85,8 +85,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             double widhtMult = 0.8 + random.NextDouble() * 0.4;
             double heightMult = 0.8 + random.NextDouble() * 0.4;
 
-            gene.width = (int)Math.Clamp(gene.width * widhtMult, 5, maxWidth * 0.5);
-            gene.height = (int)Math.Clamp(gene.height * heightMult, 5, maxHeight * 0.5);
+            gene.width = (int)Math.Clamp(gene.width * widhtMult, 5, maxWidth * 0.2);
+            gene.height = (int)Math.Clamp(gene.height * heightMult, 5, maxHeight * 0.2);
 
             if(gene.X + gene.width > maxWidth)
             {

@@ -18,14 +18,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Rgb sourcePixel;
             Rgb resultPixel;
 
-            Cie94Comparison cie94Comparison = new Cie94Comparison();
+            CieDe2000Comparison cieDe2000Comparison = new CieDe2000Comparison();
 
             for (int i = 0; i < resultPixels.Length; i++)
             {
                 sourcePixel = ImageHandler.convertToRgb(sourcePixels[i]);
                 resultPixel = ImageHandler.convertToRgb(resultPixels[i]);
-                double diff = cie94Comparison.Compare(sourcePixel, resultPixel);
-                differenceValue += diff;
+                double diff = cieDe2000Comparison.Compare(sourcePixel, resultPixel);
+                differenceValue += (diff * diff);
 
             }
 
