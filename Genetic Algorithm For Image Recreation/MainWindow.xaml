@@ -12,13 +12,18 @@
             <ColumnDefinition Width=".5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="50"/>
             <RowDefinition />
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
         
         <!--Status progres / information display-->
-        <TextBlock Grid.Column="0" Name="tbStatus"  Text="Click Button" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0 " TextWrapping="Wrap"/>
+            <TextBlock Grid.Column="0" Name="tbStatus"  Text="Click Button" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0 " TextWrapping="Wrap"/>
+        <StackPanel Grid.Column="1">
+            <TextBlock Name="tbProgress" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ProgressBar Name="ProgressBar" Height="10" Margin="10"/>
+        </StackPanel>    
+        
 
         <!--Source image-->
         <Border BorderBrush="Black" BorderThickness="2" Grid.Row="1">

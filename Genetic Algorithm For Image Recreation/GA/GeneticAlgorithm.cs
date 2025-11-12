@@ -44,7 +44,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             return population;
         }
 
-        public void Start(CancellationToken cancellationToken, IProgress<Individual> progress)
+        public void Start(CancellationToken cancellationToken, IProgress<(int generationNumber, Individual best)> progress)
         {
 
             List<Individual> population = Initialize();
@@ -54,7 +54,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            for (int generation = 0; generation < numberOfIterations; generation++)
+            for (int generation = 1; generation <= numberOfIterations; generation++)
             {
 
                 if (cancellationToken.IsCancellationRequested)
@@ -77,7 +77,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                 if (updateTimer.ElapsedMilliseconds > updateInterval)
                 {
-                    progress.Report(population[0]);
+                    progress.Report((generation, population[0]));
                     updateTimer.Restart();
                 }
 
@@ -118,7 +118,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 }
 
                 population = newGeneration;
-                generation++;
             }
 
             stopwatch.Stop();

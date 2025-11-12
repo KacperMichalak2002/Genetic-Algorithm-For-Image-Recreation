@@ -15,6 +15,10 @@ namespace Genetic_Algorithm_For_Image_Recreation
         private PixelColor[] sourcePixels;
         private bool running = false;
         private CancellationTokenSource cancellationTokenSource;
+        
+        // Change to get from user interface
+        int numberOfIterations = 100;
+        int populationSize = 40;
 
         public MainWindow()
         {
@@ -43,22 +47,25 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 running = true;
                 btnToggleRun.Content = "Stop";
                 tbStatus.Text = "Running";
+                ProgressBar.Maximum = numberOfIterations;
 
                 cancellationTokenSource = new CancellationTokenSource();
                 CancellationToken cancellationToken = cancellationTokenSource.Token;
 
                 try
                 {
-                    int numberOfIterations = 1000;
-                    int populationSize = 40;
+                    
 
                     sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
                     Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth);
 
-                    var progressHandler = new Progress<Individual>(bestIndividual =>
+                    var progressHandler = new Progress<(int generationNumber,Individual best)>(report =>
                     {
-                        draw.RenderChromosome(bestIndividual);
+                        draw.RenderChromosome(report.best);
                         resultImage.Source = draw.CloneCurrentBitmap();
+                        tbProgress.Text = $"{report.generationNumber} out of {numberOfIterations}";
+                        ProgressBar.Value = report.generationNumber;
+
                     });
 
                     GeneticAlgorithm ga = new GeneticAlgorithm(populationSize, numberOfIterations, shapeType, sourcePixels, convertedImage.PixelHeight, convertedImage.PixelWidth);
