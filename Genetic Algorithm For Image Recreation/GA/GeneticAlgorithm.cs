@@ -15,11 +15,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         private static int numberOfGenes = 5_000;
 
         private PixelColor[] sourcePixels;
-        private double bitmapHeight; 
-        private double bitmapWidth;
+        private int bitmapHeight; 
+        private int bitmapWidth;
         private int numberOfIterations;
 
-        public GeneticAlgorithm(int sizeOfPopulation, int numberOfIterations, ShapeType shapeType, PixelColor[] sourcePixels, double bitmapHeight, double bitmapWidth)
+        public GeneticAlgorithm(int sizeOfPopulation, int numberOfIterations, ShapeType shapeType, PixelColor[] sourcePixels, int bitmapHeight, int bitmapWidth)
         {
             this.sizeOfPopulation = sizeOfPopulation;
             this.numberOfIterations = numberOfIterations;
@@ -37,7 +37,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 population.Add(new Individual
                     (
-                        new Chromosome(numberOfGenes, (int)bitmapWidth, (int)bitmapHeight, shapeType)
+                        new Chromosome(numberOfGenes, bitmapWidth, bitmapHeight, shapeType)
                     ));
             }
 

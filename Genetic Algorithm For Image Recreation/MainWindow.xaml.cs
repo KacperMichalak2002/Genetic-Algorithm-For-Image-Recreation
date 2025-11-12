@@ -1,6 +1,7 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Microsoft.Win32;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -24,7 +25,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
         {
             if (convertedImage == null)
             {
-                txtBlock1.Text = "Load image first!";
+                tbStatus.Text = "Load image first!";
                 return;
             }
 
@@ -33,7 +34,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 if(cancellationTokenSource != null)
                 {
                     cancellationTokenSource.Cancel();
-                    txtBlock1.Text = "Stopping";
+                    tbStatus.Text = "Stopping";
                 }
                 running = false;
             }
@@ -41,7 +42,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
             {
                 running = true;
                 btnToggleRun.Content = "Stop";
-                txtBlock1.Text = "Running";
+                tbStatus.Text = "Running";
 
                 cancellationTokenSource = new CancellationTokenSource();
                 CancellationToken cancellationToken = cancellationTokenSource.Token;
@@ -52,7 +53,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                     int populationSize = 40;
 
                     sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
-                    Draw draw = new Draw(convertedImage.Height, convertedImage.Width);
+                    Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth);
 
                     var progressHandler = new Progress<Individual>(bestIndividual =>
                     {
@@ -60,14 +61,14 @@ namespace Genetic_Algorithm_For_Image_Recreation
                         resultImage.Source = draw.CloneCurrentBitmap();
                     });
                     
-                    GeneticAlgorithm ga = new GeneticAlgorithm(populationSize, numberOfIterations ,shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
+                    GeneticAlgorithm ga = new GeneticAlgorithm(populationSize, numberOfIterations ,shapeType, sourcePixels, convertedImage.PixelHeight, convertedImage.PixelWidth);
                     await Task.Run(() => ga.Start(cancellationToken, progressHandler), cancellationToken);
                     
-                    txtBlock1.Text = "Finished";
+                    tbStatus.Text = "Finished";
                 }
                 catch(OperationCanceledException)
                 {
-                    txtBlock1.Text = "Stopped by user";
+                    tbStatus.Text = "Stopped by user";
                 }
                 finally
                 {
@@ -96,6 +97,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 image.EndInit();
 
 
+                
+                
 
                 convertedImage = new FormatConvertedBitmap();
                 convertedImage.BeginInit();
@@ -103,6 +106,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 convertedImage.DestinationFormat = PixelFormats.Bgra32;
                 convertedImage.EndInit();
 
+
+                Debug.WriteLine($"Loaded image height {convertedImage.PixelHeight} Width {convertedImage.PixelWidth}");
                 //ImageHandler.RectangleScanningSource(convertedImage);
 
                 srcImage.Source = convertedImage;

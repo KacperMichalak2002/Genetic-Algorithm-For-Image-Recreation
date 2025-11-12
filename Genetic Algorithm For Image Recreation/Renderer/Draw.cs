@@ -10,11 +10,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
         private double maxHeight, maxWidth;
         private RenderTargetBitmap renderTarget;
 
-        public Draw(double maxHeight, double maxWidth)
+        public Draw(int maxHeight, int maxWidth)
         {
             this.maxHeight = maxHeight;
             this.maxWidth = maxWidth;
-            renderTarget = new RenderTargetBitmap((int)maxWidth, (int)maxHeight, 96, 96, PixelFormats.Pbgra32);
+            renderTarget = new RenderTargetBitmap(maxWidth, maxHeight, 96, 96, PixelFormats.Pbgra32);
         }
 
         public RenderTargetBitmap RenderChromosome(Individual individual)
