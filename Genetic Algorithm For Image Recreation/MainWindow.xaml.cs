@@ -1,11 +1,10 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Microsoft.Win32;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation
 {
@@ -14,38 +13,77 @@ namespace Genetic_Algorithm_For_Image_Recreation
         private FormatConvertedBitmap convertedImage;
         private ShapeType shapeType;
         private PixelColor[] sourcePixels;
+        private bool running = false;
+        private CancellationTokenSource cancellationTokenSource;
+        
+        // Change to get from user interface
+        int numberOfIterations = 100;
+        int populationSize = 40;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private async void btnStart_Click(object sender, RoutedEventArgs e)
+        private async void btnToggleRun_Click(object sender, RoutedEventArgs e)
         {
-            if(convertedImage == null)
+            if (convertedImage == null)
             {
-                txtBlock1.Text = "Load image first!";
+                tbStatus.Text = "Load image first!";
                 return;
             }
 
-            // List of images you want to be drawn
-            List<Image> resultImages = new List<Image>
+            if (running)
             {
-                resultImage,
-                resultImage2,
-                resultImage3
-            };
-
-            sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
-            GeneticAlgorithm ga = new GeneticAlgorithm(100, shapeType, sourcePixels, convertedImage.Height, convertedImage.Width);
-            Individual[] individualsToDraw = await Task.Run(() => ga.Start());
-            Draw draw = new Draw(convertedImage.Height, convertedImage.Width);
-
-            for(int i = 0; i < individualsToDraw.Length; i++)
-            {
-                draw.RenderChromosome(individualsToDraw[i]);
-                resultImages[i].Source = draw.CloneCurrentBitmap();
+                if (cancellationTokenSource != null)
+                {
+                    cancellationTokenSource.Cancel();
+                    tbStatus.Text = "Stopping";
+                }
+                running = false;
             }
+            else
+            {
+                running = true;
+                btnToggleRun.Content = "Stop";
+                tbStatus.Text = "Running";
+                ProgressBar.Maximum = numberOfIterations;
+
+                cancellationTokenSource = new CancellationTokenSource();
+                CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+                try
+                {
+                    
+
+                    sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
+                    Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth);
+
+                    var progressHandler = new Progress<(int generationNumber,Individual best)>(report =>
+                    {
+                        draw.RenderChromosome(report.best);
+                        resultImage.Source = draw.CloneCurrentBitmap();
+                        tbProgress.Text = $"{report.generationNumber} out of {numberOfIterations}";
+                        ProgressBar.Value = report.generationNumber;
+
+                    });
+
+                    GeneticAlgorithm ga = new GeneticAlgorithm(populationSize, numberOfIterations, shapeType, sourcePixels, convertedImage.PixelHeight, convertedImage.PixelWidth);
+                    await Task.Run(() => ga.Start(cancellationToken, progressHandler), cancellationToken);
+
+                    tbStatus.Text = "Finished";
+                }
+                catch (OperationCanceledException)
+                {
+                    tbStatus.Text = "Stopped by user";
+                }
+                finally
+                {
+                    running = true;
+                    btnToggleRun.Content = "Start";
+                }
+            }
+
         }
 
         private void loadImageButton_Click(object sender, RoutedEventArgs e)
@@ -62,10 +100,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 image.BeginInit();
                 image.UriSource = new Uri(fileBrowser.FileName);
                 image.CacheOption = BitmapCacheOption.OnLoad;
-                //image.DecodePixelHeight = 50; Change to has and given amount of pixels in height
+                image.DecodePixelHeight = 250; //Change to has and given amount of pixels in height
                 image.EndInit();
-
-
 
                 convertedImage = new FormatConvertedBitmap();
                 convertedImage.BeginInit();
@@ -73,6 +109,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 convertedImage.DestinationFormat = PixelFormats.Bgra32;
                 convertedImage.EndInit();
 
+
+                Debug.WriteLine($"Loaded image height {convertedImage.PixelHeight} Width {convertedImage.PixelWidth}");
                 //ImageHandler.RectangleScanningSource(convertedImage);
 
                 srcImage.Source = convertedImage;
@@ -92,7 +130,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
         private void rbTriangle_Checked(object sender, RoutedEventArgs e)
         {
-            shapeType= ShapeType.Triangle;
+            shapeType = ShapeType.Triangle;
         }
     }
 }
