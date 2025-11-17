@@ -45,7 +45,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         public void GenerateGene(ShapeType shapeType)
         {
-            double procentOfImage = 0.10;
+            double procentOfImage = 0.20;
             int maxWidth = (int)(imageWidth * procentOfImage);
             int maxHeight = (int)(imageHeight * procentOfImage);
 
@@ -66,7 +66,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 Y = geneY,
                 width = geneWidth,
                 height = geneHeight,
-                points = new List<Point>(),
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
                 color = System.Windows.Media.Color.FromArgb(
                     (byte)random.Next(100,200),
@@ -83,9 +82,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 case ShapeType.Rectangle:
                     break;
                 case ShapeType.Triangle:
-                    Point point1 = generatePoint(maxValueOfX, maxValueOfY);
-                    Point point2 = generatePoint(maxValueOfX, maxValueOfY);
-                    Point point3 = generatePoint(maxValueOfX, maxValueOfY);
+                    Point point1 = new Point(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
+                    Point point2 = new Point(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
+                    Point point3 = new Point(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
 
                     gene.points.Add(point1);
                     gene.points.Add(point2);
@@ -97,14 +96,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             genes.Add(gene);
         }
 
-
-        private Point generatePoint(int maxValueOfX, int maxValueOfY)
-        {
-            return new Point(
-                random.Next(0, maxValueOfX),
-                random.Next(0, maxValueOfY)
-                );
-        }
 
         public Chromosome Clone()
         {
@@ -150,7 +141,7 @@ public class Gene
     public System.Windows.Media.Color color { get; set; }
     public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }
-    public List<Point> points { get; set; }
+    public List<Point> points { get; set; } = new List<Point>();
 
     public Gene Clone()
     {
@@ -162,7 +153,7 @@ public class Gene
             height = this.height,
             color = this.color,
             ShapeType = this.ShapeType,
-            points = this.points
+            points = new List<Point>(this.points)
         };
 
         return coppiedGene;
