@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Media;
-
-namespace Genetic_Algorithm_For_Image_Recreation.GA
+﻿namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
     
     internal class Chromosome
@@ -45,7 +42,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         public void GenerateGene(ShapeType shapeType)
         {
-            double procentOfImage = 0.20;
+            double procentOfImage = 0.10;
             int maxWidth = (int)(imageWidth * procentOfImage);
             int maxHeight = (int)(imageHeight * procentOfImage);
 
@@ -82,9 +79,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 case ShapeType.Rectangle:
                     break;
                 case ShapeType.Triangle:
-                    Point point1 = new Point(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
-                    Point point2 = new Point(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
-                    Point point3 = new Point(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
+                    BasicPoint point1 = new BasicPoint(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
+                    BasicPoint point2 = new BasicPoint(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
+                    BasicPoint point3 = new BasicPoint(geneX + random.Next(0, geneWidth), geneY + random.Next(0, geneHeight));
 
                     gene.points.Add(point1);
                     gene.points.Add(point2);
@@ -125,6 +122,18 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
  
 }
 
+public struct BasicPoint
+{
+    public int X { get; }
+    public int Y  { get; }
+
+    public BasicPoint(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+}
+
 public enum ShapeType
 {
     Ellipse,
@@ -141,7 +150,7 @@ public class Gene
     public System.Windows.Media.Color color { get; set; }
     public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }
-    public List<Point> points { get; set; } = new List<Point>();
+    public List<BasicPoint> points { get; set; } = new List<BasicPoint>();
 
     public Gene Clone()
     {
@@ -153,7 +162,7 @@ public class Gene
             height = this.height,
             color = this.color,
             ShapeType = this.ShapeType,
-            points = new List<Point>(this.points)
+            points = new List<BasicPoint>(this.points)
         };
 
         return coppiedGene;
