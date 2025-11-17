@@ -17,8 +17,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
         private CancellationTokenSource cancellationTokenSource;
         
         // Change to get from user interface
-        int numberOfIterations = 100;
-        int populationSize = 40;
+        int numberOfIterations = 10_000;
+        int populationSize = 100;
 
         public MainWindow()
         {

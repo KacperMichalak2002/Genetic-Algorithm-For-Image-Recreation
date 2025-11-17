@@ -29,6 +29,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
                     case ShapeType.Ellipse:
                         PixelsFromEllipse(pixels, gene, imageWidth, imageHeight);
                         break;
+                    case ShapeType.Triangle:
+                        PixelsFromTriangle(pixels, gene, imageWidth, imageHeight);
+                        break;
 
                 }
                 
@@ -53,8 +56,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
                 {
                     int index = j * imageWidth + i;
 
-                    PixelColor oldColor = pixels[index];
-
                     pixels[index] = BlendColorsWithAlpha(pixels[index], gene.color);
                 }
             }
@@ -76,7 +77,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             byte newB = (byte)((blueTmp * newAlphaVal) + (oldColor.B * oneMinusAlpha));
 
 
-            return new PixelColor(newR, newG, newB, 255);
+            return new PixelColor(newB, newG, newR, 255);
         }
         private static void PixelsFromEllipse(PixelColor[] pixels, Gene gene, int imageWidth, int imageHeight)
         { 
@@ -102,9 +103,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             byte blueTmp = gene.color.B;
             byte alphaTmp = gene.color.A;
 
-
-            PixelColor colorTmp = new PixelColor(blueTmp, greenTmp, redTmp, alphaTmp);
-
             for (int i = startX; i < endX; i++)
             {
                 for (int j = startY; j < endY; j++)
@@ -116,10 +114,66 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
                     if(valueCheck <= 1)
                     {
                         int index = j * imageWidth + i;
-                        pixels[index] = colorTmp;
+                        pixels[index] = BlendColorsWithAlpha(pixels[index], gene.color);
                     } 
                 }
             }
+        }
+
+        private static double TriangleArea(BasicPoint point1, BasicPoint point2, BasicPoint point3)
+        {
+            return Math.Abs(
+                (point1.X * (point2.Y - point3.Y) +
+                point2.X * (point3.Y - point1.Y) +
+                point3.X * (point1.Y - point2.Y)) / 2.0);
+        }
+
+        private static bool isInsideTriangle(BasicPoint point1, BasicPoint point2, BasicPoint point3, BasicPoint pointToCheck)
+        {
+            double ABCTriangle = TriangleArea(point1,point2,point3);
+            double PBCTriangle = TriangleArea(pointToCheck,point2,point3);
+            double PACTriangle = TriangleArea(point1, pointToCheck, point3);
+            double PABTriangle = TriangleArea(point1, point2, pointToCheck);
+
+            double sumOfTriangles = PBCTriangle + PACTriangle + PABTriangle;
+
+            const double epsilon = 0.0001;
+
+            return (Math.Abs(ABCTriangle- sumOfTriangles) < epsilon);
+        }
+
+
+
+        private static void PixelsFromTriangle(PixelColor[] pixels, Gene gene, int imageWidth, int imageHeight)
+        {
+
+            int geneWidth = gene.width;
+            int geneHeight = gene.height;
+            int startX = gene.X;
+            int startY = gene.Y;
+
+            int endX = startX + geneWidth;
+            int endY = startY + geneHeight;
+
+            BasicPoint point1 = gene.points[0];
+            BasicPoint point2 = gene.points[1];
+            BasicPoint point3 = gene.points[2];
+            BasicPoint pointToChech;
+
+            for(int i = startX; i < endX; i++)
+            {
+                for(int j = startY; j < endY; j++)
+                {
+                    pointToChech = new BasicPoint(i, j);
+                    if (isInsideTriangle(point1, point2, point3, pointToChech))
+                    {
+                        int index = j * imageWidth + i;
+
+                        pixels[index] = BlendColorsWithAlpha(pixels[index], gene.color);
+                    }
+                }
+            }
+
         }
     }
 }
