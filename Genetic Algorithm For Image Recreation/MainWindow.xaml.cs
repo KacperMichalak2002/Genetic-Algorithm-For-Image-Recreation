@@ -79,7 +79,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 }
                 finally
                 {
-                    running = true;
+                    running = false;
                     btnToggleRun.Content = "Start";
                 }
             }

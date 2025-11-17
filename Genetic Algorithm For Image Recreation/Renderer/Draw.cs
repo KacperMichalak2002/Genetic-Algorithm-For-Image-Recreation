@@ -42,8 +42,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                             StreamGeometry triangle = new StreamGeometry();
                             using (StreamGeometryContext context = triangle.Open())
                             {
-                                context.BeginFigure(gene.points[0], true, true);
-                                context.PolyLineTo(gene.points.Skip(1).ToList(), true, true);
+                                Point startPoint = new Point(gene.points[0].X, gene.points[0].Y);
+
+                                context.BeginFigure(startPoint, true, true);
+
+                                List<Point> pointsToDraw = gene.points.Skip(1)
+                                    .Select(point => new Point(point.X, point.Y))
+                                    .ToList();
+
+                                context.PolyLineTo(pointsToDraw, true, true);
                             }
                             drawingContext.DrawGeometry(brush, null, triangle);
                             break;

@@ -12,7 +12,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public FormatConvertedBitmap convertedBitmap { get; set; }
 
         private static Random random = new Random();
-        private static int numberOfGenes = 5_000;
+        private static int numberOfGenes = 500;
 
         private PixelColor[] sourcePixels;
         private int bitmapHeight;

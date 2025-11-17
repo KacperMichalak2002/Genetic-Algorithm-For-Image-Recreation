@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Drawing;
+using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
@@ -51,8 +52,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             int geneWidth = random.Next(1, maxWidth + 1);
             int geneHeight = random.Next(1, maxHeight + 1);
 
-            int geneX = random.Next(0, imageWidth - geneWidth);
-            int geneY = random.Next(0, imageHeight - geneHeight);
+            int maxValueOfX = imageWidth - geneWidth;
+            int maxValueOfY = imageHeight - geneHeight;
+
+            int geneX = random.Next(0, maxValueOfX);
+            int geneY = random.Next(0, maxValueOfY);
 
 
             Gene gene = new Gene
@@ -62,6 +66,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 Y = geneY,
                 width = geneWidth,
                 height = geneHeight,
+                points = new List<Point>(),
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
                 color = System.Windows.Media.Color.FromArgb(
                     (byte)random.Next(100,200),
@@ -76,25 +81,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 case ShapeType.Ellipse:
                 case ShapeType.Rectangle:
-                    //double maxPossibleWidth = maxWidth - gene.X;
-                    //double maxPossibleHeight = maxHeight - gene.Y;
-                    //gene.width = random.Next(1, maxWidth + 1);
-                    //gene.height = random.Next(1, maxHeight + 1);
-
-                    //if(gene.X + gene.width > imageWidth)
-                    //{
-                    //    gene.width = imageWidth - gene.X;
-                    //}
-                    //if(gene.Y + gene.height > imageHeight)
-                    //{
-                    //    gene.height = imageHeight - gene.Y;
-                    //}
-
                     break;
                 case ShapeType.Triangle:
-                    System.Windows.Point point1 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);
-                    System.Windows.Point point2 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);
-                    System.Windows.Point point3 = new System.Windows.Point(random.NextDouble() * maxWidth, random.NextDouble() * maxHeight);
+                    Point point1 = generatePoint(maxValueOfX, maxValueOfY);
+                    Point point2 = generatePoint(maxValueOfX, maxValueOfY);
+                    Point point3 = generatePoint(maxValueOfX, maxValueOfY);
+
                     gene.points.Add(point1);
                     gene.points.Add(point2);
                     gene.points.Add(point3);
@@ -103,6 +95,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
 
             genes.Add(gene);
+        }
+
+
+        private Point generatePoint(int maxValueOfX, int maxValueOfY)
+        {
+            return new Point(
+                random.Next(0, maxValueOfX),
+                random.Next(0, maxValueOfY)
+                );
         }
 
         public Chromosome Clone()
@@ -149,7 +150,7 @@ public class Gene
     public System.Windows.Media.Color color { get; set; }
     public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }
-    public PointCollection points { get; set; } = new PointCollection();
+    public List<Point> points { get; set; }
 
     public Gene Clone()
     {
@@ -160,7 +161,8 @@ public class Gene
             width = this.width,
             height = this.height,
             color = this.color,
-            ShapeType = this.ShapeType
+            ShapeType = this.ShapeType,
+            points = this.points
         };
 
         return coppiedGene;
