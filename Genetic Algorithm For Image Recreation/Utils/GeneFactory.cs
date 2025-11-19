@@ -11,11 +11,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 
         private static Random random = new Random();
 
-        public static Gene GenerateGene(ShapeType shapeType, int imageWidth, int imageHeight)
+        public static Gene GenerateGene(ShapeType shapeType, int imageWidth, int imageHeight, double maxGeneScale)
         {
-            double procentOfImage = 0.05;
-            int maxWidth = (int)(imageWidth * procentOfImage);
-            int maxHeight = (int)(imageHeight * procentOfImage);
+
+            int maxWidth = (int)(imageWidth * maxGeneScale);
+            int maxHeight = (int)(imageHeight * maxGeneScale);
 
             int geneWidth = random.Next(1, maxWidth + 1);
             int geneHeight = random.Next(1, maxHeight + 1);

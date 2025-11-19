@@ -6,7 +6,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     {
         private static Random random = new Random();
 
-        public static void Mutate(Individual individual, double mutationRate)
+        public static void Mutate(Individual individual, double mutationRate, double maxGeneScale)
         {
             int maxWidth = individual.Chromosome.imageWidth;
             int maxHeight = individual.Chromosome.imageHeight;
@@ -15,12 +15,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             {
                 if (random.NextDouble() < mutationRate)
                 {
-                    SelectMutation(gene,maxHeight,maxWidth);
+                    SelectMutation(gene,maxHeight,maxWidth, maxGeneScale);
                 }
             }
         }
 
-        private static void SelectMutation(Gene gene, int maxHeight, int maxWidth)
+        private static void SelectMutation(Gene gene, int maxHeight, int maxWidth, double maxGeneScale)
         {
             int mutationType = random.Next(0,4);
 
@@ -38,7 +38,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             if(gene.ShapeType == ShapeType.Triangle)
             {
-                MutateTrianglePoints(gene, maxHeight, maxWidth);
+                MutateTrianglePoints(gene, maxHeight, maxWidth, maxGeneScale);
                 return;
             }
             else
@@ -49,7 +49,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 }
                 else
                 {
-                    MutateSize(gene, maxHeight, maxWidth);
+                    MutateSize(gene, maxHeight, maxWidth, maxGeneScale);
                 }
             }   
         }
@@ -92,13 +92,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         }
 
-        private static void MutateSize(Gene gene, int maxHeight, int maxWidth)
+        private static void MutateSize(Gene gene, int maxHeight, int maxWidth, double maxGeneScale)
         {
             double widhtMult = 0.8 + random.NextDouble() * 0.4;
             double heightMult = 0.8 + random.NextDouble() * 0.4;
 
-            gene.width = (int)Math.Clamp(gene.width * widhtMult, 5, maxWidth * 0.2);
-            gene.height = (int)Math.Clamp(gene.height * heightMult, 5, maxHeight * 0.2);
+            gene.width = (int)Math.Clamp(gene.width * widhtMult, 5, maxWidth * maxGeneScale);
+            gene.height = (int)Math.Clamp(gene.height * heightMult, 5, maxHeight * maxGeneScale);
 
             if(gene.X + gene.width > maxWidth)
             {
@@ -111,15 +111,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             }
         }
 
-        private static void MutateTrianglePoints(Gene gene, int maxHeight, int maxWidth)
+        private static void MutateTrianglePoints(Gene gene, int maxHeight, int maxWidth, double maxGeneScale)
         {
             int numberOfPoints = gene.points.Count;
             double mutationStrength = 0.05;
-            double procentOfImage = 0.20;
             List<BasicPoint> mutatedPoints = new List<BasicPoint>();
 
-            int maxAllowedWidth = (int)(maxWidth * procentOfImage);
-            int maxAllowedHeight = (int)(maxHeight * procentOfImage);
+            int maxAllowedWidth = (int)(maxWidth * maxGeneScale);
+            int maxAllowedHeight = (int)(maxHeight * maxGeneScale);
 
             maxAllowedWidth = Math.Max(maxAllowedWidth, 10);
             maxAllowedHeight = Math.Max(maxAllowedHeight, 10);

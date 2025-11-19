@@ -25,6 +25,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                             algorithmConfig.numberOfGenes,
                             algorithmConfig.bitmapWidth,
                             algorithmConfig.bitmapHeight,
+                            algorithmConfig.maxGeneScale,
                             algorithmConfig.shapeType
                             )
                     ));
@@ -90,12 +91,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                     if (random.NextDouble() < 0.20) // 20% for mutation
                     {
-                        Mutation.Mutate(child, 0.1);
+                        Mutation.Mutate(child, 0.1, algorithmConfig.maxGeneScale);
                     }
 
                     if (random.NextDouble() < 0.02) // 2% for adding new gene
                     {
-                        child.Chromosome.GenerateGene(algorithmConfig.shapeType);
+                        child.Chromosome.GenerateGene(algorithmConfig.shapeType, algorithmConfig.maxGeneScale);
                     }
 
                     if (random.NextDouble() < 0.01) // 1% for removing random gene
@@ -114,7 +115,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
-            Debug.WriteLine($"Time elapsed: {elapsedTime}");
+            Debug.WriteLine($"\nTime elapsed: {elapsedTime}");
 
             Debug.WriteLine($"Best fitness: {population[0].fitness}");
             Debug.WriteLine($"Size of population: {algorithmConfig.sizeOfPopulation}");

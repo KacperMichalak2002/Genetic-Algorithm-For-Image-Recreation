@@ -28,7 +28,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             this.shapeType = shapeType;
         }
 
-        public Chromosome(int numberOfGenes, int imageWidth, int imageHeight, ShapeType shapeType)
+        public Chromosome(int numberOfGenes, int imageWidth, int imageHeight,double maxGeneScale, ShapeType shapeType)
         {
             
             this.numberOfGenes = numberOfGenes;
@@ -38,13 +38,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             for(int i = 0; i < numberOfGenes; i++)
             {
-                GenerateGene(shapeType);
+                GenerateGene(shapeType, maxGeneScale);
             }
         }
 
-        public void GenerateGene(ShapeType shapeType)
+        public void GenerateGene(ShapeType shapeType, double maxGeneScale)
         {
-           genes.Add(GeneFactory.GenerateGene(shapeType, imageWidth, imageHeight));
+           genes.Add(GeneFactory.GenerateGene(shapeType, imageWidth, imageHeight, maxGeneScale));
         }
 
 
