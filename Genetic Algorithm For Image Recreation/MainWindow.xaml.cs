@@ -1,5 +1,6 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using Genetic_Algorithm_For_Image_Recreation.Utils;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Windows;
@@ -15,10 +16,13 @@ namespace Genetic_Algorithm_For_Image_Recreation
         private PixelColor[] sourcePixels;
         private bool running = false;
         private CancellationTokenSource cancellationTokenSource;
+        private AlgorithmConfig algorithmConfig;
         
         // Change to get from user interface
         int numberOfIterations = 10_000;
-        int populationSize = 100;
+        int numberOfGenes = 4_000;
+        int populationSize = 50;
+
 
         public MainWindow()
         {
@@ -68,7 +72,18 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
                     });
 
-                    GeneticAlgorithm ga = new GeneticAlgorithm(populationSize, numberOfIterations, shapeType, sourcePixels, convertedImage.PixelHeight, convertedImage.PixelWidth);
+                    algorithmConfig = new AlgorithmConfig(
+                        populationSize,
+                        numberOfGenes,
+                        numberOfIterations,
+                        convertedImage.PixelHeight,
+                        convertedImage.PixelWidth,
+                        shapeType,
+                        sourcePixels
+                        );
+
+
+                    GeneticAlgorithm ga = new GeneticAlgorithm(algorithmConfig);
                     await Task.Run(() => ga.Start(cancellationToken, progressHandler), cancellationToken);
 
                     tbStatus.Text = "Finished";
