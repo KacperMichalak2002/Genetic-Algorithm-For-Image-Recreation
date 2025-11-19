@@ -72,8 +72,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void MutateAlpha(Gene gene)
         {
-            int diffA = random.Next(-50, 51);
-            byte newA = (byte) Math.Clamp((gene.color.A + diffA), 100, 255);
+            int diffA = random.Next(-30, 31);
+            byte newA = (byte) Math.Clamp((gene.color.A + diffA), 30, 255);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
         }
@@ -115,7 +115,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         {
             int numberOfPoints = gene.points.Count;
             double mutationStrength = 0.05;
+            double procentOfImage = 0.20;
             List<BasicPoint> mutatedPoints = new List<BasicPoint>();
+
+            int maxAllowedWidth = (int)(maxWidth * procentOfImage);
+            int maxAllowedHeight = (int)(maxHeight * procentOfImage);
+
+            maxAllowedWidth = Math.Max(maxAllowedWidth, 10);
+            maxAllowedHeight = Math.Max(maxAllowedHeight, 10);
 
             for(int i = 0; i < numberOfPoints; i++)
             {
@@ -129,10 +136,20 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 mutatedPoints.Add(point);
             }
 
-            gene.points = mutatedPoints;
+            int minX = mutatedPoints.Min(p => p.X);
+            int minY = mutatedPoints.Min(p => p.Y);
+            int maxX = mutatedPoints.Max(p => p.X);
+            int maxY = mutatedPoints.Max(p => p.Y);
 
+            int newWidth = maxX - minX + 1;
+            int newHeight = maxY - minY + 1;
 
-            RecalculateBoundingBox(gene, maxHeight, maxWidth);
+            if(newWidth <= maxAllowedWidth && newHeight <= maxAllowedHeight)
+            {
+                gene.points = mutatedPoints;
+                RecalculateBoundingBox(gene, maxHeight, maxWidth);
+            }
+            
         }
 
         private static void RecalculateBoundingBox(Gene gene, int maxHeight, int maxWidth)
