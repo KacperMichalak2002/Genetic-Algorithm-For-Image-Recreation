@@ -19,9 +19,9 @@ namespace Genetic_Algorithm_For_Image_Recreation
         private AlgorithmConfig algorithmConfig;
         
         // Change to get from user interface
-        int numberOfIterations = 10_000;
-        int numberOfGenes = 4_000;
-        int populationSize = 50;
+        int numberOfIterations = 50_000;
+        int numberOfGenes = 10_000;
+        int populationSize = 100;
         double maxGeneScale = 0.07; // in % so 0.05 is 5% of image
 
 

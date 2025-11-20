@@ -36,7 +36,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
                 height = geneHeight,
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
                 color = System.Windows.Media.Color.FromArgb(
-                    (byte)random.Next(30, 150),
+                    (byte)random.Next(50, 150),
                     (byte)random.Next(256),
                     (byte)random.Next(256),
                     (byte)random.Next(256)),

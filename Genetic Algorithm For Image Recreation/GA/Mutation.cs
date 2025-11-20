@@ -72,7 +72,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
         private static void MutateAlpha(Gene gene)
         {
-            int diffA = random.Next(-30, 31);
+            int diffA = random.Next(-50, 51);
             byte newA = (byte) Math.Clamp((gene.color.A + diffA), 30, 255);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
