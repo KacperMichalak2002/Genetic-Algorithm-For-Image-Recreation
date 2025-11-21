@@ -40,7 +40,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Individual[] population = Initialize();
 
             var updateTimer = Stopwatch.StartNew();
-            long updateInterval = 33;
+            long updateInterval = 100;
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 

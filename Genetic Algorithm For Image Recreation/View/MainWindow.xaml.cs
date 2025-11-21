@@ -6,10 +6,11 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ControlzEx.Theming;
 
 namespace Genetic_Algorithm_For_Image_Recreation
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private FormatConvertedBitmap convertedImage;
         private ShapeType shapeType;
@@ -19,8 +20,8 @@ namespace Genetic_Algorithm_For_Image_Recreation
         private AlgorithmConfig algorithmConfig;
         
         // Change to get from user interface
-        int numberOfIterations = 50_000;
-        int numberOfGenes = 10_000;
+        int numberOfIterations = 10_000;
+        int numberOfGenes = 500;
         int populationSize = 100;
         double maxGeneScale = 0.07; // in % so 0.05 is 5% of image
 
@@ -28,6 +29,9 @@ namespace Genetic_Algorithm_For_Image_Recreation
         public MainWindow()
         {
             InitializeComponent();
+
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.SyncTheme();
         }
 
         private async void btnToggleRun_Click(object sender, RoutedEventArgs e)
@@ -59,12 +63,12 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
                 try
                 {
-                    
+
 
                     sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
                     Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth);
 
-                    var progressHandler = new Progress<(int generationNumber,Individual best)>(report =>
+                    var progressHandler = new Progress<(int generationNumber, Individual best)>(report =>
                     {
                         draw.RenderChromosome(report.best);
                         resultImage.Source = draw.CloneCurrentBitmap();
@@ -137,17 +141,22 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
         private void rbEllipse_Checked(object sender, RoutedEventArgs e)
         {
-            shapeType = ShapeType.Ellipse;
+            //shapeType = ShapeType.Ellipse;
         }
 
         private void rbRectangle_Checked(object sender, RoutedEventArgs e)
         {
-            shapeType = ShapeType.Rectangle;
+            //shapeType = ShapeType.Rectangle;
         }
 
         private void rbTriangle_Checked(object sender, RoutedEventArgs e)
         {
-            shapeType = ShapeType.Triangle;
+           // shapeType = ShapeType.Triangle;
+        }
+
+        private void MetroProgressBar_DropDownOpened(object sender, EventArgs e)
+        {
+
         }
     }
 }

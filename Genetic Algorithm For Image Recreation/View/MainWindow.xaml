@@ -1,0 +1,107 @@
+﻿<mah:MetroWindow x:Class="Genetic_Algorithm_For_Image_Recreation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:Genetic_Algorithm_For_Image_Recreation"
+        mc:Ignorable="d"
+        Title="Genetic Algorithm For Image Reconstrution" 
+                 Height="500" 
+                 Width="1000"
+                 
+                 WindowStartupLocation="CenterScreen">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width=".5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".3*"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        
+        <!--Status prgoress-->
+
+        <TextBlock Name="tbStatus" Text="Load Image" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <StackPanel Grid.Column="1">
+            <TextBlock x:Name="tbProgress" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <mah:MetroProgressBar
+                x:Name="ProgressBar"
+                BorderThickness="0.5"
+                Margin="10"
+                BorderBrush="Black"
+                Foreground="GreenYellow"
+            />
+        </StackPanel>
+        
+        <!-- Srouce Image -->
+        <Image
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            x:Name="srcImage"
+            Stretch="Uniform"
+            />
+        
+        <!-- Algorithm Output -->
+        <Image
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.RowSpan="2"
+            x:Name="resultImage"
+            Height="{Binding ActualHeight, ElementName=srcImage}"
+            Width="{Binding ActualWidth, ElementName=srcImage}"
+            Stretch="Uniform"/>
+
+        <Grid
+            Grid.Row="3"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button
+                x:Name="btnToggleRun"
+                Content="Start"
+                Width="{Binding ActualWidth, ElementName=btnLoadImage}"
+                Height="50"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Click="btnToggleRun_Click"
+                />
+
+            <Button
+                Grid.Column="1"
+                x:Name="btnLoadImage"
+                Content="Select Image"
+                Width="auto"
+                Height="50"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Click="loadImageButton_Click"
+                />
+
+            <Button
+                Grid.Column="2"
+                x:Name="btnSettings"
+                Content="Settings"
+                Width="{Binding ActualWidth, ElementName=btnLoadImage}"
+                Height="50"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+
+                />
+        </Grid>
+
+
+
+
+    </Grid>
+</mah:MetroWindow>
