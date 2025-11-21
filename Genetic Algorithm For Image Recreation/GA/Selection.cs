@@ -16,15 +16,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             }
         }
 
-        public static Individual TournamentSelection(List<Individual> population)
-        {
-            Random random = new Random();
-
-            int index1 = random.Next(population.Count);
-            int index2 = random.Next(population.Count);
+        public static Individual TournamentSelection(Individual[] population, Random random)
+        { 
+            int index1 = random.Next(population.Length);
+            int index2 = random.Next(population.Length);
 
             while(index1 == index2)
-                index2 = random.Next(population.Count);
+                index2 = random.Next(population.Length);
 
             return population[index1].fitness < population[index2].fitness ? population[index1] : population[index2];
 

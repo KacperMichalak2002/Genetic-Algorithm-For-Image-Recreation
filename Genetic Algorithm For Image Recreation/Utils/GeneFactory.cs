@@ -8,10 +8,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 {
     public class GeneFactory
     {
-
-        private static Random random = new Random();
-
-        public static Gene GenerateGene(ShapeType shapeType, int imageWidth, int imageHeight, double maxGeneScale)
+        public static Gene GenerateGene(ShapeType shapeType, int imageWidth, int imageHeight, double maxGeneScale, Random random)
         {
 
             int maxWidth = (int)(imageWidth * maxGeneScale);

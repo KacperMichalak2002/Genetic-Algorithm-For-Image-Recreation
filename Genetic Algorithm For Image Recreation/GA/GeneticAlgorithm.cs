@@ -1,4 +1,5 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Utils;
+using System;
 using System.Diagnostics;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
@@ -6,20 +7,19 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     internal class GeneticAlgorithm
     {
         private AlgorithmConfig algorithmConfig;
-        private static Random random = new Random();
 
         public GeneticAlgorithm(AlgorithmConfig algorithmConfig)
         {
             this.algorithmConfig = algorithmConfig;
         }
 
-        private List<Individual> Initialize()
+        private Individual[] Initialize()
         {
-            List<Individual> population = new List<Individual>();
+            Individual[] population = new Individual[algorithmConfig.sizeOfPopulation];
 
             for (int i = 0; i < algorithmConfig.sizeOfPopulation; i++)
             {
-                population.Add(new Individual
+                population[i] = (new Individual
                     (
                         new Chromosome(
                             algorithmConfig.numberOfGenes,
@@ -37,7 +37,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public void Start(CancellationToken cancellationToken, IProgress<(int generationNumber, Individual best)> progress)
         {
 
-            List<Individual> population = Initialize();
+            Individual[] population = Initialize();
 
             var updateTimer = Stopwatch.StartNew();
             long updateInterval = 33;
@@ -59,11 +59,16 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 });
 
                 // Sorting by fitness
-                population.Sort(new FitnessComparer());
+                Array.Sort(population, new FitnessComparer());
 
-                Debug.WriteLine($"Generation: {generation}");
-                Debug.WriteLine($"Best fitness: {population[0].fitness}");
-                Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
+
+                if(generation % 10 == 0)
+                {
+                    Debug.WriteLine($"Generation: {generation}");
+                    Debug.WriteLine($"Best fitness: {population[0].fitness}");
+                    Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
+                }
+                
 
                 if (updateTimer.ElapsedMilliseconds > updateInterval)
                 {
@@ -72,7 +77,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 }
 
                 // Creataing new generation 
-                List<Individual> newGeneration = new List<Individual>();
+                Individual[] newGeneration = new Individual[algorithmConfig.sizeOfPopulation];
 
 
                 // Ellitism 10% for testing
@@ -80,32 +85,35 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                 for (int i = 0; i < pct; i++)
                 {
-                    newGeneration.Add(population[i].Clone());
+                    newGeneration[i] = population[i].Clone();
                 }
 
-                while (newGeneration.Count < algorithmConfig.sizeOfPopulation)
+                Parallel.For(pct, algorithmConfig.sizeOfPopulation, i =>
                 {
-                    Individual parent1 = Selection.TournamentSelection(population);
-                    Individual parent2 = Selection.TournamentSelection(population);
-                    Individual child = Crossover.UniformCrossover(parent1, parent2);
+                    Random random = Random.Shared;
+
+                    Individual parent1 = Selection.TournamentSelection(population, random);
+                    Individual parent2 = Selection.TournamentSelection(population, random);
+                    Individual child = Crossover.UniformCrossover(parent1, parent2, random);
 
                     if (random.NextDouble() < 0.20) // 20% for mutation
                     {
-                        Mutation.Mutate(child, 0.1, algorithmConfig.maxGeneScale);
+                        Mutation.Mutate(child, 0.1, algorithmConfig.maxGeneScale, random);
                     }
 
                     if (random.NextDouble() < 0.02) // 2% for adding new gene
                     {
-                        child.Chromosome.GenerateGene(algorithmConfig.shapeType, algorithmConfig.maxGeneScale);
+                        child.Chromosome.GenerateGene(algorithmConfig.shapeType, algorithmConfig.maxGeneScale, random);
                     }
 
                     if (random.NextDouble() < 0.01) // 1% for removing random gene
                     {
-                        child.Chromosome.RemoveRandomGene();
+                        child.Chromosome.RemoveRandomGene(random);
                     }
 
-                    newGeneration.Add(child);
-                }
+                    newGeneration[i] = child;
+                });
+
 
                 population = newGeneration;
             }
