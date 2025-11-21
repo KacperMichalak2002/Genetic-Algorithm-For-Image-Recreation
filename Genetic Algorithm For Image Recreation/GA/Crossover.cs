@@ -11,10 +11,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     internal class Crossover
     {
 
-        private static Random random = new Random();
-
         // Mutation after selection and crossover
-        public static Individual BlendCrossover(Individual parent1, Individual parent2)
+        public static Individual BlendCrossover(Individual parent1, Individual parent2, Random random)
         {
 
             List<Gene> childsGenes = new List<Gene>();
@@ -33,7 +31,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 childsGenes.Add(blendedGene);
             }
 
-            CompleteGenes(childsGenes, parent1, parent2, minGenes, maxGenes);
+            CompleteGenes(childsGenes, parent1, parent2, minGenes, maxGenes, random);
 
 
             Chromosome childsChromosome = new Chromosome(childsGenes, childsGenes.Count, parent1.Chromosome.imageWidth, parent1.Chromosome.imageHeight, parent1.Chromosome.shapeType);
@@ -43,7 +41,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             return child;
         }
 
-        private static void CompleteGenes(List<Gene> childsGenes, Individual parent1, Individual parent2, int minGenes, int maxGenes)
+        private static void CompleteGenes(List<Gene> childsGenes, Individual parent1, Individual parent2, int minGenes, int maxGenes, Random random)
         {                                                                                                       
             if (parent1.Chromosome.genes.Count == maxGenes)
             {
@@ -64,7 +62,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         }
 
 
-        public static Individual UniformCrossover(Individual parent1, Individual parent2)
+        public static Individual UniformCrossover(Individual parent1, Individual parent2, Random random)
         {
             List<Gene> childsGenes = new List<Gene>();
 
@@ -87,7 +85,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 childsGenes.Add(newGene);
             }
 
-            CompleteGenes(childsGenes, parent1, parent2, minGenes, maxGenes);
+            CompleteGenes(childsGenes, parent1, parent2, minGenes, maxGenes, random);
             Chromosome childsChromosome = new Chromosome(childsGenes, childsGenes.Count, parent1.Chromosome.imageWidth, parent1.Chromosome.imageHeight, parent1.Chromosome.shapeType);
             Individual child = new Individual(childsChromosome);
 

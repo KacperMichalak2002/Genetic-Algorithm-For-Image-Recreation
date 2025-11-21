@@ -6,7 +6,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
     internal class Fitness
     {
-        public static double CalculateFitness(PixelColor[] sourcePixels, PixelColor[] resultPixels)
+        public static double CalculateFitness(PixelColor[] sourcePixels, PixelColor[] resultPixels, int numberOfGenes)
         {
             if (sourcePixels.Length != resultPixels.Length)
             {
@@ -29,8 +29,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             }
 
-            double retValue= Math.Round(differenceValue / resultPixels.Length, 4);
-            return retValue;
+            double avgDifference= Math.Round(differenceValue / resultPixels.Length, 4);
+            double geneReward = Math.Log(1 + numberOfGenes);
+
+            double retValue = avgDifference - geneReward;
+
+            retValue = Math.Max(retValue, 0.0001);
+
+            return Math.Round(retValue, 4);
 
 
         }

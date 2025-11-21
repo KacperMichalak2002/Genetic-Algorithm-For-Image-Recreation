@@ -1,5 +1,6 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using Genetic_Algorithm_For_Image_Recreation.Utils;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Windows;
@@ -15,10 +16,14 @@ namespace Genetic_Algorithm_For_Image_Recreation
         private PixelColor[] sourcePixels;
         private bool running = false;
         private CancellationTokenSource cancellationTokenSource;
+        private AlgorithmConfig algorithmConfig;
         
         // Change to get from user interface
-        int numberOfIterations = 100;
-        int populationSize = 40;
+        int numberOfIterations = 50_000;
+        int numberOfGenes = 10_000;
+        int populationSize = 100;
+        double maxGeneScale = 0.07; // in % so 0.05 is 5% of image
+
 
         public MainWindow()
         {
@@ -68,7 +73,19 @@ namespace Genetic_Algorithm_For_Image_Recreation
 
                     });
 
-                    GeneticAlgorithm ga = new GeneticAlgorithm(populationSize, numberOfIterations, shapeType, sourcePixels, convertedImage.PixelHeight, convertedImage.PixelWidth);
+                    algorithmConfig = new AlgorithmConfig(
+                        populationSize,
+                        numberOfGenes,
+                        numberOfIterations,
+                        convertedImage.PixelHeight,
+                        convertedImage.PixelWidth,
+                        maxGeneScale,
+                        shapeType,
+                        sourcePixels
+                        );
+
+
+                    GeneticAlgorithm ga = new GeneticAlgorithm(algorithmConfig);
                     await Task.Run(() => ga.Start(cancellationToken, progressHandler), cancellationToken);
 
                     tbStatus.Text = "Finished";
@@ -79,7 +96,7 @@ namespace Genetic_Algorithm_For_Image_Recreation
                 }
                 finally
                 {
-                    running = true;
+                    running = false;
                     btnToggleRun.Content = "Start";
                 }
             }
