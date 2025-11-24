@@ -27,12 +27,14 @@
         
         <!--Status prgoress-->
 
-        <TextBlock Name="tbStatus" Text="Load Image" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name="tbStatus" Text="{Binding StatusText}" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <StackPanel Grid.Column="1">
-            <TextBlock x:Name="tbProgress" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock x:Name="tbProgress" Text="{Binding ProgressText}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <mah:MetroProgressBar
                 x:Name="ProgressBar"
+                Value="{Binding ProgressValue}"
+                Maximum="{Binding ProgressMaximumValue}"
                 BorderThickness="0.5"
                 Margin="10"
                 BorderBrush="Black"
@@ -46,6 +48,7 @@
             Grid.RowSpan="2"
             x:Name="srcImage"
             Stretch="Uniform"
+            Source="{Binding SourceImage}"
             />
         
         <!-- Algorithm Output -->
@@ -56,6 +59,7 @@
             x:Name="resultImage"
             Height="{Binding ActualHeight, ElementName=srcImage}"
             Width="{Binding ActualWidth, ElementName=srcImage}"
+            Source="{Binding ResultImage}"
             Stretch="Uniform"/>
 
         <Grid
@@ -69,23 +73,23 @@
 
             <Button
                 x:Name="btnToggleRun"
-                Content="Start"
+                Content="{Binding StartButtonText}"
                 Width="{Binding ActualWidth, ElementName=btnLoadImage}"
                 Height="50"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
-                Click="btnToggleRun_Click"
+                Command="{Binding ToggleRunCommand}"
                 />
 
             <Button
                 Grid.Column="1"
                 x:Name="btnLoadImage"
-                Content="Select Image"
+                Content="{Binding SelectImageButtonText }"
                 Width="auto"
                 Height="50"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
-                Click="loadImageButton_Click"
+                Command="{Binding LoadImageCommand}"
                 />
 
             <Button
@@ -96,7 +100,6 @@
                 Height="50"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
-
                 />
         </Grid>
 
