@@ -2,15 +2,17 @@
 using Genetic_Algorithm_For_Image_Recreation.ViewModel;
 using System.Windows;
 
-namespace Genetic_Algorithm_For_Image_Recreation
+namespace Genetic_Algorithm_For_Image_Recreation.View
 {
-    public partial class MainWindow
+    public partial class SettingsWindow : Window
     {
-        public MainWindow()
+        public SettingsWindow(Window parent)
         {
             InitializeComponent();
-            MainWindowViewModel viewModel = new MainWindowViewModel(this);
+
+            SettingsWindowModel viewModel = new SettingsWindowModel();
             DataContext = viewModel;
+
 
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
             ThemeManager.Current.SyncTheme();

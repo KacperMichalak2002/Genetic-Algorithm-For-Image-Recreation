@@ -2,8 +2,10 @@
 using Genetic_Algorithm_For_Image_Recreation.MVVM;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
+using Genetic_Algorithm_For_Image_Recreation.View;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -22,18 +24,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
         private bool running = false;
         private CancellationTokenSource? cancellationTokenSource;
 		private FormatConvertedBitmap? convertedImage;
+		private Window parentWindow;
 
 
         public RelayCommand ToggleRunCommand => new RelayCommand(execute => Start(), canExecute => SourceImage != null);
 		public RelayCommand LoadImageCommand => new RelayCommand(execute => LoadSourceImage());
 
+		public RelayCommand OpenSettingsCommand => new RelayCommand(ExecutionEngineException => OpenSettings(), canExecute => !running);
 
-        public MainWindowViewModel()
+
+        public MainWindowViewModel(Window window)
 		{
+			parentWindow = window;
 			StatusText = "Load Image";
 			ProgressText = "";
 			StartButtonText = "Start";
 			SelectImageButtonText = "Load Image";
+			SettingButtonText = "Settigns";
 		}
 
         private string statusText;
@@ -81,6 +88,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 				OnPropertyChanged();
 			}
 		}
+
+		private string settingButtonText;
+
+		public string SettingButtonText
+        {
+			get { return settingButtonText; }
+			set { settingButtonText = value; OnPropertyChanged(); }
+		}
+
 
 
 
@@ -237,5 +253,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 
 		}
-	}
+
+		private void OpenSettings()
+		{
+			SettingsWindow settingsWindow = new SettingsWindow(parentWindow);
+			settingsWindow.ShowDialog();
+		}
+
+    }
 }

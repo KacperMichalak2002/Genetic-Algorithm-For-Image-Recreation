@@ -95,11 +95,12 @@
             <Button
                 Grid.Column="2"
                 x:Name="btnSettings"
-                Content="Settings"
+                Content="{Binding SettingButtonText}"
                 Width="{Binding ActualWidth, ElementName=btnLoadImage}"
                 Height="50"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
+                Command="{Binding OpenSettingsCommand}"
                 />
         </Grid>
 
