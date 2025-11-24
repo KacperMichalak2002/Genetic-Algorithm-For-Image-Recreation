@@ -1,5 +1,4 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Utils;
-using System;
 using System.Diagnostics;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
