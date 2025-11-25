@@ -4,14 +4,19 @@ using System.Windows;
 
 namespace Genetic_Algorithm_For_Image_Recreation.View
 {
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow
     {
-        public SettingsWindow(Window parent)
+        internal SettingsWindow(SettingsWindowModel viewModel)
         {
             InitializeComponent();
-
-            SettingsWindowModel viewModel = new SettingsWindowModel();
             DataContext = viewModel;
+
+            viewModel.RequestClose = (result) =>
+            {
+                this.DialogResult = result;
+                this.Close();
+
+            };
 
 
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;

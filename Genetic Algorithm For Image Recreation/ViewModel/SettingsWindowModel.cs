@@ -1,5 +1,6 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.MVVM;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
+using System.Diagnostics;
 
 namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 {
@@ -22,6 +23,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		public int SizeMinimum { get; } = 2;
 		public int SizeMaximum { get; } = 30;
 
+		public string SubmitButtonText { get; } = "Submit";
+
         private AlgorithmConfig algorithmConfig;
 
 
@@ -31,13 +34,27 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 			set { algorithmConfig = value; OnPropertyChanged(); }
 		}
 
-		public SettingsWindowModel()
+		public SettingsWindowModel(AlgorithmConfig currentAlgorithmConfig)
 		{
+			if(currentAlgorithmConfig != null)
+				AlgorithmConfig = currentAlgorithmConfig.Clone();
+			else
+				AlgorithmConfig = new AlgorithmConfig();
+		}
 
+        public double PrecentageOfScale 
+		{ 
+			get => AlgorithmConfig.maxGeneScale * 100;
+			set
+			{
+				AlgorithmConfig.maxGeneScale = value / 100;
+				OnPropertyChanged();
+			}
+		
 		}
 
 
-		private void RectangleChecked()
+        private void RectangleChecked()
 		{
 			AlgorithmConfig.shapeType = ShapeType.Rectangle;
 		}

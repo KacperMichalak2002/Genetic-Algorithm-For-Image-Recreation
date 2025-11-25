@@ -13,22 +13,15 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 {
     internal class MainWindowViewModel : ViewModelBase
     {
-
-        // Change to get from user interface
-        int numberOfIterations = 10_000;
-        int numberOfGenes = 500;
-        int populationSize = 100;
-        double maxGeneScale = 0.07; // in % so 0.05 is 5% of image
-		ShapeType shapeType = ShapeType.Ellipse;
-
         private bool running = false;
         private CancellationTokenSource? cancellationTokenSource;
 		private FormatConvertedBitmap? convertedImage;
 		private Window parentWindow;
+		private AlgorithmConfig currentAlgorithmConfig = new AlgorithmConfig();
 
 
         public RelayCommand ToggleRunCommand => new RelayCommand(execute => Start(), canExecute => SourceImage != null);
-		public RelayCommand LoadImageCommand => new RelayCommand(execute => LoadSourceImage());
+		public RelayCommand LoadImageCommand => new RelayCommand(execute => LoadSourceImage(), canExecute => !running);
 
 		public RelayCommand OpenSettingsCommand => new RelayCommand(ExecutionEngineException => OpenSettings(), canExecute => !running);
 
@@ -39,8 +32,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 			StatusText = "Load Image";
 			ProgressText = "";
 			StartButtonText = "Start";
-			SelectImageButtonText = "Load Image";
-			SettingButtonText = "Settigns";
 		}
 
         private string statusText;
@@ -77,30 +68,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 			}
 		}
 
-		private string selectImagebuttonText;
+		public string SelectImageButtonText { get; } = "Select Image";
 
-		public string SelectImageButtonText
-		{
-			get { return selectImagebuttonText; }
-			set 
-			{ 
-				selectImagebuttonText = value;
-				OnPropertyChanged();
-			}
-		}
+		public string SettingButtonText { get; } = "Settings";
 
-		private string settingButtonText;
-
-		public string SettingButtonText
-        {
-			get { return settingButtonText; }
-			set { settingButtonText = value; OnPropertyChanged(); }
-		}
-
-
-
-
-		private ImageSource sourceImage;
+        private ImageSource sourceImage;
 
 		public ImageSource SourceImage
         {
@@ -201,7 +173,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 				running = true;
 				StartButtonText = "Stop";
 				StatusText = "Running";
-				ProgressMaximumValue = numberOfIterations;
+				ProgressMaximumValue = currentAlgorithmConfig.numberOfIterations;
 
 				cancellationTokenSource = new CancellationTokenSource();
 				CancellationToken cancellationToken = cancellationTokenSource.Token;
@@ -216,24 +188,16 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
                     {
                         draw.RenderChromosome(report.best);
                         ResultImage = draw.CloneCurrentBitmap();
-                        ProgressText = $"{report.generationNumber} out of {numberOfIterations}";
+                        ProgressText = $"{report.generationNumber} out of {ProgressMaximumValue}";
                         ProgressValue = report.generationNumber;
 
                     });
 
-					AlgorithmConfig algorithmConfig = new AlgorithmConfig
-						(
-							populationSize,
-							numberOfGenes,
-							numberOfIterations,
-							convertedImage.PixelHeight,
-							convertedImage.PixelWidth,
-							maxGeneScale,
-							shapeType,
-							sourcePixels
-						);
+                    currentAlgorithmConfig.bitmapHeight = convertedImage.PixelHeight;
+                    currentAlgorithmConfig.bitmapWidth = convertedImage.PixelWidth;
+					currentAlgorithmConfig.sourcePixels = sourcePixels;
 
-					GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(algorithmConfig);
+					GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(currentAlgorithmConfig);
 					await Task.Run(() => geneticAlgorithm.Start(cancellationToken, progressHandler), cancellationToken);
 
 					StatusText = "Finshed";
@@ -256,8 +220,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 		private void OpenSettings()
 		{
-			SettingsWindow settingsWindow = new SettingsWindow(parentWindow);
-			settingsWindow.ShowDialog();
+			SettingsWindowModel settingsWindowModel = new SettingsWindowModel(currentAlgorithmConfig);
+
+			SettingsWindow settingsWindow = new SettingsWindow(settingsWindowModel);
+			settingsWindow.Owner = parentWindow;
+			bool? result = settingsWindow.ShowDialog();
+
+			if(result == true)
+			{
+				currentAlgorithmConfig = settingsWindowModel.AlgorithmConfig;
+				
+			}
 		}
 
     }

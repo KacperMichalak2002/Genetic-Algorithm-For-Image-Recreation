@@ -1,4 +1,4 @@
-﻿<Window x:Class="Genetic_Algorithm_For_Image_Recreation.View.SettingsWindow"
+﻿<mah:MetroWindow x:Class="Genetic_Algorithm_For_Image_Recreation.View.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,16 @@
         xmlns:local="clr-namespace:Genetic_Algorithm_For_Image_Recreation.View"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="SettingsWindow" Height="450" Width="800">
+        Title="Settings" Height="450" Width="800">
+
+
+    <mah:MetroWindow.Resources>
+        <Style TargetType="RadioButton"
+               BasedOn="{StaticResource MahApps.Styles.RadioButton}">
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+    </mah:MetroWindow.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -17,7 +26,7 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height=".25*"/>
-                <RowDefinition Height=".15*"/>
+                <RowDefinition Height=".10*"/>
                 <RowDefinition Height=".6*"/>
             </Grid.RowDefinitions>
 
@@ -74,16 +83,23 @@
 
                 <Label Target="{Binding ElementName=nrOfGeneScale}" Content="Size of gene (shape) in %:"/>
                 <mah:NumericUpDown Name="nrOfGeneScale"
-                                   Value="{Binding AlgorithmConfig.maxGeneScale}"
+                                   Value="{Binding PrecentageOfScale}"
                                    Minimum="{Binding SizeMinimum}"
                                    Maximum="{Binding SizeMaximum}"
                                    NumericInputMode="Numbers"
                                    HorizontalAlignment="Left" 
                                    Width="100"/>
 
-                <Button x:Name="btnSubmit" Command="{Binding SubmitCommand}"/>
+                <Button x:Name="btnSubmit"
+                        Command="{Binding SubmitCommand}"
+                        Width="{Binding ActualWidth, ElementName=nrOfGenes}"
+                        Content="{Binding SubmitButtonText}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="10"
+                        />
             </StackPanel>
 
         </Grid>
     </Grid>
-</Window>
+</mah:MetroWindow>
