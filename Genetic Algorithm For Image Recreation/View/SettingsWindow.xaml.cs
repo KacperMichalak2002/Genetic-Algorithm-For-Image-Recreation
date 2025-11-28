@@ -13,9 +13,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.View
 
             viewModel.RequestClose = (result) =>
             {
-                this.DialogResult = result;
                 this.Close();
-
             };
 
 

@@ -1,14 +1,17 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.MVVM;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
 using System.Diagnostics;
+using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 {
     internal class SettingsWindowModel : ViewModelBase
     {
 		public Action<bool> RequestClose { get; set; }
+		public Action<AlgorithmConfig> SubmitChanges { get; set; }
 
 		public RelayCommand SubmitCommand => new RelayCommand(execute => SubmitSettings(), canExecute => CanSubmit());
+		public RelayCommand CloseCommand => new RelayCommand(execute => CloseSettings());
 		public RelayCommand RectangleCheckedCommand => new RelayCommand(excecute => RectangleChecked());
         public RelayCommand EllipseCheckedCommand => new RelayCommand(excecute => EllipseChecked());
         public RelayCommand TriangleCheckedCommand => new RelayCommand(excecute => TriangleChecked());
@@ -24,6 +27,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		public int SizeMaximum { get; } = 30;
 
 		public string SubmitButtonText { get; } = "Submit";
+
+		public string CloseButtonText { get; } = "Close";
 
         private AlgorithmConfig algorithmConfig;
 
@@ -53,8 +58,21 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		
 		}
 
+		private ImageSource previewImage;
 
-        private void RectangleChecked()
+		public ImageSource PreviewImage
+		{
+			get { return previewImage; }
+			set 
+			{ 
+				previewImage = value; 
+				OnPropertyChanged();
+			}
+		}
+
+
+
+		private void RectangleChecked()
 		{
 			AlgorithmConfig.geneConfig.shapeType = ShapeType.Rectangle;
 		}
@@ -74,12 +92,19 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 		}
 
+
+		// Change preview after submit
 		private void SubmitSettings()
 		{
-			RequestClose?.Invoke(true);
+			SubmitChanges?.Invoke(AlgorithmConfig.Clone());
 		}
 
-		private bool CanSubmit()
+		private void CloseSettings()
+		{
+            RequestClose?.Invoke(false);
+        }
+
+        private bool CanSubmit()
 		{
 			return true;
 		}

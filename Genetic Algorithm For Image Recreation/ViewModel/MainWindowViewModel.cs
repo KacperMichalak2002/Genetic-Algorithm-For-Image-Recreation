@@ -229,13 +229,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 			SettingsWindow settingsWindow = new SettingsWindow(settingsWindowModel);
 			settingsWindow.Owner = parentWindow;
-			bool? result = settingsWindow.ShowDialog();
+			
 
-			if(result == true)
+			settingsWindowModel.SubmitChanges = (newConfig) =>
 			{
-				currentAlgorithmConfig = settingsWindowModel.AlgorithmConfig;
-				
-			}
+				currentAlgorithmConfig = newConfig;
+			};
+
+			settingsWindow.ShowDialog();
 		}
 
     }
