@@ -66,7 +66,7 @@
                 <Label Target="{Binding ElementName=nrOfPopulation}" Content="Population size:" Grid.Row="0"/>
                 <mah:NumericUpDown 
                             x:Name="nrOfPopulation"
-                            Value="{Binding AlgorithmConfig.sizeOfPopulation }"
+                            Value="{Binding AlgorithmConfigSettings.sizeOfPopulation }"
                             Minimum="{Binding PopulationMinimum}"
                             Maximum="{Binding PopulationMaximum}"
                             NumericInputMode="Numbers"
@@ -77,36 +77,24 @@
                 <Label Grid.Row="1" Target="{Binding ElementName=nrOfGenes}" Content="Number of genes:"/>
                 <mah:NumericUpDown 
                     Name="nrOfGenes"
-                            Value="{Binding AlgorithmConfig.geneConfig.numberOfGenes}"
-                            Minimum="{Binding GenesMinimum}"
-                            Maximum="{Binding GenesMaximum}"
-                            NumericInputMode="Numbers" 
-                            Width="100"
+                    Value="{Binding AlgorithmConfigSettings.geneConfig.numberOfGenes}"
+                    Minimum="{Binding GenesMinimum}"
+                    Maximum="{Binding GenesMaximum}"
+                    NumericInputMode="Numbers" 
+                    Width="100"
                     Grid.Row="1"
                     Grid.Column="1"/>
 
                 <Label Grid.Row="2" Target="{Binding ElementName=nrOfIteration}" Content="Number of iterations"/>
                 <mah:NumericUpDown 
-                            Name="nrOfIteration"
-                            Value="{Binding AlgorithmConfig.numberOfIterations}"
-                            Minimum="{Binding IterationsMinimum}"
-                            Maximum="{Binding IterationsMaximum}"
-                            NumericInputMode="Numbers" 
-                            Width="100"
-                            Grid.Row="2"
-                            Grid.Column="1"/>
-
-                <Label Grid.Row="3" Target="{Binding ElementName=nrOfGeneScale}" Content="Size of gene (shape) in %:"/>
-                <mah:NumericUpDown
-                            Name="nrOfGeneScale"
-                            Value="{Binding PrecentageOfScale}"
-                            Minimum="{Binding SizeMinimum}"
-                            Maximum="{Binding SizeMaximum}"
-                            NumericInputMode="Numbers"
-                            Width="100"
-                    Grid.Row="3"
+                    Name="nrOfIteration"
+                    Value="{Binding AlgorithmConfigSettings.numberOfIterations}"
+                    Minimum="{Binding IterationsMinimum}"
+                    Maximum="{Binding IterationsMaximum}"
+                    NumericInputMode="Numbers" 
+                    Width="100"
+                    Grid.Row="2"
                     Grid.Column="1"/>
-
             </Grid>
         </GroupBox>
 
@@ -117,31 +105,92 @@
                 <ColumnDefinition/>
 
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnSubmit"
-                        Command="{Binding SubmitCommand}"
-                        Width="{Binding ActualWidth, ElementName=nrOfGenes}"
-                        Content="{Binding SubmitButtonText}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
+            <Button
+                x:Name="btnSubmit"
+                Command="{Binding SubmitCommand}"
+                Width="{Binding ActualWidth, ElementName=nrOfGenes}"
+                Content="{Binding SubmitButtonText}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 />
 
-            <Button x:Name="btnClose"
-                        Command="{Binding CloseCommand}"
-                        Width="{Binding ActualWidth, ElementName=nrOfGenes}"
-                        Content="{Binding CloseButtonText}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Column="1"
+            <Button 
+                x:Name="btnClose"
+                Command="{Binding CloseCommand}"
+                Width="{Binding ActualWidth, ElementName=nrOfGenes}"
+                Content="{Binding CloseButtonText}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Column="1"
                 />
         </Grid>
-        
-        
-        <!--Left Panel-->
-        <Border BorderThickness="50" BorderBrush="Black" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="10,0,0,10">
 
+
+        <!--Left Panel-->
+        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Margin="10,0,0,10">
+            <Image
+                x:Name="previewImage"
+                Source="{Binding PreviewImage}"
+                MaxHeight="150" 
+                MaxWidth="370"
+                Stretch="Fill"
+                />
         </Border>
 
         <GroupBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Margin="10,0,0,0" Header="Genes parameters (SHAPE)">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+
+
+                <Label Target="{Binding ElementName=minAlpha}" Content="Minimun alpha:"/>
+                <mah:NumericUpDown
+                    Grid.Column="1"
+                    x:Name="minAlpha"
+                    Value="{Binding AlphaMin}"
+                    Minimum="{Binding AlphaRangeMinimum}"
+                    Maximum="{Binding AlphaRangeMaximum}"
+                    NumericInputMode="Numbers"
+                    />
+
+
+                <Label Grid.Row="1" Target="{Binding ElementName=maxAlpha}" Content="Maximum alpha:"/>
+                <mah:NumericUpDown
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    x:Name="maxAlpha"
+                    Value="{Binding AlphaMax}"
+                    Minimum="{Binding AlphaRangeMinimum}"
+                    Maximum="{Binding AlphaRangeMaximum}"
+                    NumericInputMode="Numbers"
+                    />
+
+                <Label Grid.Row="3" Target="{Binding ElementName=nrOfGeneScale}" Content="Maximum size of gene (shape) in %:"/>
+                <mah:NumericUpDown
+                    Name="nrOfGeneScale"
+                    Value="{Binding PrecentageOfScale}"
+                    Minimum="{Binding SizeMinimum}"
+                    Maximum="{Binding SizeMaximum}"
+                    NumericInputMode="Numbers"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    />
+
+            </Grid>
+
+
+
 
         </GroupBox>
 

@@ -6,10 +6,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     internal class GeneticAlgorithm
     {
         private AlgorithmConfig algorithmConfig;
+        private GeneFactoryConfig geneFactoryConfig;
 
         public GeneticAlgorithm(AlgorithmConfig algorithmConfig)
         {
             this.algorithmConfig = algorithmConfig;
+            this.geneFactoryConfig = new GeneFactoryConfig
+                (
+                    algorithmConfig.geneConfig,
+                    algorithmConfig.bitmapWidth,
+                    algorithmConfig.bitmapHeight
+                );
         }
 
         private Individual[] Initialize()
@@ -24,8 +31,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                             algorithmConfig.geneConfig.numberOfGenes,
                             algorithmConfig.bitmapWidth,
                             algorithmConfig.bitmapHeight,
-                            algorithmConfig.geneConfig.maxGeneScale,
-                            algorithmConfig.geneConfig.shapeType
+                            geneFactoryConfig
 
                             )
                     ));
@@ -103,7 +109,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                     if (random.NextDouble() < 0.02) // 2% for adding new gene
                     {
-                        child.Chromosome.GenerateGene(algorithmConfig.geneConfig.shapeType, algorithmConfig.geneConfig.maxGeneScale, random);
+                        child.Chromosome.GenerateGene(geneFactoryConfig, random);
                     }
 
                     if (random.NextDouble() < 0.01) // 1% for removing random gene

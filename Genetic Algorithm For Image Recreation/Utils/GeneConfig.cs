@@ -15,6 +15,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
         public ShapeType shapeType { get; set; } = ShapeType.Ellipse;
         public PixelColor backgroundColor { get; set; } = new PixelColor(255, 255, 255, 255);
 
+        public int maxAlpha { get; set; } = 150;
+        public int minAlpha { get; set; } = 50;
+
+
 
         public GeneConfig()
         {

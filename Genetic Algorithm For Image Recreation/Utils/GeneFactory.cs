@@ -8,11 +8,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 {
     public class GeneFactory
     {
-        public static Gene GenerateGene(ShapeType shapeType, int imageWidth, int imageHeight, double maxGeneScale, Random random)
+        public static Gene GenerateGene(GeneFactoryConfig geneFactoryConfig, int imageWidth, int imageHeight, Random random)
         {
 
-            int maxWidth = (int)(imageWidth * maxGeneScale);
-            int maxHeight = (int)(imageHeight * maxGeneScale);
+            int maxWidth = geneFactoryConfig.maxWidth;
+            int maxHeight = geneFactoryConfig.maxHeight;
 
             int geneWidth = random.Next(1, maxWidth + 1);
             int geneHeight = random.Next(1, maxHeight + 1);
@@ -22,7 +22,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 
             int geneX = random.Next(0, maxValueOfX);
             int geneY = random.Next(0, maxValueOfY);
-
+            
+            ShapeType shapeType = geneFactoryConfig.shapeType;
 
             Gene gene = new Gene
             {
@@ -33,7 +34,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
                 height = geneHeight,
                 //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
                 color = System.Windows.Media.Color.FromArgb(
-                    (byte)random.Next(50, 150),
+                    (byte)random.Next(geneFactoryConfig.minAlpha, geneFactoryConfig.maxAlpha + 1),
                     (byte)random.Next(256),
                     (byte)random.Next(256),
                     (byte)random.Next(256)),

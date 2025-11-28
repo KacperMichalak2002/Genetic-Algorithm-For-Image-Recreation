@@ -1,4 +1,6 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.MVVM;
+﻿using Genetic_Algorithm_For_Image_Recreation.GA;
+using Genetic_Algorithm_For_Image_Recreation.MVVM;
+using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
 using System.Diagnostics;
 using System.Windows.Media;
@@ -26,39 +28,83 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		public int SizeMinimum { get; } = 2;
 		public int SizeMaximum { get; } = 30;
 
-		public string SubmitButtonText { get; } = "Submit";
+		public int AlphaRangeMinimum { get; set; } = 10;
+		public int AlphaRangeMaximum { get; set; } = 255;
+
+        public string SubmitButtonText { get; } = "Submit";
 
 		public string CloseButtonText { get; } = "Close";
 
-        private AlgorithmConfig algorithmConfig;
+        private AlgorithmConfig algorithmConfigSettings;
 
 
-		public AlgorithmConfig AlgorithmConfig
+		public AlgorithmConfig AlgorithmConfigSettings
         {
-			get { return algorithmConfig; }
-			set { algorithmConfig = value; OnPropertyChanged(); }
+			get { return algorithmConfigSettings; }
+			set { algorithmConfigSettings = value; OnPropertyChanged(); }
 		}
 
 		public SettingsWindowModel(AlgorithmConfig currentAlgorithmConfig)
 		{
 			if(currentAlgorithmConfig != null)
-				AlgorithmConfig = currentAlgorithmConfig.Clone();
+                AlgorithmConfigSettings = currentAlgorithmConfig.Clone();
 			else
-				AlgorithmConfig = new AlgorithmConfig();
+                AlgorithmConfigSettings = new AlgorithmConfig();
+
+			DrawPreview();
 		}
 
         public double PrecentageOfScale 
 		{ 
-			get => AlgorithmConfig.geneConfig.maxGeneScale * 100;
+			get => AlgorithmConfigSettings.geneConfig.maxGeneScale * 100;
 			set
 			{
-				AlgorithmConfig.geneConfig.maxGeneScale = value / 100;
+                AlgorithmConfigSettings.geneConfig.maxGeneScale = value / 100;
 				OnPropertyChanged();
 			}
 		
 		}
 
-		private ImageSource previewImage;
+        public int AlphaMin 
+		{ 
+			get => AlgorithmConfigSettings.geneConfig.minAlpha;
+			set 
+			{
+
+				int alphaMinVal = Math.Clamp(value, AlphaRangeMinimum, AlphaRangeMaximum);
+
+				if(alphaMinVal > AlphaMax)
+				{
+					AlphaMax = alphaMinVal;
+				}
+
+                AlgorithmConfigSettings.geneConfig.minAlpha = value;
+
+				DrawPreview();
+                OnPropertyChanged();
+			}
+		}
+
+        public int AlphaMax
+		{
+			get => AlgorithmConfigSettings.geneConfig.maxAlpha;
+			set
+			{
+				int alphaMaxVal = Math.Clamp(value, AlphaRangeMinimum, AlphaRangeMaximum);
+
+				if(alphaMaxVal < AlphaMin)
+				{
+					AlphaMin = alphaMaxVal;
+				}
+
+				AlgorithmConfigSettings.geneConfig.maxAlpha = value;
+
+                DrawPreview();
+                OnPropertyChanged();
+			}
+		}
+
+        private ImageSource previewImage;
 
 		public ImageSource PreviewImage
 		{
@@ -74,17 +120,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 		private void RectangleChecked()
 		{
-			AlgorithmConfig.geneConfig.shapeType = ShapeType.Rectangle;
+            AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Rectangle;
 		}
 
 		private void EllipseChecked()
 		{
-            AlgorithmConfig.geneConfig.shapeType = ShapeType.Ellipse;
+            AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Ellipse;
 		}
 
 		private void TriangleChecked()
 		{
-            AlgorithmConfig.geneConfig.shapeType = ShapeType.Triangle;
+            AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Triangle;
 		}
 
 		private void TournametChecked()
@@ -96,8 +142,36 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		// Change preview after submit
 		private void SubmitSettings()
 		{
-			SubmitChanges?.Invoke(AlgorithmConfig.Clone());
+			SubmitChanges?.Invoke(AlgorithmConfigSettings.Clone());
+			DrawPreview();
 		}
+
+		private void DrawPreview()
+		{
+            int canvasHeight = 200;
+            int canvasWidth = 200;
+            Draw draw = new Draw(canvasHeight, canvasWidth, new PixelColor(255, 255, 255, 255));
+
+			GeneFactoryConfig geneFactoryConfig = new GeneFactoryConfig
+				(
+					algorithmConfigSettings.geneConfig,
+					canvasWidth,
+					canvasHeight
+				);
+
+            Chromosome dummyChromosome = new Chromosome
+                (
+                    20,
+                    canvasWidth,
+                    canvasHeight,
+					geneFactoryConfig
+
+                );
+
+			Individual individual = new Individual(dummyChromosome);
+
+			PreviewImage = draw.RenderChromosome(individual);
+        }
 
 		private void CloseSettings()
 		{
