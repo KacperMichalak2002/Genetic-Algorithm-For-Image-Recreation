@@ -6,14 +6,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 {
     internal class PixelRenderer
     {
-        public static PixelColor[] RenderPixelsToArray(Individual individual)
+        public static PixelColor[] RenderPixelsToArray(Individual individual, PixelColor backgroundColor)
         {
             int imageWidth = individual.Chromosome.imageWidth;
             int imageHeight = individual.Chromosome.imageHeight;
             ShapeType shapeType = individual.Chromosome.shapeType;
 
             PixelColor[] pixels = new PixelColor[imageWidth * imageHeight];
-            PixelColor backgroundColorTemp = new PixelColor(255, 255, 255, 255);
+            PixelColor backgroundColorTemp = backgroundColor;
             for(int i = 0; i < pixels.Length; i++)
             {
                 pixels[i] = backgroundColorTemp;

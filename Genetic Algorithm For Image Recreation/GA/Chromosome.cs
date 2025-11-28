@@ -28,7 +28,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             this.shapeType = shapeType;
         }
 
-        public Chromosome(int numberOfGenes, int imageWidth, int imageHeight,double maxGeneScale, ShapeType shapeType)
+        public Chromosome(int numberOfGenes, int imageWidth, int imageHeight, double maxGeneScale, ShapeType shapeType)
         {
             
             this.numberOfGenes = numberOfGenes;

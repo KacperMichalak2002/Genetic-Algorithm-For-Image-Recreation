@@ -180,8 +180,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 				try
 				{
+
+					
+
 					PixelColor[] sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
-					Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth);
+
+					PixelColor backgroundColor =ImageHandler.GetBackrgoundColor(sourcePixels) ;
+                    Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth, backgroundColor);
 
 
                     var progressHandler = new Progress<(int generationNumber, Individual best)>(report =>

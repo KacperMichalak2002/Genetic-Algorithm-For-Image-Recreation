@@ -21,11 +21,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 population[i] = (new Individual
                     (
                         new Chromosome(
-                            algorithmConfig.numberOfGenes,
+                            algorithmConfig.geneConfig.numberOfGenes,
                             algorithmConfig.bitmapWidth,
                             algorithmConfig.bitmapHeight,
-                            algorithmConfig.maxGeneScale,
-                            algorithmConfig.shapeType
+                            algorithmConfig.geneConfig.maxGeneScale,
+                            algorithmConfig.geneConfig.shapeType
+
                             )
                     ));
             }
@@ -97,12 +98,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
                     if (random.NextDouble() < 0.20) // 20% for mutation
                     {
-                        Mutation.Mutate(child, 0.1, algorithmConfig.maxGeneScale, random);
+                        Mutation.Mutate(child, 0.1, algorithmConfig.geneConfig.maxGeneScale, random);
                     }
 
                     if (random.NextDouble() < 0.02) // 2% for adding new gene
                     {
-                        child.Chromosome.GenerateGene(algorithmConfig.shapeType, algorithmConfig.maxGeneScale, random);
+                        child.Chromosome.GenerateGene(algorithmConfig.geneConfig.shapeType, algorithmConfig.geneConfig.maxGeneScale, random);
                     }
 
                     if (random.NextDouble() < 0.01) // 1% for removing random gene
@@ -140,7 +141,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 return;
             }
 
-            individual.pixels = PixelRenderer.RenderPixelsToArray(individual);
+            individual.pixels = PixelRenderer.RenderPixelsToArray(individual, algorithmConfig.sourcePixels[0]);
 
             individual.fitness = Fitness.CalculateFitness(algorithmConfig.sourcePixels, individual.pixels, individual.Chromosome.genes.Count);
 

@@ -44,10 +44,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
         public double PrecentageOfScale 
 		{ 
-			get => AlgorithmConfig.maxGeneScale * 100;
+			get => AlgorithmConfig.geneConfig.maxGeneScale * 100;
 			set
 			{
-				AlgorithmConfig.maxGeneScale = value / 100;
+				AlgorithmConfig.geneConfig.maxGeneScale = value / 100;
 				OnPropertyChanged();
 			}
 		
@@ -56,17 +56,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
         private void RectangleChecked()
 		{
-			AlgorithmConfig.shapeType = ShapeType.Rectangle;
+			AlgorithmConfig.geneConfig.shapeType = ShapeType.Rectangle;
 		}
 
 		private void EllipseChecked()
 		{
-            AlgorithmConfig.shapeType = ShapeType.Ellipse;
+            AlgorithmConfig.geneConfig.shapeType = ShapeType.Ellipse;
 		}
 
 		private void TriangleChecked()
 		{
-            AlgorithmConfig.shapeType = ShapeType.Triangle;
+            AlgorithmConfig.geneConfig.shapeType = ShapeType.Triangle;
 		}
 
 		private void TournametChecked()
