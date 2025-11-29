@@ -35,16 +35,16 @@
         <!--Shape settings-->
         <GroupBox Header="Shape">
             <StackPanel>
-                <RadioButton x:Name="rbRectangle" Command="{Binding RectangleCheckedCommand}" IsChecked="True" Content="Rectangle"/>
-                <RadioButton x:Name="rbEllipse" Command="{Binding EllipseCheckedCommand}" Content="Ellipse"/>
-                <RadioButton x:Name="rbTriangle" Command="{Binding TriangleCheckedCommand}" Content="Triangle"/>
+                <RadioButton x:Name="rbRectangle" IsChecked="{Binding RectangleCheck}" Content="Rectangle"/>
+                <RadioButton x:Name="rbEllipse" IsChecked="{Binding EllipseCheck}" Content="Ellipse"/>
+                <RadioButton x:Name="rbTriangle" IsChecked="{Binding TriangleCheck}"   Content="Triangle"/>
             </StackPanel>
         </GroupBox>
 
         <!--Selection settings-->
         <GroupBox Grid.Column="0"  Grid.Row="1" Header="Selection" Margin="0,10,0,0">
             <StackPanel Grid.Row="1">
-                <RadioButton x:Name="rbTournamentSelection" Command="{Binding TournamentCheckedCommand}" Content="Tournament"/>
+                <RadioButton x:Name="rbTournamentSelection" IsChecked="{Binding TournamentCheck}" Content="Tournament"/>
             </StackPanel>
         </GroupBox>
 

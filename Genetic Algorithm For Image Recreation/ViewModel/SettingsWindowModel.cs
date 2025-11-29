@@ -14,9 +14,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 		public RelayCommand SubmitCommand => new RelayCommand(execute => SubmitSettings(), canExecute => CanSubmit());
 		public RelayCommand CloseCommand => new RelayCommand(execute => CloseSettings());
-		public RelayCommand RectangleCheckedCommand => new RelayCommand(excecute => RectangleChecked());
-        public RelayCommand EllipseCheckedCommand => new RelayCommand(excecute => EllipseChecked());
-        public RelayCommand TriangleCheckedCommand => new RelayCommand(excecute => TriangleChecked());
 		public RelayCommand TournamentCheckedCommand => new RelayCommand(execute => TournametChecked());
 
 		public int PopulationMinimum { get; } = 5;
@@ -104,6 +101,68 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 			}
 		}
 
+        public bool RectangleCheck 
+		{ 
+			get => AlgorithmConfigSettings.geneConfig.shapeType == ShapeType.Rectangle;
+			set
+			{
+				if (value)
+				{
+					AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Rectangle;
+					OnPropertyChanged();
+					OnPropertyChanged(nameof(EllipseCheck));
+                    OnPropertyChanged(nameof(TriangleCheck));
+
+                    DrawPreview();
+                }
+			}
+		}
+
+        public bool EllipseCheck 
+		{ 
+			get => AlgorithmConfigSettings.geneConfig.shapeType == ShapeType.Ellipse; 
+			set
+			{
+				if (value)
+				{
+					AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Ellipse;
+					OnPropertyChanged();
+					OnPropertyChanged(nameof(RectangleCheck));
+                    OnPropertyChanged(nameof(TriangleCheck));
+
+					DrawPreview();
+                }
+			}
+		}
+
+		public bool TriangleCheck
+		{
+			get => AlgorithmConfigSettings.geneConfig.shapeType == ShapeType.Triangle;
+			set
+			{
+				if (value)
+				{
+					AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Triangle;
+					OnPropertyChanged();
+					OnPropertyChanged(nameof(RectangleCheck));
+                    OnPropertyChanged(nameof(EllipseCheck));
+
+                    DrawPreview();
+                }
+			}
+
+        }
+
+		// Change after adding new selections
+        public bool TournamentCheck 
+		{ 
+			get => true; 
+			set
+			{
+
+			}
+		}
+
         private ImageSource previewImage;
 
 		public ImageSource PreviewImage
@@ -114,23 +173,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 				previewImage = value; 
 				OnPropertyChanged();
 			}
-		}
-
-
-
-		private void RectangleChecked()
-		{
-            AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Rectangle;
-		}
-
-		private void EllipseChecked()
-		{
-            AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Ellipse;
-		}
-
-		private void TriangleChecked()
-		{
-            AlgorithmConfigSettings.geneConfig.shapeType = ShapeType.Triangle;
 		}
 
 		private void TournametChecked()
