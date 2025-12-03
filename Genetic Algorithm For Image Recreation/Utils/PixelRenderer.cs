@@ -120,54 +120,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             }
         }
 
-        private static double TriangleArea(BasicPoint point1, BasicPoint point2, BasicPoint point3)
-        {
-            return Math.Abs(
-                (point1.X * (point2.Y - point3.Y) +
-                point2.X * (point3.Y - point1.Y) +
-                point3.X * (point1.Y - point2.Y)) / 2.0);
-        }
-
-        private static bool isInsideTriangle(BasicPoint point1, BasicPoint point2, BasicPoint point3, int pX, int pY)
-        {
-            
-            int vector1x = point2.X - point1.X;
-            int vector1y = point2.Y - point1.Y;
-
-            int vector2x = point3.X - point2.X;
-            int vector2y = point3.Y - point2.Y;
-
-            int vector3x = point1.X - point3.X;
-            int vector3y = point1.Y - point3.Y;
-
-            int vectorP1x = pX - point1.X;
-            int vectorP1y = pY - point1.Y;
-
-            int vectorP2x = pX - point2.X;
-            int vectorP2y = pY - point2.Y;
-
-            int vectorP3x = pX - point3.X;
-            int vectorP3y = pY - point3.Y;
-
-
-            int edgeCheck12 = (vectorP1x * vector1y) - (vectorP1y * vector1x);
-            int edgeCheck23 = (vectorP2x * vector2y) - (vectorP2y * vector2x);
-            int edgeCheck31 = (vectorP3x * vector3y) - (vectorP3y * vector3x);
-
-            bool hasNegValue = false;
-            bool hasPosValue = false;
-
-            if (edgeCheck12 < 0 || edgeCheck23 < 0 || edgeCheck31 < 0)
-                hasNegValue = true;
-
-            if(edgeCheck12 > 0 || edgeCheck23 > 0 || edgeCheck31 > 0)
-                hasPosValue = true;
-
-            return !(hasNegValue && hasPosValue);
-        }
-
-        
-
         private static void PixelsFromTriangle(PixelColor[] pixels, Gene gene, int imageWidth, int imageHeight)
         {
 
@@ -185,11 +137,47 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             int endX = Math.Min(imageWidth, maxX + 1);
             int endY = Math.Min(imageHeight, maxY + 1);
 
-            for(int i = startX; i < endX; i++)
+            if (startX >= endX || startY >= endY)
+                return;
+
+
+            int vector1x = point2.X - point1.X;
+            int vector1y = point2.Y - point1.Y;
+
+            int vector2x = point3.X - point2.X;
+            int vector2y = point3.Y - point2.Y;
+
+            int vector3x = point1.X - point3.X;
+            int vector3y = point1.Y - point3.Y;
+
+            for (int i = startX; i < endX; i++)
             {
                 for(int j = startY; j < endY; j++)
                 {
-                    if (isInsideTriangle(point1, point2, point3, i, j))
+                    int vectorP1x = i - point1.X;
+                    int vectorP1y = j - point1.Y;
+
+                    int vectorP2x = i - point2.X;
+                    int vectorP2y = j - point2.Y;
+
+                    int vectorP3x = i - point3.X;
+                    int vectorP3y = j - point3.Y;
+
+                    int edgeCheck12 = (vectorP1x * vector1y) - (vectorP1y * vector1x);
+                    int edgeCheck23 = (vectorP2x * vector2y) - (vectorP2y * vector2x);
+                    int edgeCheck31 = (vectorP3x * vector3y) - (vectorP3y * vector3x);
+
+                    bool hasNegValue = false;
+                    bool hasPosValue = false;
+
+                    if (edgeCheck12 < 0 || edgeCheck23 < 0 || edgeCheck31 < 0)
+                        hasNegValue = true;
+
+                    if (edgeCheck12 > 0 || edgeCheck23 > 0 || edgeCheck31 > 0)
+                        hasPosValue = true;
+
+
+                    if (!(hasNegValue && hasPosValue))
                     {
                         int index = j * imageWidth + i;
 

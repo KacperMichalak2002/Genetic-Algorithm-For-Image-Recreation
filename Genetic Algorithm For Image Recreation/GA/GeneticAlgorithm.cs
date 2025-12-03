@@ -102,10 +102,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     Individual parent2 = Selection.TournamentSelection(population, random);
                     Individual child = Crossover.UniformCrossover(parent1, parent2, random);
 
-                    if (random.NextDouble() < 0.20) // 20% for mutation
-                    {
-                        Mutation.Mutate(child, 0.1, algorithmConfig.geneConfig.maxGeneScale, random);
-                    }
+                    //if (random.NextDouble() < 0.20) // 20% for mutation
+                    //{
+                        Mutation.Mutate(child, 0.1, algorithmConfig, random);
+                    //}
 
                     if (random.NextDouble() < 0.02) // 2% for adding new gene
                     {
@@ -134,6 +134,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             Debug.WriteLine($"Best fitness: {population[0].fitness}");
             Debug.WriteLine($"Size of population: {algorithmConfig.sizeOfPopulation}");
             Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
+            Debug.WriteLine($"Alpha values: MIN: {algorithmConfig.geneConfig.minAlpha} MAX {algorithmConfig.geneConfig.maxAlpha}");
 
 
         }

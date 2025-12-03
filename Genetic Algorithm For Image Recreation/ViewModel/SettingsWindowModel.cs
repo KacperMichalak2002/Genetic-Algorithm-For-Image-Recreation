@@ -16,14 +16,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		public RelayCommand CloseCommand => new RelayCommand(execute => CloseSettings());
 		public RelayCommand TournamentCheckedCommand => new RelayCommand(execute => TournametChecked());
 
-		public int PopulationMinimum { get; } = 5;
+		public int PopulationMinimum { get; } = 1;
         public int PopulationMaximum { get; } = 100;
-        public int GenesMinimum { get; } = 5;
+        public int GenesMinimum { get; } = 1;
 		public int GenesMaximum { get; } = 10_000;
 		public int IterationsMinimum { get; } = 100;
-		public int IterationsMaximum { get; } = 50_000;
+		public int IterationsMaximum { get; } = 500_000;
 		public int SizeMinimum { get; } = 2;
-		public int SizeMaximum { get; } = 30;
+		public int SizeMaximum { get; } = 50;
 
 		public int AlphaRangeMinimum { get; set; } = 10;
 		public int AlphaRangeMaximum { get; set; } = 255;
@@ -203,7 +203,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
             Chromosome dummyChromosome = new Chromosome
                 (
-                    20,
+                    50,
                     canvasWidth,
                     canvasHeight,
 					geneFactoryConfig

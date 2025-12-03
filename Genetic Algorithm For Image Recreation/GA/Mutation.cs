@@ -1,25 +1,27 @@
-﻿using System.Windows.Media;
+﻿using Genetic_Algorithm_For_Image_Recreation.Utils;
+using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA
 {
     internal class Mutation
     {
 
-        public static void Mutate(Individual individual, double mutationRate, double maxGeneScale, Random random)
+        public static void Mutate(Individual individual, double mutationRate, AlgorithmConfig algorithmConfig, Random random)
         {
             int maxWidth = individual.Chromosome.imageWidth;
             int maxHeight = individual.Chromosome.imageHeight;
+            
+            int geneCount = individual.Chromosome.genes.Count;
+            int geneIndexToMutate = random.Next(0, geneCount);
 
-            foreach (Gene gene in individual.Chromosome.genes)
-            {
-                if (random.NextDouble() < mutationRate)
-                {
-                    SelectMutation(gene,maxHeight,maxWidth, maxGeneScale, random);
-                }
-            }
+            Gene geneToMuate = individual.Chromosome.genes[geneIndexToMutate];
+            
+            
+            SelectMutation(geneToMuate, algorithmConfig, random);
+
         }
 
-        private static void SelectMutation(Gene gene, int maxHeight, int maxWidth, double maxGeneScale, Random random)
+        private static void SelectMutation(Gene gene, AlgorithmConfig algorithmConfig, Random random)
         {
             int mutationType = random.Next(0,4);
 
@@ -31,24 +33,24 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             if(mutationType == 1)
             {
-                MutateAlpha(gene, random);
+                MutateAlpha(gene, algorithmConfig.geneConfig.minAlpha, algorithmConfig.geneConfig.maxAlpha ,random);
                 return;
             }
 
             if(gene.ShapeType == ShapeType.Triangle)
             {
-                MutateTrianglePoints(gene, maxHeight, maxWidth, maxGeneScale, random);
+                MutateTrianglePoints(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, algorithmConfig.geneConfig.maxGeneScale, random);
                 return;
             }
             else
             {
                 if(mutationType == 2)
                 {
-                    MutatePosition(gene, maxHeight, maxWidth, random);
+                    MutatePosition(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, random);
                 }
                 else
                 {
-                    MutateSize(gene, maxHeight, maxWidth, maxGeneScale, random);
+                    MutateSize(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, algorithmConfig.geneConfig.maxGeneScale, random);
                 }
             }   
         }
@@ -69,10 +71,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             gene.color = newColor;
         }
 
-        private static void MutateAlpha(Gene gene, Random random)
+        private static void MutateAlpha(Gene gene,int minAlpha, int maxAlpha, Random random)
         {
-            int diffA = random.Next(-50, 51);
-            byte newA = (byte) Math.Clamp((gene.color.A + diffA), 30, 255);
+            int diffA = random.Next(-30, 31);
+            byte newA = (byte) Math.Clamp((gene.color.A + diffA), minAlpha, maxAlpha);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
         }
