@@ -23,6 +23,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		private AlgorithmConfig currentAlgorithmConfig = new AlgorithmConfig();
 		private IDialogCoordinator dialogCoordinator;
 		private Individual bestIndividual;
+		private PixelColor backgroundColor;
 
 
         public RelayCommand ToggleRunCommand => new RelayCommand(execute => Start(), canExecute => SourceImage != null);
@@ -194,7 +195,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 					PixelColor[] sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
 
-					PixelColor backgroundColor =ImageHandler.GetBackrgoundColor(sourcePixels) ;
+					backgroundColor =ImageHandler.GetBackrgoundColor(sourcePixels) ;
                     Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth, backgroundColor);
 
 
@@ -279,21 +280,27 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
                     fileBrowser.DefaultExt = ".png";
 
                     Boolean? fileBrowserResult = fileBrowser.ShowDialog();
-					
-					if(fileBrowserResult == true)
+
+					if (fileBrowserResult != true)
+						break;
+
+					string filePath = fileBrowser.FileName;
+					string fileExtension = Path.GetExtension(filePath).ToLower();
+
+					if(fileExtension == ".svg")
 					{
-						string filePath = fileBrowser.FileName;
-						string fileExtension = Path.GetExtension(filePath).ToLower();
+						SaveHandler.SaveImageToSvg(bestIndividual, backgroundColor, filePath);
+                        var info = await dialogCoordinator.ShowMessageAsync(this, "Saved", "Image saved successfully");
+                    }
+					else
+					{
+                         if (ResultImage is BitmapSource bitmapToSave)
+                         {
+                             SaveHandler.SaveImageToPng(bitmapToSave, filePath);
+                             var info = await dialogCoordinator.ShowMessageAsync(this, "Saved", "Image saved successfully");
+                         }
+                     }
 
-
-						if(ResultImage is BitmapSource bitmapToSave)
-						{
-                            SaveHandler.SaveImageToPng(bitmapToSave, filePath);
-							var test = await dialogCoordinator.ShowMessageAsync(this, "Saved", "Image saved successfully");
-                        }
-							
-
-					}
 
 
 
