@@ -3,8 +3,10 @@ using Genetic_Algorithm_For_Image_Recreation.MVVM;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
 using Genetic_Algorithm_For_Image_Recreation.View;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -18,21 +20,26 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		private FormatConvertedBitmap? convertedImage;
 		private Window parentWindow;
 		private AlgorithmConfig currentAlgorithmConfig = new AlgorithmConfig();
+		private IDialogCoordinator dialogCoordinator;
 
 
         public RelayCommand ToggleRunCommand => new RelayCommand(execute => Start(), canExecute => SourceImage != null);
 		public RelayCommand LoadImageCommand => new RelayCommand(execute => LoadSourceImage(), canExecute => !running);
 
-		public RelayCommand OpenSettingsCommand => new RelayCommand(ExecutionEngineException => OpenSettings(), canExecute => !running);
+		public RelayCommand OpenSettingsCommand => new RelayCommand(execute => OpenSettings(), canExecute => !running);
+		public RelayCommand SaveResultCommand => new RelayCommand(execute => SaveResult(), canExecute => !running);
 
 
-        public MainWindowViewModel(Window window)
+        public MainWindowViewModel(Window window, IDialogCoordinator dialogCoordinatorInstance)
 		{
 			parentWindow = window;
 			StatusText = "Load Image";
 			ProgressText = "";
 			StartButtonText = "Start";
+			dialogCoordinator = dialogCoordinatorInstance;
 		}
+
+		public string SaveResultButtonText { get; } = "Save";
 
         private string statusText;
         public string StatusText	
@@ -237,6 +244,38 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 			};
 
 			settingsWindow.ShowDialog();
+		}
+
+		private async Task SaveResult()
+		{
+			string messageBoxText = "Do you want to save result ?";
+			string caption = "Saving";
+
+
+			MetroDialogSettings dialogSettings = new MetroDialogSettings()
+			{
+				AffirmativeButtonText = "Save",
+				NegativeButtonText = "Cancel",
+
+			};
+
+			var result = await dialogCoordinator.ShowMessageAsync(
+				this,
+				caption,
+				messageBoxText,
+				MessageDialogStyle.AffirmativeAndNegative,
+				dialogSettings);
+
+			switch (result)
+			{
+				case MessageDialogResult.Affirmative:
+					// SAVE 
+					break;
+				case MessageDialogResult.Negative:
+					break;
+			}
+
+
 		}
 
     }

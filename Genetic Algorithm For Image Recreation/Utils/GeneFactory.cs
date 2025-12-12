@@ -14,16 +14,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             int maxWidth = geneFactoryConfig.maxWidth;
             int maxHeight = geneFactoryConfig.maxHeight;
 
-            double scaleWidth = random.NextDouble() * random.NextDouble();
-            double scaleHeight = random.NextDouble() * random.NextDouble();
-
-
-            int geneWidth = (int)(scaleWidth * maxWidth);
-            int geneHeight = (int)(scaleHeight * maxHeight);
-            if (geneWidth < 1)
-                geneWidth = 5;
-            if (geneHeight < 1)
-                geneHeight = 5;
+            int geneWidth = random.Next(1, maxWidth + 1);
+            int geneHeight = random.Next(1, maxHeight + 1);
 
 
             int maxValueOfX = imageWidth - geneWidth;

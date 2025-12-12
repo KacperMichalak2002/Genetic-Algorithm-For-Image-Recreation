@@ -5,6 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Genetic_Algorithm_For_Image_Recreation"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        
+        Dialog:DialogParticipation.Register="{Binding}"
+  
         mc:Ignorable="d"
         Title="Genetic Algorithm For Image Reconstrution" 
                  Height="500" 
@@ -104,6 +108,20 @@
                 />
         </Grid>
 
+
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Button
+                x:Name="btnSaveResult"
+                Content="{Binding SaveResultButtonText}"
+                Height="50"
+                Width="{Binding ActualWidth, ElementName=btnLoadImage}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Command="{Binding SaveResultCommand}"
+                />
+
+
+        </Grid>
 
 
 
