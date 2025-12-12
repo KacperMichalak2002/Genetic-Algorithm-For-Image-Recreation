@@ -6,6 +6,7 @@ using Genetic_Algorithm_For_Image_Recreation.View;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -21,13 +22,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		private Window parentWindow;
 		private AlgorithmConfig currentAlgorithmConfig = new AlgorithmConfig();
 		private IDialogCoordinator dialogCoordinator;
+		private Individual bestIndividual;
 
 
         public RelayCommand ToggleRunCommand => new RelayCommand(execute => Start(), canExecute => SourceImage != null);
 		public RelayCommand LoadImageCommand => new RelayCommand(execute => LoadSourceImage(), canExecute => !running);
 
 		public RelayCommand OpenSettingsCommand => new RelayCommand(execute => OpenSettings(), canExecute => !running);
-		public RelayCommand SaveResultCommand => new RelayCommand(execute => SaveResult(), canExecute => !running);
+		public RelayCommand SaveResultCommand => new RelayCommand(execute => SaveResult(), canExecute => !running && ResultImage !=null);
 
 
         public MainWindowViewModel(Window window, IDialogCoordinator dialogCoordinatorInstance)
@@ -202,6 +204,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
                         ResultImage = draw.CloneCurrentBitmap();
                         ProgressText = $"{report.generationNumber} out of {ProgressMaximumValue}";
                         ProgressValue = report.generationNumber;
+						bestIndividual = report.best;
 
                     });
 
@@ -259,18 +262,42 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 			};
 
-			var result = await dialogCoordinator.ShowMessageAsync(
+			var messageBoxResult = await dialogCoordinator.ShowMessageAsync(
 				this,
 				caption,
 				messageBoxText,
 				MessageDialogStyle.AffirmativeAndNegative,
 				dialogSettings);
 
-			switch (result)
+			switch (messageBoxResult)
 			{
 				case MessageDialogResult.Affirmative:
 					// SAVE 
-					break;
+					var fileBrowser = new SaveFileDialog();
+					fileBrowser.FileName = $"Result_{DateTime.Now.ToString("dd_MM_yyyy-HH-mm-ss")}";
+					fileBrowser.Filter = "PNG Image| *.png | SVG Image | *.svg";
+                    fileBrowser.DefaultExt = ".png";
+
+                    Boolean? fileBrowserResult = fileBrowser.ShowDialog();
+					
+					if(fileBrowserResult == true)
+					{
+						string filePath = fileBrowser.FileName;
+						string fileExtension = Path.GetExtension(filePath).ToLower();
+
+
+						if(ResultImage is BitmapSource bitmapToSave)
+						{
+                            SaveHandler.SaveImageToPng(bitmapToSave, filePath);
+							var test = await dialogCoordinator.ShowMessageAsync(this, "Saved", "Image saved successfully");
+                        }
+							
+
+					}
+
+
+
+                    break;
 				case MessageDialogResult.Negative:
 					break;
 			}
