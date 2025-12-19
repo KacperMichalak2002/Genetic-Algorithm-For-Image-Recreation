@@ -252,7 +252,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 		private async Task SaveResult()
 		{
-			string messageBoxText = "Do you want to save result ?";
+			string messageBoxText = "Do you want to save result?";
 			string caption = "Saving";
 
 

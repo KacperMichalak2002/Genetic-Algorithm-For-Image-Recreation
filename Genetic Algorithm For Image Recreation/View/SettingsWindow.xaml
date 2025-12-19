@@ -65,14 +65,15 @@
 
                 <Label Target="{Binding ElementName=nrOfPopulation}" Content="Population size:" Grid.Row="0"/>
                 <mah:NumericUpDown 
-                            x:Name="nrOfPopulation"
-                            Value="{Binding AlgorithmConfigSettings.sizeOfPopulation }"
-                            Minimum="{Binding PopulationMinimum}"
-                            Maximum="{Binding PopulationMaximum}"
-                            NumericInputMode="Numbers"
-                            Width="100"
-                            Grid.Row="0"
-                            Grid.Column="1"/>
+                    x:Name="nrOfPopulation"
+                    Value="{Binding AlgorithmConfigSettings.sizeOfPopulation }"
+                    Minimum="{Binding PopulationMinimum}"
+                    Maximum="{Binding PopulationMaximum}"
+                    NumericInputMode="Numbers"
+                    ToolTip="Number of individuals per generation"
+                    Width="100"
+                    Grid.Row="0"
+                    Grid.Column="1"/>
 
                 <Label Grid.Row="1" Target="{Binding ElementName=nrOfGenes}" Content="Number of genes:"/>
                 <mah:NumericUpDown 
@@ -81,6 +82,7 @@
                     Minimum="{Binding GenesMinimum}"
                     Maximum="{Binding GenesMaximum}"
                     NumericInputMode="Numbers" 
+                    ToolTip="Number of shapes per individual"
                     Width="100"
                     Grid.Row="1"
                     Grid.Column="1"/>
@@ -92,6 +94,7 @@
                     Minimum="{Binding IterationsMinimum}"
                     Maximum="{Binding IterationsMaximum}"
                     NumericInputMode="Numbers" 
+                    ToolTip="Number of iterations the algorithm will complete"
                     Width="100"
                     Grid.Row="2"
                     Grid.Column="1"/>
@@ -154,7 +157,7 @@
 
 
 
-                <Label Target="{Binding ElementName=minAlpha}" Content="Minimun alpha:"/>
+                <Label Target="{Binding ElementName=minAlpha}" Content="Minimum alpha:" ToolTip="Minimum opacity of generated shape"/>
                 <mah:NumericUpDown
                     Grid.Column="1"
                     x:Name="minAlpha"
@@ -162,10 +165,11 @@
                     Minimum="{Binding AlphaRangeMinimum}"
                     Maximum="{Binding AlphaRangeMaximum}"
                     NumericInputMode="Numbers"
+                    ToolTip="Minimum opacity of generated shape"
                     />
 
 
-                <Label Grid.Row="1" Target="{Binding ElementName=maxAlpha}" Content="Maximum alpha:"/>
+                <Label Grid.Row="1" Target="{Binding ElementName=maxAlpha}" Content="Maximum alpha:" ToolTip="Maximum opacity of generated shape"/>
                 <mah:NumericUpDown
                     Grid.Row="1"
                     Grid.Column="1"
@@ -174,9 +178,10 @@
                     Minimum="{Binding AlphaRangeMinimum}"
                     Maximum="{Binding AlphaRangeMaximum}"
                     NumericInputMode="Numbers"
+                    ToolTip="Maximum opacity of generated shape"
                     />
 
-                <Label Grid.Row="3" Target="{Binding ElementName=nrOfGeneScale}" Content="Maximum size of gene (shape) in %:"/>
+                <Label Grid.Row="3" Target="{Binding ElementName=nrOfGeneScale}" Content="Size of shape in %:" ToolTip="Determines the maximum precentage of the image area a single shape can cover"/>
                 <mah:NumericUpDown
                     Name="nrOfGeneScale"
                     Value="{Binding PrecentageOfScale}"
@@ -185,6 +190,7 @@
                     NumericInputMode="Numbers"
                     Grid.Row="3"
                     Grid.Column="1"
+                    ToolTip="Determines the maximum precentage of the image area a single shape can cover"
                     />
 
             </Grid>
