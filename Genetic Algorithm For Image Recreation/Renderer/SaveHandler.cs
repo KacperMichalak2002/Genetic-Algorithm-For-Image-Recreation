@@ -43,6 +43,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
                     case ShapeType.Ellipse:
                         EllipseSaving(stringBuilder, gene);
                         break;
+                    case ShapeType.Triangle:
+                        TrinagleSaving(stringBuilder, gene);
+                        break;
 
                 }
 
@@ -72,10 +75,18 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             int cy = gene.Y + ry;
 
             stringBuilder.AppendLine($"<ellipse cx=\"{cx}\" cy=\"{cy}\" rx=\"{rx}\" ry=\"{ry}\" fill=\"{hexColor}\" />");
+        }
 
+        private static void TrinagleSaving(StringBuilder stringBuilder, Gene gene)
+        {
+            var color = Color.FromRgba(gene.color.R, gene.color.G, gene.color.B, gene.color.A);
+            string hexColor = color.ToRgbaHexString();
 
+            BasicPoint p1 = gene.points[0];
+            BasicPoint p2 = gene.points[1];
+            BasicPoint p3 = gene.points[2];
 
-
+            stringBuilder.AppendLine($"<polygon points=\"{p1.X},{p1.Y} {p2.X},{p2.Y} {p3.X},{p3.Y}\" fill=\"{hexColor}\" />");
         }
 
     }
