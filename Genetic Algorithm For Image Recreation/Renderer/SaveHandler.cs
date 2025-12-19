@@ -3,6 +3,7 @@ using Genetic_Algorithm_For_Image_Recreation.GA;
 using System.IO;
 using System.Text;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {
@@ -32,21 +33,49 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             stringBuilder.AppendLine($"<rect width=\"100%\" height=\"100%\" fill=\"rgb({backgroundColor.R},{backgroundColor.G},{backgroundColor.B},{backgroundColor.A})\" />");
 
             //Rectangle
-            foreach(var shape in individual.Chromosome.genes)
+            foreach(var gene in individual.Chromosome.genes)
             {
-                if(shape.ShapeType == ShapeType.Rectangle)
+                switch (gene.ShapeType)
                 {
-                    var color = Color.FromRgba(shape.color.R, shape.color.G, shape.color.B, shape.color.A);
-                    string hexColor = color.ToRgbaHexString();
+                    case ShapeType.Rectangle:
+                        RectangleSaving(stringBuilder, gene);
+                        break;
+                    case ShapeType.Ellipse:
+                        EllipseSaving(stringBuilder, gene);
+                        break;
 
-                    stringBuilder.AppendLine($"<rect width=\"{shape.width}\" height=\"{shape.height}\" x=\"{shape.X}\" y=\"{shape.Y}\" fill=\"{hexColor}\" />");
                 }
-                
+
             }
 
             stringBuilder.AppendLine("</svg>");
 
            File.WriteAllText(filePath, stringBuilder.ToString());
+        }
+
+        private static void RectangleSaving(StringBuilder stringBuilder, Gene gene)
+        {
+            var color = Color.FromRgba(gene.color.R, gene.color.G, gene.color.B, gene.color.A);
+            string hexColor = color.ToRgbaHexString();
+
+            stringBuilder.AppendLine($"<rect width=\"{gene.width}\" height=\"{gene.height}\" x=\"{gene.X}\" y=\"{gene.Y}\" fill=\"{hexColor}\" />");
+        }
+
+        private static void EllipseSaving(StringBuilder stringBuilder, Gene gene)
+        {
+            var color = Color.FromRgba(gene.color.R, gene.color.G, gene.color.B, gene.color.A);
+            string hexColor = color.ToRgbaHexString();
+
+            int rx = gene.width / 2;
+            int ry = gene.height / 2;
+            int cx = gene.X + rx;
+            int cy = gene.Y + ry;
+
+            stringBuilder.AppendLine($"<ellipse cx=\"{cx}\" cy=\"{cy}\" rx=\"{rx}\" ry=\"{ry}\" fill=\"{hexColor}\" />");
+
+
+
+
         }
 
     }
