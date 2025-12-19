@@ -236,7 +236,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 		private void OpenSettings()
 		{
-			SettingsWindowModel settingsWindowModel = new SettingsWindowModel(currentAlgorithmConfig);
+			SettingsWindowModel settingsWindowModel = new SettingsWindowModel(currentAlgorithmConfig, dialogCoordinator);
 
 			SettingsWindow settingsWindow = new SettingsWindow(settingsWindowModel);
 			settingsWindow.Owner = parentWindow;
@@ -268,7 +268,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 				caption,
 				messageBoxText,
 				MessageDialogStyle.AffirmativeAndNegative,
-				dialogSettings);
+				dialogSettings
+				);
 
 			switch (messageBoxResult)
 			{

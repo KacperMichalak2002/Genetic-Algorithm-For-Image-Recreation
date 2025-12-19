@@ -2,14 +2,17 @@
 using Genetic_Algorithm_For_Image_Recreation.MVVM;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using Genetic_Algorithm_For_Image_Recreation.Utils;
+using MahApps.Metro.Controls.Dialogs;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 {
     internal class SettingsWindowModel : ViewModelBase
     {
-		public Action<bool> RequestClose { get; set; }
+        private IDialogCoordinator dialogCoordinator;
+        public Action<bool> RequestClose { get; set; }
 		public Action<AlgorithmConfig> SubmitChanges { get; set; }
 
 		public RelayCommand SubmitCommand => new RelayCommand(execute => SubmitSettings(), canExecute => CanSubmit());
@@ -41,12 +44,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 			set { algorithmConfigSettings = value; OnPropertyChanged(); }
 		}
 
-		public SettingsWindowModel(AlgorithmConfig currentAlgorithmConfig)
+		public SettingsWindowModel(AlgorithmConfig currentAlgorithmConfig, IDialogCoordinator dialogCoordinatorInstance)
 		{
 			if(currentAlgorithmConfig != null)
                 AlgorithmConfigSettings = currentAlgorithmConfig.Clone();
 			else
                 AlgorithmConfigSettings = new AlgorithmConfig();
+
+			dialogCoordinator = dialogCoordinatorInstance;
 
 			DrawPreview();
 		}
@@ -182,10 +187,27 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 
 		// Change preview after submit
-		private void SubmitSettings()
+		private async Task SubmitSettings()
 		{
-			SubmitChanges?.Invoke(AlgorithmConfigSettings.Clone());
-			DrawPreview();
+
+			string messageBoxText = "Changes applied";
+			string caption = "Parameters changed";
+
+			MetroDialogSettings dialogSettings = new MetroDialogSettings()
+			{ 
+				AffirmativeButtonText = "Ok"
+			};
+
+			var messageBoxResult = await dialogCoordinator.ShowMessageAsync(
+				this,
+				caption,
+				messageBoxText,
+				MessageDialogStyle.Affirmative,
+				dialogSettings
+				);
+
+            SubmitChanges?.Invoke(AlgorithmConfigSettings.Clone());
+            DrawPreview();
 		}
 
 		private void DrawPreview()
