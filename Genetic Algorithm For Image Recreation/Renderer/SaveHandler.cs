@@ -69,10 +69,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             var color = Color.FromRgba(gene.color.R, gene.color.G, gene.color.B, gene.color.A);
             string hexColor = color.ToRgbaHexString();
 
-            int rx = gene.width / 2;
-            int ry = gene.height / 2;
-            int cx = gene.X + rx;
-            int cy = gene.Y + ry;
+            double rx = gene.width / 2;
+            double ry = gene.height / 2;
+            double cx = gene.X + rx;
+            double cy = gene.Y + ry;
 
             stringBuilder.AppendLine($"<ellipse cx=\"{cx}\" cy=\"{cy}\" rx=\"{rx}\" ry=\"{ry}\" fill=\"{hexColor}\" />");
         }
