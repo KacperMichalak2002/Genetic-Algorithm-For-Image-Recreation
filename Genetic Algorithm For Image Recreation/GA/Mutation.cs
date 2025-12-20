@@ -6,7 +6,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
     internal class Mutation
     {
 
-        public static void Mutate(Individual individual, double mutationRate, AlgorithmConfig algorithmConfig, Random random)
+        public static void Mutate(Individual individual, AlgorithmConfig algorithmConfig, Random random)
         {
             int maxWidth = individual.Chromosome.imageWidth;
             int maxHeight = individual.Chromosome.imageHeight;

@@ -27,6 +27,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 		public int IterationsMaximum { get; } = 500_000;
 		public int SizeMinimum { get; } = 2;
 		public int SizeMaximum { get; } = 50;
+		public int MutationRateMinimum { get; } = 1;
+		public int MutationRateMaximum { get; } = 50;
 
 		public int AlphaRangeMinimum { get; set; } = 10;
 		public int AlphaRangeMaximum { get; set; } = 255;
@@ -65,6 +67,16 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 				OnPropertyChanged();
 			}
 		
+		}
+
+		public double PrecentOfMutationRate
+		{
+			get => AlgorithmConfigSettings.mutationRate * 100;
+			set
+			{
+				AlgorithmConfigSettings.mutationRate = value / 100; 
+				OnPropertyChanged();
+			}
 		}
 
         public int AlphaMin 

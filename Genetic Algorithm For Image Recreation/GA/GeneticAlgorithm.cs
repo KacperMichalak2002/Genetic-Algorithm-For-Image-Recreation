@@ -102,17 +102,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                     Individual parent2 = Selection.TournamentSelection(population, random);
                     Individual child = Crossover.UniformCrossover(parent1, parent2, random);
 
-                    //if (random.NextDouble() < 0.20) // 20% for mutation
-                    //{
-                        Mutation.Mutate(child, 0.1, algorithmConfig, random);
-                    //}
+                    if (random.NextDouble() < algorithmConfig.mutationRate)
+                    {
+                        Mutation.Mutate(child,algorithmConfig, random);
+                    }
 
-                    if (random.NextDouble() < 0.02) // 2% for adding new gene
+                    if (random.NextDouble() < 0.02)
                     {
                         child.Chromosome.GenerateGene(geneFactoryConfig, random);
                     }
 
-                    if (random.NextDouble() < 0.01) // 1% for removing random gene
+                    if (random.NextDouble() < 0.01)
                     {
                         child.Chromosome.RemoveRandomGene(random);
                     }

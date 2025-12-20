@@ -157,6 +157,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
 
@@ -185,16 +186,28 @@
                     ToolTip="Maximum opacity of generated shape"
                     />
 
-                <Label Grid.Row="3" Target="{Binding ElementName=nrOfGeneScale}" Content="Size of shape in %:" ToolTip="Determines the maximum precentage of the image area a single shape can cover"/>
+                <Label Grid.Row="2" Target="{Binding ElementName=nrOfGeneScale}" Content="Size of shape in %:" ToolTip="Determines the maximum precentage of the image area a single shape can cover"/>
                 <mah:NumericUpDown
                     Name="nrOfGeneScale"
                     Value="{Binding PrecentageOfScale}"
                     Minimum="{Binding SizeMinimum}"
                     Maximum="{Binding SizeMaximum}"
                     NumericInputMode="Numbers"
-                    Grid.Row="3"
+                    Grid.Row="2"
                     Grid.Column="1"
                     ToolTip="Determines the maximum precentage of the image area a single shape can cover"
+                    />
+
+                <Label Grid.Row="3" Target="{Binding ElementName=mutationRate}" Content="Mutation rate in %:"/>
+                <mah:NumericUpDown
+                    x:Name="mutationRate"
+                    Value="{Binding PrecentOfMutationRate}"
+                    Minimum="{Binding MutationRateMinimum}"
+                    Maximum="{Binding MutationRateMaximum}"
+                    NumericInputMode="Numbers"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    ToolTip="Determines how often the mutation occurs"
                     />
 
             </Grid>

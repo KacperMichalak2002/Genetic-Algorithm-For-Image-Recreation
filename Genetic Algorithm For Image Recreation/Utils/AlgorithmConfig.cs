@@ -10,6 +10,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
         public int bitmapWidth { get; set; }
         public GeneConfig geneConfig { get; set; } = new GeneConfig();
         public PixelColor[] sourcePixels { get; set; }
+        public double mutationRate { get; set; } = 0.2;
 
 
         public AlgorithmConfig() { }
