@@ -120,64 +120,52 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             }
         }
 
+        private static double TriangleArea(BasicPoint point1, BasicPoint point2, BasicPoint point3)
+        {
+            return Math.Abs(
+                (point1.X * (point2.Y - point3.Y) +
+                point2.X * (point3.Y - point1.Y) +
+                point3.X * (point1.Y - point2.Y)) / 2.0);
+        }
+
+        private static bool isInsideTriangle(BasicPoint point1, BasicPoint point2, BasicPoint point3, BasicPoint pointToCheck)
+        {
+            double ABCTriangle = TriangleArea(point1, point2, point3);
+            double PBCTriangle = TriangleArea(pointToCheck, point2, point3);
+            double PACTriangle = TriangleArea(point1, pointToCheck, point3);
+            double PABTriangle = TriangleArea(point1, point2, pointToCheck);
+
+            double sumOfTriangles = PBCTriangle + PACTriangle + PABTriangle;
+
+            const double epsilon = 0.0001;
+
+            return (Math.Abs(ABCTriangle - sumOfTriangles) < epsilon);
+        }
+
+
+
         private static void PixelsFromTriangle(PixelColor[] pixels, Gene gene, int imageWidth, int imageHeight)
         {
+
+            int geneWidth = gene.width;
+            int geneHeight = gene.height;
+            int startX = gene.X;
+            int startY = gene.Y;
+
+            int endX = startX + geneWidth;
+            int endY = startY + geneHeight;
 
             BasicPoint point1 = gene.points[0];
             BasicPoint point2 = gene.points[1];
             BasicPoint point3 = gene.points[2];
-
-            int minX = Math.Min(point1.X, Math.Min(point2.X, point3.X));
-            int maxX = Math.Max(point1.X, Math.Max(point2.X, point3.X));
-            int minY = Math.Min(point1.Y,Math.Min(point2.Y, point3.Y));
-            int maxY = Math.Max(point1.Y, Math.Max(point2.Y, point3.Y));
-
-            int startX = Math.Max(0, minX);
-            int startY = Math.Max(0, minY);
-            int endX = Math.Min(imageWidth, maxX + 1);
-            int endY = Math.Min(imageHeight, maxY + 1);
-
-            if (startX >= endX || startY >= endY)
-                return;
-
-
-            int vector1x = point2.X - point1.X;
-            int vector1y = point2.Y - point1.Y;
-
-            int vector2x = point3.X - point2.X;
-            int vector2y = point3.Y - point2.Y;
-
-            int vector3x = point1.X - point3.X;
-            int vector3y = point1.Y - point3.Y;
+            BasicPoint pointToChech;
 
             for (int i = startX; i < endX; i++)
             {
-                for(int j = startY; j < endY; j++)
+                for (int j = startY; j < endY; j++)
                 {
-                    int vectorP1x = i - point1.X;
-                    int vectorP1y = j - point1.Y;
-
-                    int vectorP2x = i - point2.X;
-                    int vectorP2y = j - point2.Y;
-
-                    int vectorP3x = i - point3.X;
-                    int vectorP3y = j - point3.Y;
-
-                    int edgeCheck12 = (vectorP1x * vector1y) - (vectorP1y * vector1x);
-                    int edgeCheck23 = (vectorP2x * vector2y) - (vectorP2y * vector2x);
-                    int edgeCheck31 = (vectorP3x * vector3y) - (vectorP3y * vector3x);
-
-                    bool hasNegValue = false;
-                    bool hasPosValue = false;
-
-                    if (edgeCheck12 < 0 || edgeCheck23 < 0 || edgeCheck31 < 0)
-                        hasNegValue = true;
-
-                    if (edgeCheck12 > 0 || edgeCheck23 > 0 || edgeCheck31 > 0)
-                        hasPosValue = true;
-
-
-                    if (!(hasNegValue && hasPosValue))
+                    pointToChech = new BasicPoint(i, j);
+                    if (isInsideTriangle(point1, point2, point3, pointToChech))
                     {
                         int index = j * imageWidth + i;
 

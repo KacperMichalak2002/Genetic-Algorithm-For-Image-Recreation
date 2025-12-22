@@ -10,41 +10,41 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         {
             int maxWidth = individual.Chromosome.imageWidth;
             int maxHeight = individual.Chromosome.imageHeight;
-            
+
             int geneCount = individual.Chromosome.genes.Count;
             int geneIndexToMutate = random.Next(0, geneCount);
 
             Gene geneToMuate = individual.Chromosome.genes[geneIndexToMutate];
-            
-            
+
+
             SelectMutation(geneToMuate, algorithmConfig, random);
 
         }
 
         private static void SelectMutation(Gene gene, AlgorithmConfig algorithmConfig, Random random)
         {
-            int mutationType = random.Next(0,4);
+            int mutationType = random.Next(0, 4);
 
-            if(mutationType == 0)
+            if (mutationType == 0)
             {
                 MutateColor(gene, random);
                 return;
             }
 
-            if(mutationType == 1)
+            if (mutationType == 1)
             {
-                MutateAlpha(gene, algorithmConfig.geneConfig.minAlpha, algorithmConfig.geneConfig.maxAlpha ,random);
+                MutateAlpha(gene, algorithmConfig.geneConfig.minAlpha, algorithmConfig.geneConfig.maxAlpha, random);
                 return;
             }
 
-            if(gene.ShapeType == ShapeType.Triangle)
+            if (gene.ShapeType == ShapeType.Triangle)
             {
                 MutateTrianglePoints(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, algorithmConfig.geneConfig.maxGeneScale, random);
                 return;
             }
             else
             {
-                if(mutationType == 2)
+                if (mutationType == 2)
                 {
                     MutatePosition(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, random);
                 }
@@ -52,7 +52,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 {
                     MutateSize(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, algorithmConfig.geneConfig.maxGeneScale, random);
                 }
-            }   
+            }
         }
 
         private static void MutateColor(Gene gene, Random random)
@@ -71,10 +71,10 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             gene.color = newColor;
         }
 
-        private static void MutateAlpha(Gene gene,int minAlpha, int maxAlpha, Random random)
+        private static void MutateAlpha(Gene gene, int minAlpha, int maxAlpha, Random random)
         {
             int diffA = random.Next(-30, 31);
-            byte newA = (byte) Math.Clamp((gene.color.A + diffA), minAlpha, maxAlpha);
+            byte newA = (byte)Math.Clamp((gene.color.A + diffA), minAlpha, maxAlpha);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
         }
@@ -101,12 +101,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             gene.width = (int)Math.Clamp(gene.width * widhtMult, 5, maxWidth * maxGeneScale);
             gene.height = (int)Math.Clamp(gene.height * heightMult, 5, maxHeight * maxGeneScale);
 
-            if(gene.X + gene.width > maxWidth)
+            if (gene.X + gene.width > maxWidth)
             {
                 gene.width = maxWidth - gene.X;
             }
 
-            if(gene.Y + gene.height > maxHeight)
+            if (gene.Y + gene.height > maxHeight)
             {
                 gene.height = maxHeight - gene.Y;
             }
@@ -116,25 +116,47 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         {
             int numberOfPoints = gene.points.Count;
             double mutationStrength = 0.05;
-            List<BasicPoint> mutatedPoints = new List<BasicPoint>();
+            List<BasicPoint> mutatedPoints = new List<BasicPoint>(gene.points);
+
+            int mutationType = random.Next(0, 100);
+
+            if (mutationType < 80)
+            {
+                int pointIndex = random.Next(0, numberOfPoints);
+
+
+                double diffX = (random.NextDouble() - 0.5) * maxWidth * mutationStrength;
+                double diffY = (random.NextDouble() - 0.5) * maxHeight * mutationStrength;
+
+                int X = (int)Math.Clamp(gene.points[pointIndex].X + diffX, 0, maxWidth - 1);
+                int Y = (int)Math.Clamp(gene.points[pointIndex].Y + diffY, 0, maxHeight - 1);
+
+                BasicPoint point = new BasicPoint(X, Y);
+                mutatedPoints[pointIndex] = point;
+
+
+
+            }
+            else
+            {
+                for (int i = 0; i < numberOfPoints; i++)
+                {
+                    double diffX = (random.NextDouble() - 0.5) * maxWidth * mutationStrength;
+                    double diffY = (random.NextDouble() - 0.5) * maxHeight * mutationStrength;
+
+                    int X = (int)Math.Clamp(gene.points[i].X + diffX, 0, maxWidth - 1);
+                    int Y = (int)Math.Clamp(gene.points[i].Y + diffY, 0, maxHeight - 1);
+
+                    BasicPoint point = new BasicPoint(X, Y);
+                    mutatedPoints.Add(point);
+                }
+            }
 
             int maxAllowedWidth = (int)(maxWidth * maxGeneScale);
             int maxAllowedHeight = (int)(maxHeight * maxGeneScale);
 
             maxAllowedWidth = Math.Max(maxAllowedWidth, 10);
             maxAllowedHeight = Math.Max(maxAllowedHeight, 10);
-
-            for(int i = 0; i < numberOfPoints; i++)
-            {
-                double diffX = (random.NextDouble() - 0.5) * maxWidth * mutationStrength;
-                double diffY = (random.NextDouble() - 0.5) * maxHeight * mutationStrength;
-
-                int X = (int)Math.Clamp(gene.points[i].X + diffX, 0, maxWidth - 1);
-                int Y = (int)Math.Clamp(gene.points[i].Y + diffY, 0, maxHeight - 1);
-
-                BasicPoint point = new BasicPoint(X, Y);
-                mutatedPoints.Add(point);
-            }
 
             int minX = mutatedPoints.Min(p => p.X);
             int minY = mutatedPoints.Min(p => p.Y);
@@ -144,12 +166,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             int newWidth = maxX - minX + 1;
             int newHeight = maxY - minY + 1;
 
-            if(newWidth <= maxAllowedWidth && newHeight <= maxAllowedHeight)
+            if (newWidth <= maxAllowedWidth && newHeight <= maxAllowedHeight)
             {
                 gene.points = mutatedPoints;
                 RecalculateBoundingBox(gene, maxHeight, maxWidth);
             }
-            
+
         }
 
         private static void RecalculateBoundingBox(Gene gene, int maxHeight, int maxWidth)
