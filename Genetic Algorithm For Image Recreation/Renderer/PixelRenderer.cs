@@ -1,8 +1,7 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.GA;
-using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using System.Windows.Media;
 
-namespace Genetic_Algorithm_For_Image_Recreation.Utils
+namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {
     internal class PixelRenderer
     {
@@ -72,9 +71,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             double oneMinusAlpha = 1.0 - newAlphaVal;
 
 
-            byte newR = (byte)((redTmp * newAlphaVal) + (oldColor.R * oneMinusAlpha));
-            byte newG = (byte)((greenTmp * newAlphaVal) + (oldColor.G * oneMinusAlpha));
-            byte newB = (byte)((blueTmp * newAlphaVal) + (oldColor.B * oneMinusAlpha));
+            byte newR = (byte)(redTmp * newAlphaVal + oldColor.R * oneMinusAlpha);
+            byte newG = (byte)(greenTmp * newAlphaVal + oldColor.G * oneMinusAlpha);
+            byte newB = (byte)(blueTmp * newAlphaVal + oldColor.B * oneMinusAlpha);
 
 
             return new PixelColor(newB, newG, newR, 255);
@@ -139,7 +138,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 
             const double epsilon = 0.0001;
 
-            return (Math.Abs(ABCTriangle - sumOfTriangles) < epsilon);
+            return Math.Abs(ABCTriangle - sumOfTriangles) < epsilon;
         }
 
 
