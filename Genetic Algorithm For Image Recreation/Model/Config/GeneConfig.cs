@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Genetic_Algorithm_For_Image_Recreation.Utils
+namespace Genetic_Algorithm_For_Image_Recreation.Model.Config
 {
     public class GeneConfig
     {

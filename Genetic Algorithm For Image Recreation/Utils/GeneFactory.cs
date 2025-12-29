@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

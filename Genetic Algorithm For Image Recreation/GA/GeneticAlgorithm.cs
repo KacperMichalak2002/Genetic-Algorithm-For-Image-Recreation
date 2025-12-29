@@ -1,4 +1,5 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.Utils;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
+using Genetic_Algorithm_For_Image_Recreation.Utils;
 using System.Diagnostics;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA

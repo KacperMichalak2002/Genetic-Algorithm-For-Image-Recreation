@@ -1,4 +1,4 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.Utils;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
 using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.GA

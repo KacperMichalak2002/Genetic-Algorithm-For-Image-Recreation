@@ -1,4 +1,4 @@
-﻿namespace Genetic_Algorithm_For_Image_Recreation.Utils
+﻿namespace Genetic_Algorithm_For_Image_Recreation.Model.Config
 {
     public class GeneFactoryConfig
     {
@@ -12,11 +12,11 @@
 
         public GeneFactoryConfig (GeneConfig geneConfig, int imageWidth, int imageHeight)
         {
-            this.maxHeight = (int)(imageWidth * geneConfig.maxGeneScale);
-            this.maxWidth = (int)(imageHeight * geneConfig.maxGeneScale);
-            this.maxAlpha = geneConfig.maxAlpha;
-            this.minAlpha = geneConfig.minAlpha;
-            this.shapeType = geneConfig.shapeType;
+            maxHeight = (int)(imageWidth * geneConfig.maxGeneScale);
+            maxWidth = (int)(imageHeight * geneConfig.maxGeneScale);
+            maxAlpha = geneConfig.maxAlpha;
+            minAlpha = geneConfig.minAlpha;
+            shapeType = geneConfig.shapeType;
         }
 
 

@@ -1,6 +1,6 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
 
-namespace Genetic_Algorithm_For_Image_Recreation.Utils
+namespace Genetic_Algorithm_For_Image_Recreation.Model.Config
 {
     public  class AlgorithmConfig
     {
@@ -27,7 +27,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
         public AlgorithmConfig Clone()
         {
             AlgorithmConfig clone = (AlgorithmConfig)MemberwiseClone();
-            clone.geneConfig = this.geneConfig.Clone();
+            clone.geneConfig = geneConfig.Clone();
 
             return clone;
         }
