@@ -1,4 +1,5 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.GA;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.GA;
+using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;

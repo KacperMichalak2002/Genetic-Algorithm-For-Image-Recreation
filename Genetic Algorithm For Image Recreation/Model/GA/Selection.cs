@@ -1,4 +1,4 @@
-﻿namespace Genetic_Algorithm_For_Image_Recreation.GA
+﻿namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 {
     internal class Selection
     {

@@ -2,7 +2,7 @@
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using System.Diagnostics;
 
-namespace Genetic_Algorithm_For_Image_Recreation.GA
+namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 {
     internal class GeneticAlgorithm
     {
@@ -12,7 +12,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public GeneticAlgorithm(AlgorithmConfig algorithmConfig)
         {
             this.algorithmConfig = algorithmConfig;
-            this.geneFactoryConfig = new GeneFactoryConfig
+            geneFactoryConfig = new GeneFactoryConfig
                 (
                     algorithmConfig.geneConfig,
                     algorithmConfig.bitmapWidth,
@@ -26,7 +26,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             for (int i = 0; i < algorithmConfig.sizeOfPopulation; i++)
             {
-                population[i] = (new Individual
+                population[i] = new Individual
                     (
                         new Chromosome(
                             algorithmConfig.geneConfig.numberOfGenes,
@@ -35,7 +35,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                             geneFactoryConfig
 
                             )
-                    ));
+                    );
             }
 
             return population;
@@ -88,7 +88,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
 
                 // Ellitism 10% for testing
-                int pct = Math.Max(1, (10 * algorithmConfig.sizeOfPopulation) / 100);
+                int pct = Math.Max(1, 10 * algorithmConfig.sizeOfPopulation / 100);
 
                 for (int i = 0; i < pct; i++)
                 {
@@ -127,7 +127,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
             Debug.WriteLine($"\nTime elapsed: {elapsedTime}");

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 
-namespace Genetic_Algorithm_For_Image_Recreation.Renderer
+namespace Genetic_Algorithm_For_Image_Recreation.Model.Processing
 {
     internal class ImageHandler
     {
@@ -27,7 +27,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             {
                 for (int i = 0; i < bitmapWidth; i++)
                 {
-                    int pixelIndex = (j * stride + i * bytesPerPixel);
+                    int pixelIndex = j * stride + i * bytesPerPixel;
                     byte bluetmp = pixelData[pixelIndex];
                     byte greentmp = pixelData[pixelIndex + 1];
                     byte redtmp = pixelData[pixelIndex + 2];

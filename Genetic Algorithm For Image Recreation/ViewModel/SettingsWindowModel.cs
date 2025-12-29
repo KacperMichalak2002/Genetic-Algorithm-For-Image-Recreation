@@ -1,11 +1,12 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.GA;
-using Genetic_Algorithm_For_Image_Recreation.Model.Config;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
 using Genetic_Algorithm_For_Image_Recreation.MVVM;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 using MahApps.Metro.Controls.Dialogs;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Genetic_Algorithm_For_Image_Recreation.Model.GA;
 
 namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 {

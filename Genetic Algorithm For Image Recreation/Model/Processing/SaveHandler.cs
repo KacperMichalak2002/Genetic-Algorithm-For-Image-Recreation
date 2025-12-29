@@ -1,11 +1,11 @@
 ﻿using Aspose.Svg.Drawing;
-using Genetic_Algorithm_For_Image_Recreation.GA;
+using Genetic_Algorithm_For_Image_Recreation.Model.GA;
 using System.IO;
 using System.Text;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Genetic_Algorithm_For_Image_Recreation.Renderer
+namespace Genetic_Algorithm_For_Image_Recreation.Model.Processing
 {
     internal class SaveHandler
     {

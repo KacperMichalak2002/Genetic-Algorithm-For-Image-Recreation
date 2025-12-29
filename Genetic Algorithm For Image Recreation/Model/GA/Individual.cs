@@ -1,6 +1,6 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 
-namespace Genetic_Algorithm_For_Image_Recreation.GA
+namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 {
     internal class Individual
     {
@@ -14,7 +14,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         public Individual(Chromosome chromosome)
         {
             Chromosome = chromosome;
-            fitness = Double.MaxValue;
+            fitness = double.MaxValue;
             pixels = null;
         }
 
@@ -25,9 +25,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         {
             Individual newIndividual = new Individual
             {
-                Chromosome = this.Chromosome.Clone(),
-                fitness = this.fitness,
-                pixels = this.pixels
+                Chromosome = Chromosome.Clone(),
+                fitness = fitness,
+                pixels = pixels
             
             };
             return newIndividual;

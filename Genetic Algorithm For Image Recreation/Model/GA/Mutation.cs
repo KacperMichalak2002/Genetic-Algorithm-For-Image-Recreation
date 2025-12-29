@@ -1,7 +1,7 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
 using System.Windows.Media;
 
-namespace Genetic_Algorithm_For_Image_Recreation.GA
+namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 {
     internal class Mutation
     {
@@ -62,9 +62,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             int diffB = random.Next(-30, 31);
 
 
-            byte newR = (byte)Math.Clamp((gene.color.R + diffR), 0, 255);
-            byte newG = (byte)Math.Clamp((gene.color.G + diffG), 0, 255);
-            byte newB = (byte)Math.Clamp((gene.color.B + diffB), 0, 255);
+            byte newR = (byte)Math.Clamp(gene.color.R + diffR, 0, 255);
+            byte newG = (byte)Math.Clamp(gene.color.G + diffG, 0, 255);
+            byte newB = (byte)Math.Clamp(gene.color.B + diffB, 0, 255);
 
             Color newColor = Color.FromArgb(gene.color.A, newR, newG, newB);
 
@@ -74,7 +74,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         private static void MutateAlpha(Gene gene, int minAlpha, int maxAlpha, Random random)
         {
             int diffA = random.Next(-30, 31);
-            byte newA = (byte)Math.Clamp((gene.color.A + diffA), minAlpha, maxAlpha);
+            byte newA = (byte)Math.Clamp(gene.color.A + diffA, minAlpha, maxAlpha);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
         }

@@ -1,4 +1,4 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.Renderer;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Model.Config
 {
