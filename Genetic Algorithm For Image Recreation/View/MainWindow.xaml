@@ -31,7 +31,7 @@
         
         <!--Status prgoress-->
 
-        <TextBlock x:Name="tbStatus" Text="{Binding StatusText}" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name="tbStatus" Text="{Binding StatusText}" FontSize="15" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"/>
 
         <StackPanel Grid.Column="1">
             <TextBlock x:Name="tbProgress" Text="{Binding ProgressText}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
