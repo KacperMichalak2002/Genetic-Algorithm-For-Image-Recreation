@@ -37,7 +37,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                             )
                     );
             }
-
             return population;
         }
 
@@ -69,13 +68,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                 Array.Sort(population, new FitnessComparer());
 
 
-                if(generation % 10 == 0)
+                if (generation % 10 == 0)
                 {
                     Debug.WriteLine($"Generation: {generation}");
                     Debug.WriteLine($"Best fitness: {population[0].fitness}");
                     Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
                 }
-                
+
 
                 if (updateTimer.ElapsedMilliseconds > updateInterval)
                 {
@@ -103,10 +102,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                     Individual parent2 = Selection.TournamentSelection(population, random);
                     Individual child = Crossover.UniformCrossover(parent1, parent2, random);
 
-                    if (random.NextDouble() < algorithmConfig.mutationRate)
-                    {
-                        Mutation.Mutate(child,algorithmConfig, random);
-                    }
+
+                    Mutation.Mutate(child, algorithmConfig, random);
+
+                    //if (random.NextDouble() < algorithmConfig.mutationRate)
+                    //{
+                    //    Mutation.Mutate(child,algorithmConfig, random);
+                    //}
 
                     if (random.NextDouble() < 0.02)
                     {

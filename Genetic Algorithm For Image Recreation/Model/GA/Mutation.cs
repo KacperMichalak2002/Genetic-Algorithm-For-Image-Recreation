@@ -1,4 +1,5 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
+using System.Diagnostics;
 using System.Windows.Media;
 
 namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
@@ -12,13 +13,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
             int maxHeight = individual.Chromosome.imageHeight;
 
             int geneCount = individual.Chromosome.genes.Count;
-            int geneIndexToMutate = random.Next(0, geneCount);
+            //int amountOfGenesToMutate = (int)(algorithmConfig.mutationRate * geneCount);
+            int amountOfGenesToMutate = 5;
 
-            Gene geneToMuate = individual.Chromosome.genes[geneIndexToMutate];
+            for (int i = 0; i < amountOfGenesToMutate; i++)
+            {
+                int geneIndexToMutate = random.Next(0, geneCount);
 
+                Gene geneToMuate = individual.Chromosome.genes[geneIndexToMutate];
 
-            SelectMutation(geneToMuate, algorithmConfig, random);
-
+                SelectMutation(geneToMuate, algorithmConfig, random);
+            }
         }
 
         private static void SelectMutation(Gene gene, AlgorithmConfig algorithmConfig, Random random)
@@ -57,9 +62,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
         private static void MutateColor(Gene gene, Random random)
         {
-            int diffR = random.Next(-30, 31);
-            int diffG = random.Next(-30, 31);
-            int diffB = random.Next(-30, 31);
+            int minVal = -5;
+            int maxVal = 5;
+
+            int diffR = random.Next(-minVal, maxVal);
+            int diffG = random.Next(-minVal, maxVal);
+            int diffB = random.Next(-minVal, maxVal);
 
 
             byte newR = (byte)Math.Clamp(gene.color.R + diffR, 0, 255);
@@ -73,7 +81,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
         private static void MutateAlpha(Gene gene, int minAlpha, int maxAlpha, Random random)
         {
-            int diffA = random.Next(-30, 31);
+            int diffA = random.Next(-5, 5);
             byte newA = (byte)Math.Clamp(gene.color.A + diffA, minAlpha, maxAlpha);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
@@ -81,7 +89,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
         private static void MutatePosition(Gene gene, int maxHeight, int maxWidth, Random random)
         {
-            double mutationStrength = 0.2;
+            double mutationStrength = 0.1;
             double randomVal = random.NextDouble() - 0.5; // Range of [-0.5, 0.5]
             double maxShift = maxWidth * mutationStrength; // 20% of the image
             double diffX = randomVal * maxShift;
