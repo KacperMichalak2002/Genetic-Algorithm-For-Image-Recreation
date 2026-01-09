@@ -197,7 +197,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 					PixelColor[] sourcePixels = ImageHandler.GetAllPxielsFromBitmap(convertedImage);
 
 					backgroundColor =ImageHandler.GetBackrgoundColor(sourcePixels) ;
+					//backgroundColor = new PixelColor(255, 255, 255, 255);
                     Draw draw = new Draw(convertedImage.PixelHeight, convertedImage.PixelWidth, backgroundColor);
+					currentAlgorithmConfig.backgroundColor = backgroundColor;
 
 
                     var progressHandler = new Progress<(int generationNumber, Individual best)>(report =>

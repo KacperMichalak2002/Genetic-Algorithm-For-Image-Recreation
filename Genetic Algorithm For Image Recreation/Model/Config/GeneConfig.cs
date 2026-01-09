@@ -10,13 +10,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.Config
     public class GeneConfig
     {
 
-        public int numberOfGenes { get; set; } = 500;
-        public double maxGeneScale { get; set; } = 0.2;
+        public int numberOfGenes { get; set; } = 2000;
+        public double maxGeneScale { get; set; } = 0.10;
         public ShapeType shapeType { get; set; } = ShapeType.Ellipse;
         public PixelColor backgroundColor { get; set; } = new PixelColor(255, 255, 255, 255);
 
-        public int maxAlpha { get; set; } = 150;
-        public int minAlpha { get; set; } = 50;
+        public int maxAlpha { get; set; } = 200;
+        public int minAlpha { get; set; } = 70;
 
 
 

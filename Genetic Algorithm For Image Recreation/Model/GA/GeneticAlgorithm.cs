@@ -151,7 +151,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                 return;
             }
 
-            individual.pixels = PixelRenderer.RenderPixelsToArray(individual, algorithmConfig.sourcePixels[0]);
+            individual.pixels = PixelRenderer.RenderPixelsToArray(individual, algorithmConfig.backgroundColor);
 
             individual.fitness = Fitness.CalculateFitness(algorithmConfig.sourcePixels, individual.pixels, individual.Chromosome.genes.Count);
 
