@@ -1,4 +1,5 @@
 ﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
+using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 using Genetic_Algorithm_For_Image_Recreation.Renderer;
 using System.Diagnostics;
 
@@ -8,6 +9,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
     {
         private AlgorithmConfig algorithmConfig;
         private GeneFactoryConfig geneFactoryConfig;
+        private List<CsvData> csvDatas = new List<CsvData>();
 
         public GeneticAlgorithm(AlgorithmConfig algorithmConfig)
         {
@@ -55,6 +57,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
                 if (cancellationToken.IsCancellationRequested)
                 {
+                    ConsoleLogFinalInfo(stopwatch, population);
+                    CsvHandler.WriteToCsv(csvDatas);
                     cancellationToken.ThrowIfCancellationRequested();
                 }
 
@@ -73,6 +77,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                     Debug.WriteLine($"Generation: {generation}");
                     Debug.WriteLine($"Best fitness: {population[0].fitness}");
                     Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
+
+
+                    var stats = new CsvData
+                    {
+                        generationId = generation,
+                        bestFitness = population[0].fitness,
+                        geneCount = population[0].Chromosome.genes.Count,
+                        timeElapsed = stopwatch.Elapsed.TotalSeconds
+                    };
+
+                    csvDatas.Add(stats);
                 }
 
 
@@ -127,19 +142,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                 population = newGeneration;
             }
 
-            stopwatch.Stop();
-            TimeSpan ts = stopwatch.Elapsed;
-            string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
-            Debug.WriteLine($"\nTime elapsed: {elapsedTime}");
-
-            Debug.WriteLine($"Best fitness: {population[0].fitness}");
-            Debug.WriteLine($"Size of population: {algorithmConfig.sizeOfPopulation}");
-            Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
-            Debug.WriteLine($"Alpha values: MIN: {algorithmConfig.geneConfig.minAlpha} MAX {algorithmConfig.geneConfig.maxAlpha}");
-
-
+            ConsoleLogFinalInfo(stopwatch, population);
         }
 
         private void CalculateFitnessForPopulation(Individual individual)
@@ -163,6 +166,21 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
             {
                 return ind1.fitness.CompareTo(ind2?.fitness);
             }
+        }
+
+        private void ConsoleLogFinalInfo(Stopwatch stopwatch, Individual[] population )
+        {
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            Debug.WriteLine($"\nTime elapsed: {elapsedTime}");
+
+            Debug.WriteLine($"Best fitness: {population[0].fitness}");
+            Debug.WriteLine($"Size of population: {algorithmConfig.sizeOfPopulation}");
+            Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
+            Debug.WriteLine($"Alpha values: MIN: {algorithmConfig.geneConfig.minAlpha} MAX {algorithmConfig.geneConfig.maxAlpha}");
         }
     }
 }
