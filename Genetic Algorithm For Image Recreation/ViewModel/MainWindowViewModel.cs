@@ -158,7 +158,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 
                 Debug.WriteLine($"Loaded image height {convertedImage.PixelHeight} Width {convertedImage.PixelWidth}");
-                //ImageHandler.RectangleScanningSource(convertedImage);
 
                 SourceImage = convertedImage;
 				StatusText = "Load Image";
@@ -277,7 +276,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 			switch (messageBoxResult)
 			{
 				case MessageDialogResult.Affirmative:
-					// SAVE 
 					var fileBrowser = new SaveFileDialog();
 					fileBrowser.FileName = $"Result_{DateTime.Now.ToString("dd_MM_yyyy-HH-mm-ss")}";
 					fileBrowser.Filter = "PNG Image| *.png | SVG Image | *.svg";
@@ -304,9 +302,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
                              var info = await dialogCoordinator.ShowMessageAsync(this, "Saved", "Image saved successfully");
                          }
                      }
-
-
-
 
                     break;
 				case MessageDialogResult.Negative:

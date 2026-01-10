@@ -18,9 +18,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
             pixels = null;
         }
 
-
-
-
         public Individual Clone()
         {
             Individual newIndividual = new Individual

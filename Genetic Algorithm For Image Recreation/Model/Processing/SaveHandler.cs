@@ -32,7 +32,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.Processing
             stringBuilder.AppendLine($"<svg width=\"{width}\" height=\"{height}\" xmlns=\"http://www.w3.org/2000/svg\">");
             stringBuilder.AppendLine($"<rect width=\"100%\" height=\"100%\" fill=\"rgb({backgroundColor.R},{backgroundColor.G},{backgroundColor.B},{backgroundColor.A})\" />");
 
-            //Rectangle
             foreach(var gene in individual.Chromosome.genes)
             {
                 switch (gene.ShapeType)

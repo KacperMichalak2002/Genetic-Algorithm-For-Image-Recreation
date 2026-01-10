@@ -171,7 +171,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
         }
 
-		// Change after adding new selections
         public bool TournamentCheck 
 		{ 
 			get => true; 
@@ -198,8 +197,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.ViewModel
 
 		}
 
-
-		// Change preview after submit
 		private async Task SubmitSettings()
 		{
 

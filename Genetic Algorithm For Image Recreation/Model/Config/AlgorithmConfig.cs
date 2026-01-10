@@ -4,13 +4,14 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.Config
 {
     public  class AlgorithmConfig
     {
-        public int sizeOfPopulation { get; set; } = 10;
+        public int sizeOfPopulation { get; set; } = 30;
         public int numberOfIterations { get; set; } = 50000;
         public int bitmapHeight { get; set; }
         public int bitmapWidth { get; set; }
         public GeneConfig geneConfig { get; set; } = new GeneConfig();
         public PixelColor[] sourcePixels { get; set; }
         public double mutationRate { get; set; } = 0.02;
+        public double mutationIntensity { get; set; } = 1.0;
         public PixelColor backgroundColor { get; set; } = new PixelColor(255, 255, 255, 255);
 
 

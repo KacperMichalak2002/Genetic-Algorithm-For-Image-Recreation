@@ -50,6 +50,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
             var updateTimer = Stopwatch.StartNew();
             long updateInterval = 100;
 
+            double lastBestFintess = double.MaxValue;
+            double currentBestFitness = 0;
+            int stagnationCounter = 0;
+            int maxStagnation = 30;
+
+
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             for (int generation = 1; generation <= algorithmConfig.numberOfIterations; generation++)
@@ -68,16 +74,38 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                     CalculateFitnessForPopulation(individual);
                 });
 
-                // Sorting by fitness
                 Array.Sort(population, new FitnessComparer());
 
+                currentBestFitness = population[0].fitness;
+
+                if (lastBestFintess - currentBestFitness > 0.001)
+                {
+                    stagnationCounter = 0;
+                    lastBestFintess = currentBestFitness;
+                }
+                else
+                {
+                    stagnationCounter++;
+                }
+
+                if (stagnationCounter >= maxStagnation)
+                {
+                    algorithmConfig.mutationIntensity *= 0.8;
+                    algorithmConfig.mutationIntensity = Math.Round(algorithmConfig.mutationIntensity, 4);
+
+                    stagnationCounter = 0;
+
+                    Debug.WriteLine($"Mutation intensity changed to {algorithmConfig.mutationIntensity}");
+                }
+
+                if (algorithmConfig.mutationIntensity < 0.01)
+                    algorithmConfig.mutationIntensity = 0.01;
 
                 if (generation % 10 == 0)
                 {
                     Debug.WriteLine($"Generation: {generation}");
                     Debug.WriteLine($"Best fitness: {population[0].fitness}");
                     Debug.WriteLine($"Number of genes: {population[0].Chromosome.genes.Count}");
-
 
                     var stats = new CsvData
                     {
@@ -100,7 +128,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                 // Creataing new generation 
                 Individual[] newGeneration = new Individual[algorithmConfig.sizeOfPopulation];
 
-
                 // Ellitism 10% for testing
                 int pct = Math.Max(1, 10 * algorithmConfig.sizeOfPopulation / 100);
 
@@ -117,13 +144,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                     Individual parent2 = Selection.TournamentSelection(population, random);
                     Individual child = Crossover.UniformCrossover(parent1, parent2, random);
 
-
                     Mutation.Mutate(child, algorithmConfig, random);
-
-                    //if (random.NextDouble() < algorithmConfig.mutationRate)
-                    //{
-                    //    Mutation.Mutate(child,algorithmConfig, random);
-                    //}
 
                     if (random.NextDouble() < 0.02)
                     {
@@ -138,26 +159,23 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
                     newGeneration[i] = child;
                 });
 
-
                 population = newGeneration;
             }
 
+            CsvHandler.WriteToCsv(csvDatas);
             ConsoleLogFinalInfo(stopwatch, population);
         }
 
         private void CalculateFitnessForPopulation(Individual individual)
         {
-
-            //Pixeles were already calculated individual came from elitism
             if (individual.pixels != null)
             {
                 return;
             }
 
-            individual.pixels = PixelRenderer.RenderPixelsToArray(individual, algorithmConfig.backgroundColor);
+            individual.pixels = PixelRenderer.RenderPixelsToArray(individual, algorithmConfig.sourcePixels[0]);
 
             individual.fitness = Fitness.CalculateFitness(algorithmConfig.sourcePixels, individual.pixels, individual.Chromosome.genes.Count);
-
         }
 
         private class FitnessComparer : IComparer<Individual>
@@ -168,7 +186,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
             }
         }
 
-        private void ConsoleLogFinalInfo(Stopwatch stopwatch, Individual[] population )
+        private void ConsoleLogFinalInfo(Stopwatch stopwatch, Individual[] population)
         {
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;

@@ -103,7 +103,6 @@ public class Gene
     public int width { get; set; }
     public int height { get; set; }
     public System.Windows.Media.Color color { get; set; }
-    public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }
     public List<BasicPoint> points { get; set; } = new List<BasicPoint>();
 

@@ -68,16 +68,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             return renderTarget;
         }
 
-        //private void ClearRenderTarget()
-        //{
-        //    DrawingVisual clearVisual = new DrawingVisual();
-        //    using(DrawingContext dc = clearVisual.RenderOpen())
-        //    {
-        //        dc.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, maxWidth, maxHeight));
-        //    }
-        //    renderTarget.Render(clearVisual);
-        //}
-
         public BitmapSource CloneCurrentBitmap()
         {
             return renderTarget.Clone();

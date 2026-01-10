@@ -13,8 +13,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
             int maxHeight = individual.Chromosome.imageHeight;
 
             int geneCount = individual.Chromosome.genes.Count;
-            //int amountOfGenesToMutate = (int)(algorithmConfig.mutationRate * geneCount);
-            int amountOfGenesToMutate = 5;
+
+            double mutationIntensity = algorithmConfig.mutationIntensity;
+            int maxStartGenes = (int)(algorithmConfig.mutationRate * geneCount);
+            int minGenes = 1;
+
+            int amountOfGenesToMutate = (int)(mutationIntensity * (maxStartGenes - minGenes)) + minGenes;
+            amountOfGenesToMutate = Math.Clamp(amountOfGenesToMutate, minGenes, maxStartGenes);
 
             for (int i = 0; i < amountOfGenesToMutate; i++)
             {
@@ -44,7 +49,17 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
             if (gene.ShapeType == ShapeType.Triangle)
             {
-                MutateTrianglePoints(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, algorithmConfig.geneConfig.maxGeneScale, random);
+                int triangleMutationType = random.Next(0, 2);
+
+                switch (triangleMutationType)
+                {
+                    case 0:
+                        MutateTrianglePoints(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, algorithmConfig.geneConfig.maxGeneScale, random);
+                        break;
+                    case 1:
+                        MutateTriangleShift(gene, algorithmConfig.bitmapHeight, algorithmConfig.bitmapWidth, random);
+                        break;
+                }
                 return;
             }
             else
@@ -62,12 +77,12 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
         private static void MutateColor(Gene gene, Random random)
         {
-            int minVal = -5;
-            int maxVal = 5;
+            int minVal = -30;
+            int maxVal = 31;
 
-            int diffR = random.Next(-minVal, maxVal);
-            int diffG = random.Next(-minVal, maxVal);
-            int diffB = random.Next(-minVal, maxVal);
+            int diffR = random.Next(minVal, maxVal);
+            int diffG = random.Next(minVal, maxVal);
+            int diffB = random.Next(minVal, maxVal);
 
 
             byte newR = (byte)Math.Clamp(gene.color.R + diffR, 0, 255);
@@ -81,7 +96,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
         private static void MutateAlpha(Gene gene, int minAlpha, int maxAlpha, Random random)
         {
-            int diffA = random.Next(-5, 5);
+            int diffA = random.Next(-30, 31);
             byte newA = (byte)Math.Clamp(gene.color.A + diffA, minAlpha, maxAlpha);
 
             gene.color = Color.FromArgb(newA, gene.color.R, gene.color.G, gene.color.B);
@@ -89,7 +104,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 
         private static void MutatePosition(Gene gene, int maxHeight, int maxWidth, Random random)
         {
-            double mutationStrength = 0.1;
+            double mutationStrength = 0.2;
             double randomVal = random.NextDouble() - 0.5; // Range of [-0.5, 0.5]
             double maxShift = maxWidth * mutationStrength; // 20% of the image
             double diffX = randomVal * maxShift;
@@ -120,45 +135,93 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
             }
         }
 
+        private static void MutateTriangleShift(Gene gene, int maxHeight, int maxWidth, Random random)
+        {
+            int numberOfPoints = gene.points.Count;
+            double mutationStrength = 0.05;
+            List<BasicPoint> mutatedPoints = new List<BasicPoint>();
+
+            int maxShiftX = (int)(maxWidth * mutationStrength);
+            int maxShiftY = (int)(maxHeight * mutationStrength);
+
+            int dx = random.Next(-maxShiftX, maxShiftX + 1);
+            int dy = random.Next(-maxShiftY, maxShiftY + 1);
+
+            bool outOfBound = false;
+
+            for (int i = 0; i < numberOfPoints; i++)
+            {
+                int newX = gene.points[i].X + dx;
+                int newY = gene.points[i].Y + dy;
+
+                if (newX >= maxWidth || newX < 0 || newY < 0 || newY >= maxHeight)
+                {
+                    outOfBound = true;
+                    break;
+                }
+
+                BasicPoint point = new BasicPoint(newX, newY);
+                mutatedPoints.Add(point);
+            }
+
+            if (!outOfBound)
+            {
+                gene.points = mutatedPoints;
+                RecalculateBoundingBox(gene, maxHeight, maxWidth);
+            }
+        }
+
         private static void MutateTrianglePoints(Gene gene, int maxHeight, int maxWidth, double maxGeneScale, Random random)
         {
             int numberOfPoints = gene.points.Count;
             double mutationStrength = 0.05;
             List<BasicPoint> mutatedPoints = new List<BasicPoint>(gene.points);
 
-            int mutationType = random.Next(0, 100);
-
-            if (mutationType < 80)
+            for (int i = 0; i < numberOfPoints; i++)
             {
-                int pointIndex = random.Next(0, numberOfPoints);
-
-
                 double diffX = (random.NextDouble() - 0.5) * maxWidth * mutationStrength;
                 double diffY = (random.NextDouble() - 0.5) * maxHeight * mutationStrength;
 
-                int X = (int)Math.Clamp(gene.points[pointIndex].X + diffX, 0, maxWidth - 1);
-                int Y = (int)Math.Clamp(gene.points[pointIndex].Y + diffY, 0, maxHeight - 1);
+                int X = (int)Math.Clamp(gene.points[i].X + diffX, 0, maxWidth - 1);
+                int Y = (int)Math.Clamp(gene.points[i].Y + diffY, 0, maxHeight - 1);
 
                 BasicPoint point = new BasicPoint(X, Y);
-                mutatedPoints[pointIndex] = point;
-
-
-
+                mutatedPoints[i] = point;
             }
-            else
-            {
-                for (int i = 0; i < numberOfPoints; i++)
-                {
-                    double diffX = (random.NextDouble() - 0.5) * maxWidth * mutationStrength;
-                    double diffY = (random.NextDouble() - 0.5) * maxHeight * mutationStrength;
 
-                    int X = (int)Math.Clamp(gene.points[i].X + diffX, 0, maxWidth - 1);
-                    int Y = (int)Math.Clamp(gene.points[i].Y + diffY, 0, maxHeight - 1);
+            //int mutationType = random.Next(0, 100);
 
-                    BasicPoint point = new BasicPoint(X, Y);
-                    mutatedPoints.Add(point);
-                }
-            }
+            //if (mutationType < 80)
+            //{
+            //    int pointIndex = random.Next(0, numberOfPoints);
+
+
+            //    double diffX = (random.NextDouble() - 0.5) * maxWidth * mutationStrength;
+            //    double diffY = (random.NextDouble() - 0.5) * maxHeight * mutationStrength;
+
+            //    int X = (int)Math.Clamp(gene.points[pointIndex].X + diffX, 0, maxWidth - 1);
+            //    int Y = (int)Math.Clamp(gene.points[pointIndex].Y + diffY, 0, maxHeight - 1);
+
+            //    BasicPoint point = new BasicPoint(X, Y);
+            //    mutatedPoints[pointIndex] = point;
+
+
+
+            //}
+            //else
+            //{
+            //    for (int i = 0; i < numberOfPoints; i++)
+            //    {
+            //        double diffX = (random.NextDouble() - 0.5) * maxWidth * mutationStrength;
+            //        double diffY = (random.NextDouble() - 0.5) * maxHeight * mutationStrength;
+
+            //        int X = (int)Math.Clamp(gene.points[i].X + diffX, 0, maxWidth - 1);
+            //        int Y = (int)Math.Clamp(gene.points[i].Y + diffY, 0, maxHeight - 1);
+
+            //        BasicPoint point = new BasicPoint(X, Y);
+            //        mutatedPoints[i] = point;
+            //    }
+            //}
 
             int maxAllowedWidth = (int)(maxWidth * maxGeneScale);
             int maxAllowedHeight = (int)(maxHeight * maxGeneScale);

@@ -34,14 +34,11 @@ namespace Genetic_Algorithm_For_Image_Recreation.Model.Factories
                 Y = geneY,
                 width = geneWidth,
                 height = geneHeight,
-                //color = System.Windows.Media.Color.FromRgb(255, 0, 0),
                 color = System.Windows.Media.Color.FromArgb(
                     (byte)random.Next(geneFactoryConfig.minAlpha, geneFactoryConfig.maxAlpha + 1),
                     (byte)random.Next(256),
                     (byte)random.Next(256),
                     (byte)random.Next(256)),
-                //color = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))
-                //backgroundColor = System.Windows.Media.Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256)),
             };
 
             switch (shapeType)

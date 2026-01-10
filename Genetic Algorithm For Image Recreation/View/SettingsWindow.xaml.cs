@@ -17,7 +17,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.View
                 this.Close();
             };
 
-
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
             ThemeManager.Current.SyncTheme();
         }
