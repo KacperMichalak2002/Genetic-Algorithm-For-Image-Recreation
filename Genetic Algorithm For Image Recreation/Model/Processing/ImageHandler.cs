@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 
-namespace Genetic_Algorithm_For_Image_Recreation.Renderer
+namespace Genetic_Algorithm_For_Image_Recreation.Model.Processing
 {
     internal class ImageHandler
     {
@@ -27,7 +27,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             {
                 for (int i = 0; i < bitmapWidth; i++)
                 {
-                    int pixelIndex = (j * stride + i * bytesPerPixel);
+                    int pixelIndex = j * stride + i * bytesPerPixel;
                     byte bluetmp = pixelData[pixelIndex];
                     byte greentmp = pixelData[pixelIndex + 1];
                     byte redtmp = pixelData[pixelIndex + 2];
@@ -39,6 +39,28 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
             }
             return pixelColors;
 
+        }
+
+        public static PixelColor GetBackrgoundColor(PixelColor[] imagePixels)
+        {
+
+            long sumR = 0;
+            long sumG = 0;
+            long sumB = 0;
+            long sizeOfImage = imagePixels.Length;
+
+            for(int i = 0; i < sizeOfImage; i++)
+            {
+                sumR += imagePixels[i].R;
+                sumG += imagePixels[i].G;
+                sumB += imagePixels[i].B;
+            }
+
+            byte avgR = (byte)(sumR / sizeOfImage);
+            byte avgG = (byte)(sumG / sizeOfImage);
+            byte avgB = (byte)(sumB / sizeOfImage);
+
+            return new PixelColor(avgB, avgG, avgR, 255);
         }
 
         public static Rgb convertToRgb(PixelColor pixel)
@@ -71,26 +93,5 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
         public override string ToString() => $"({R},{G},{B}) A{A}";
 
     }
-    //public class PixelColor
-    //{
-    //    public byte B { get; set; }
-    //    public byte G { get; set; }
-    //    public byte R { get; set; }
-    //    public byte A { get; set; }
 
-    //    public PixelColor(byte B, byte G, byte R, byte A)
-    //    {
-    //        this.B = B;
-    //        this.G = G;
-    //        this.R = R;
-    //        this.A = A;
-    //    }
-
-    //    public override string ToString()
-    //    {
-    //        return $"({R},{G},{B}) A{A}";
-    //    }
-       
-
-    //}
 }

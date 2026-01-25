@@ -1,8 +1,8 @@
 ﻿using ColorMine.ColorSpaces;
 using ColorMine.ColorSpaces.Comparisons;
-using Genetic_Algorithm_For_Image_Recreation.Renderer;
+using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 
-namespace Genetic_Algorithm_For_Image_Recreation.GA
+namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 {
     internal class Fitness
     {
@@ -10,7 +10,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
         {
             if (sourcePixels.Length != resultPixels.Length)
             {
-                return Double.MaxValue;
+                return double.MaxValue;
             }
 
             double differenceValue = 0;
@@ -25,7 +25,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
                 sourcePixel = ImageHandler.convertToRgb(sourcePixels[i]);
                 resultPixel = ImageHandler.convertToRgb(resultPixels[i]);
                 double diff = cieDe2000Comparison.Compare(sourcePixel, resultPixel);
-                differenceValue += (diff * diff);
+                differenceValue += diff * diff;
 
             }
 

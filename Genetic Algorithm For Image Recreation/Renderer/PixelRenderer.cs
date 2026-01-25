@@ -1,19 +1,19 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.GA;
-using Genetic_Algorithm_For_Image_Recreation.Renderer;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.GA;
+using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 using System.Windows.Media;
 
-namespace Genetic_Algorithm_For_Image_Recreation.Utils
+namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 {
     internal class PixelRenderer
     {
-        public static PixelColor[] RenderPixelsToArray(Individual individual)
+        public static PixelColor[] RenderPixelsToArray(Individual individual, PixelColor backgroundColor)
         {
             int imageWidth = individual.Chromosome.imageWidth;
             int imageHeight = individual.Chromosome.imageHeight;
             ShapeType shapeType = individual.Chromosome.shapeType;
 
             PixelColor[] pixels = new PixelColor[imageWidth * imageHeight];
-            PixelColor backgroundColorTemp = new PixelColor(255, 255, 255, 255);
+            PixelColor backgroundColorTemp = backgroundColor;
             for(int i = 0; i < pixels.Length; i++)
             {
                 pixels[i] = backgroundColorTemp;
@@ -72,9 +72,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             double oneMinusAlpha = 1.0 - newAlphaVal;
 
 
-            byte newR = (byte)((redTmp * newAlphaVal) + (oldColor.R * oneMinusAlpha));
-            byte newG = (byte)((greenTmp * newAlphaVal) + (oldColor.G * oneMinusAlpha));
-            byte newB = (byte)((blueTmp * newAlphaVal) + (oldColor.B * oneMinusAlpha));
+            byte newR = (byte)(redTmp * newAlphaVal + oldColor.R * oneMinusAlpha);
+            byte newG = (byte)(greenTmp * newAlphaVal + oldColor.G * oneMinusAlpha);
+            byte newB = (byte)(blueTmp * newAlphaVal + oldColor.B * oneMinusAlpha);
 
 
             return new PixelColor(newB, newG, newR, 255);
@@ -130,8 +130,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 
         private static bool isInsideTriangle(BasicPoint point1, BasicPoint point2, BasicPoint point3, BasicPoint pointToCheck)
         {
-            double ABCTriangle = TriangleArea(point1,point2,point3);
-            double PBCTriangle = TriangleArea(pointToCheck,point2,point3);
+            double ABCTriangle = TriangleArea(point1, point2, point3);
+            double PBCTriangle = TriangleArea(pointToCheck, point2, point3);
             double PACTriangle = TriangleArea(point1, pointToCheck, point3);
             double PABTriangle = TriangleArea(point1, point2, pointToCheck);
 
@@ -139,7 +139,7 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
 
             const double epsilon = 0.0001;
 
-            return (Math.Abs(ABCTriangle- sumOfTriangles) < epsilon);
+            return Math.Abs(ABCTriangle - sumOfTriangles) < epsilon;
         }
 
 
@@ -160,9 +160,9 @@ namespace Genetic_Algorithm_For_Image_Recreation.Utils
             BasicPoint point3 = gene.points[2];
             BasicPoint pointToChech;
 
-            for(int i = startX; i < endX; i++)
+            for (int i = startX; i < endX; i++)
             {
-                for(int j = startY; j < endY; j++)
+                for (int j = startY; j < endY; j++)
                 {
                     pointToChech = new BasicPoint(i, j);
                     if (isInsideTriangle(point1, point2, point3, pointToChech))

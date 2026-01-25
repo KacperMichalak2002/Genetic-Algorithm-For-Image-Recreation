@@ -1,6 +1,7 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.Utils;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.Config;
+using Genetic_Algorithm_For_Image_Recreation.Model.Factories;
 
-namespace Genetic_Algorithm_For_Image_Recreation.GA
+namespace Genetic_Algorithm_For_Image_Recreation.Model.GA
 {
     
     internal class Chromosome
@@ -28,36 +29,36 @@ namespace Genetic_Algorithm_For_Image_Recreation.GA
             this.shapeType = shapeType;
         }
 
-        public Chromosome(int numberOfGenes, int imageWidth, int imageHeight,double maxGeneScale, ShapeType shapeType)
+        public Chromosome(int numberOfGenes, int imageWidth, int imageHeight, GeneFactoryConfig geneFactoryConfig)
         {
             
             this.numberOfGenes = numberOfGenes;
             this.imageWidth = imageWidth;
             this.imageHeight = imageHeight;
-            this.shapeType = shapeType;
+            shapeType = shapeType;
 
             for(int i = 0; i < numberOfGenes; i++)
             {
-                GenerateGene(shapeType, maxGeneScale, randomGene);
+                GenerateGene(geneFactoryConfig, randomGene);
             }
         }
 
-        public void GenerateGene(ShapeType shapeType, double maxGeneScale, Random random)
+        public void GenerateGene(GeneFactoryConfig geneFactoryConfig, Random random)
         {
-           genes.Add(GeneFactory.GenerateGene(shapeType, imageWidth, imageHeight, maxGeneScale, random));
+           genes.Add(GeneFactory.GenerateGene(geneFactoryConfig, imageWidth, imageHeight, random));
         }
 
 
         public Chromosome Clone()
         {
-            List<Gene> clonedGenes = this.genes.Select(genes => genes.Clone()).ToList();
+            List<Gene> clonedGenes = genes.Select(genes => genes.Clone()).ToList();
             Chromosome newChromosome = new Chromosome
             {
                 genes = clonedGenes,
-                numberOfGenes = this.numberOfGenes,
-                imageHeight = this.imageHeight,
-                imageWidth = this.imageWidth,
-                shapeType = this.shapeType
+                numberOfGenes = numberOfGenes,
+                imageHeight = imageHeight,
+                imageWidth = imageWidth,
+                shapeType = shapeType
             };
 
             return newChromosome;
@@ -102,7 +103,6 @@ public class Gene
     public int width { get; set; }
     public int height { get; set; }
     public System.Windows.Media.Color color { get; set; }
-    public System.Windows.Media.Color backgroundColor {get; set; }
     public ShapeType ShapeType { get; set; }
     public List<BasicPoint> points { get; set; } = new List<BasicPoint>();
 
@@ -110,13 +110,13 @@ public class Gene
     {
         Gene coppiedGene = new Gene
         {
-            X = this.X,
-            Y = this.Y,
-            width = this.width,
-            height = this.height,
-            color = this.color,
-            ShapeType = this.ShapeType,
-            points = new List<BasicPoint>(this.points)
+            X = X,
+            Y = Y,
+            width = width,
+            height = height,
+            color = color,
+            ShapeType = ShapeType,
+            points = new List<BasicPoint>(points)
         };
 
         return coppiedGene;

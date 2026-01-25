@@ -1,4 +1,5 @@
-﻿using Genetic_Algorithm_For_Image_Recreation.GA;
+﻿using Genetic_Algorithm_For_Image_Recreation.Model.GA;
+using Genetic_Algorithm_For_Image_Recreation.Model.Processing;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -9,11 +10,13 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
     {
         private double maxHeight, maxWidth;
         private RenderTargetBitmap renderTarget;
+        private Color backgroundColor;
 
-        public Draw(int maxHeight, int maxWidth)
+        public Draw(int maxHeight, int maxWidth, PixelColor backgroundColor)
         {
             this.maxHeight = maxHeight;
             this.maxWidth = maxWidth;
+            this.backgroundColor = Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B);
             renderTarget = new RenderTargetBitmap(maxWidth, maxHeight, 96, 96, PixelFormats.Pbgra32);
         }
 
@@ -24,7 +27,8 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             using (DrawingContext drawingContext = drawingVisual.RenderOpen())
             {
-                drawingContext.DrawRectangle(Brushes.White, null, new Rect(0, 0, maxWidth, maxHeight));
+                SolidColorBrush backgroundBrush = new SolidColorBrush(backgroundColor);
+                drawingContext.DrawRectangle(backgroundBrush, null, new Rect(0, 0, maxWidth, maxHeight));
 
                 foreach (var gene in individual.Chromosome.genes)
                 {
@@ -63,16 +67,6 @@ namespace Genetic_Algorithm_For_Image_Recreation.Renderer
 
             return renderTarget;
         }
-
-        //private void ClearRenderTarget()
-        //{
-        //    DrawingVisual clearVisual = new DrawingVisual();
-        //    using(DrawingContext dc = clearVisual.RenderOpen())
-        //    {
-        //        dc.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, maxWidth, maxHeight));
-        //    }
-        //    renderTarget.Render(clearVisual);
-        //}
 
         public BitmapSource CloneCurrentBitmap()
         {
